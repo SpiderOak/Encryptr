@@ -1,0 +1,5 @@
+platforms/*
+plugins/*
+node_modules
+www/js/Encryptr.js
+www/js/Encryptr.min.js
