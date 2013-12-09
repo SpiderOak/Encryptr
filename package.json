@@ -1,0 +1,23 @@
+{
+  "name": "Encryptr",
+  "version": "0.1.0",
+  "main": "www/js/Encryptr.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "author": "tommy-carlos williams (devgeeks)",
+  "keywords": [
+    "cordova"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "grunt-cli": "0.1.x",
+    "grunt-contrib-jshint": "~0.4.3",
+    "grunt": "0.4.x",
+    "grunt-contrib-concat": "~0.2.0",
+    "grunt-contrib-uglify": "~0.2.0",
+    "grunt-contrib-watch": "~0.3.1",
+    "grunt-shell": "0.2.x",
+    "temporary": "0.0.5"
+  }
+}

@@ -1,0 +1,225 @@
+* {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+ 
+body {
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-touch-callout: none;
+  -webkit-text-size-adjust: none;
+  -webkit-user-select: none;
+  user-select: none;
+  font-family: -apple-system-font, "HelveticaNueue", Helvetica, Arial, sans-serif;
+  background-color: #ccc;
+  font-size: 100%;
+  padding: 0;
+  margin: 0;
+}
+ 
+.app {
+  background-color: #fff;
+  position:absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+ 
+.main {
+  background-color: #fff;
+  position:absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+ 
+.nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 44px;
+  background-color: #ccc;
+}
+ 
+.nav .title {
+  position: absolute;
+  left: 80px;
+  right: 80px;
+  text-align: center;
+  line-height: 44px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+ 
+.nav .btn {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  line-height: 44px;
+  height: 44px;
+  padding: 0 10px;
+  color: #666;
+}
+ 
+.nav .btn.disabled {
+  color: #bbb;
+}
+ 
+.nav .btn:active {
+  background-color: #e4e4e4;
+  color: #999;
+}
+ 
+.nav .right {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+ 
+.nav .left {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+ 
+.nav .btn.right {
+  /*border-left: 1px solid #aaa;*/
+}
+ 
+.nav .btn.left {
+  /*border-right: 1px solid #aaa;*/
+}
+ 
+a.btn {
+  color: inherit;
+  text-decoration: none;
+  min-width: 44px;
+  text-align: center;
+  font-size: 150%;
+}
+ 
+.subviews {
+  box-sizing: border-box;
+  position: absolute;
+  top: 44px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 10px;
+}
+ 
+.hidden {
+  display: none;
+}
+ 
+.scrollable {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.login {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  z-index: 101;
+}
+
+.middle {
+  text-align: center;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="tel"],
+input[type="number"],
+input[type="search"],
+input[type="email"],
+input[type="url"],
+textarea, select {
+  position: relative;
+  -webkit-box-sizing: border-box;
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: block;
+  width: 100%;
+  font: normal 100% "Roboto", Helvetica, Arial, sans-serif;
+  outline: 0 none;
+}
+
+input[type="text"],
+input[type="password"] {
+  -webkit-box-sizing: border-box;
+  position: relative;
+  padding: 10px;
+  margin: 0;
+  border: none;
+  border: 1px solid rgb(200, 199, 204);
+  border-bottom: none;
+  background-color: rgb(248, 248, 248);
+  border-radius: 0;
+  box-shadow: none;
+}
+
+#username,
+#password {
+  border: none;
+  margin: 0;
+}
+
+#username {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom: 1px solid rgb(200, 199, 204);
+}
+
+#password {
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-bottom: none;
+}
+div.login-input {
+  -webkit-box-sizing: border-box;
+  padding: 0 20px;
+}
+
+.spacer5 {
+  height: 0;
+}
+
+a.button,
+button {
+  display: block;
+  margin: 10px 20px;
+  padding: 8px 40px;
+  border-top: 1px solid rgba(255,255,255,0.34);
+  border-right: 1px solid rgba(0,0,0,0.04);
+  border-bottom: 1px solid rgba(0,0,0,0.43);
+  border-left: 1px solid rgba(0,0,0,0.04);
+  border-radius: 5px;
+  text-decoration: none;
+  text-align: center;
+  background: -webkit-linear-gradient(top, #eee 0%, #ccc 100%);
+  background: linear-gradient(to bottom, #eee 0%, #ccc 100%);
+  color: #666;
+}
+
+a.button.active {
+  color: #333;
+  background: -webkit-linear-gradient(top, #ddd 0%, #bbb 100%);
+  background: linear-gradient(to bottom, #ddd 0%, #bbb 100%);
+  box-shadow: none;
+  outline:0;
+}
+
+a.button.loginButton {
+  background: -webkit-linear-gradient(top, #999 0%, #666 100%);
+  background: linear-gradient(to bottom, #999 0%, #666 100%);
+  color: #fff;
+}
