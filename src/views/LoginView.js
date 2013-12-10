@@ -34,6 +34,9 @@
     },
     form_submitHandler: function(event) {
       event.preventDefault();
+
+      var username = $("#username").val().trim();
+      var password = $("#password").val();
       // @TODO: Remove the below and actually log in
       this.dismiss();
     },

@@ -1,4 +1,9 @@
-(function(window, console, app, undefined) {
+/*! Backbone.crypton - v0.1.0 - 2013-12-11
+
+ * Copyright (c) 2013 tommy-carlos williams (devgeeks);
+ * License: Apache2 (http://www.apache.org/licenses/LICENSE-2.0)
+ */
+ (function(window, console, app, undefined) {
   "use strict";
   console       = console || {};
   console.log   = console.log || function() {};
@@ -17,7 +22,7 @@
 
   Backbone.sync = function(method, model, options) {
     options = options || {};
-    if (!window.app.session) {
+    if (!Backbone.session) {
       options.error("No available session");
       return;
     }
@@ -32,7 +37,7 @@
           console.log("COLLECTION, WHAT NOW?!");
           return;
         }
-        window.app.session.load("Entries", function(err, entries) {
+        Backbone.session.load("Entries", function(err, entries) {
           if (err) {
             // @TODO: Add a better error object to return
             options.error(err);
@@ -47,7 +52,7 @@
         // @TODO: get rid of hardcoded "window.app" session container var
         //        ..think of a better way to store the session, maybe Backbone.session?
         // @TODO: get rid of hardcoded "Entries" container name
-        window.app.session.load("Entries", function(err, entries) {
+        Backbone.session.load("Entries", function(err, entries) {
           if (err) {
             // @TODO: Add a better error object to return
             options.error(err);
@@ -84,7 +89,7 @@
         });
         break;
       case "update":
-        window.app.session.load("Entries", function(err, entries) {
+        Backbone.session.load("Entries", function(err, entries) {
           if (err) {
             // @TODO: Add a better error object to return
             options.error(err);
@@ -104,7 +109,7 @@
         });
         break;
       case "delete":
-        window.app.session.load("Entries", function(err, entries) {
+        Backbone.session.load("Entries", function(err, entries) {
           if (err) {
             // @TODO: Add a better error object to return
             options.error(err);
@@ -126,6 +131,10 @@
         });
         break;
     }
+  };
+
+  Backbone.Collection.sync = function(method, model, options) {
+    // ...
   };
 
 })(this, this.console, this.app);

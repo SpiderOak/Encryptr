@@ -3,14 +3,24 @@
   "version": "0.1.0",
   "main": "www/js/Encryptr.js",
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "postinstall": "./node_modules/.bin/bower install",
+    "pluginstall": "cordova plugins add org.apache.cordova.device",
+    "plugremove": "cordova plugins remove org.apache.cordova.device"
   },
   "author": "tommy-carlos williams (devgeeks)",
   "keywords": [
     "cordova"
   ],
+  "licenses": [
+    {
+      "type": "GPLv3",
+      "url": "http://www.gnu.org/licenses/gpl.html"
+    }
+  ],
   "dependencies": {},
   "devDependencies": {
+    "bower": "0.9.x",
     "grunt-cli": "0.1.x",
     "grunt-contrib-jshint": "~0.4.3",
     "grunt": "0.4.x",
