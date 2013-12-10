@@ -5,8 +5,8 @@
   "scripts": {
     "test": "grunt test",
     "postinstall": "./node_modules/.bin/bower install",
-    "pluginstall": "cordova plugins add org.apache.cordova.device",
-    "plugremove": "cordova plugins remove org.apache.cordova.device"
+    "pluginstall": "cordova plugins add org.apache.cordova.device org.apache.cordova.dialogs",
+    "plugremove": "cordova plugins remove org.apache.cordova.device org.apache.cordova.dialogs"
   },
   "author": "tommy-carlos williams (devgeeks)",
   "keywords": [

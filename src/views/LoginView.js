@@ -45,7 +45,7 @@
       this.form_submitHandler(event);
     },
     signupButton_tapHandler: function(event) {
-      // ...
+      navigator.notification.alert("Sign up has not yet been implemented.");
     },
     dismiss: function() {
       if (!this.$el.hasClass("dismissed")) {

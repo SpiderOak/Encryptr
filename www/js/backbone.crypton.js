@@ -82,7 +82,7 @@
                   return;
                 }
                 model.id = modelId;
-                options.success(model);
+                options.success(model.attributes);
               });
             });
           });
@@ -131,10 +131,6 @@
         });
         break;
     }
-  };
-
-  Backbone.Collection.sync = function(method, model, options) {
-    // ...
   };
 
 })(this, this.console, this.app);
