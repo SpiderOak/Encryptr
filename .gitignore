@@ -7,3 +7,4 @@ www/components/**/*
 components/**/*
 !www/components/.gitignore
 !components/.gitignore
+www/tests/Encryptr-tests.js
