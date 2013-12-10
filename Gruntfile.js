@@ -19,6 +19,49 @@ module.exports = function(grunt) {
       dist: {
         src: ['src/**/*.js'],
         dest: 'www/js/<%= pkg.name %>.js'
+      },
+      zepto: {
+        src: [
+          'components/zepto/src/zepto.js',
+          'components/zepto/src/ajax.js',
+          'components/zepto/src/assets.js',
+          'components/zepto/src/data.js',
+          'components/zepto/src/detect.js',
+          'components/zepto/src/event.js',
+          'components/zepto/src/form.js',
+          'components/zepto/src/fx.js',
+          'components/zepto/src/fx_methods.js',
+          'components/zepto/src/gesture.js',
+          'components/zepto/src/polyfill.js',
+          'components/zepto/src/selector.js',
+          'components/zepto/src/stack.js',
+          'components/zepto/src/touch.js'
+        ],
+        dest: 'www/components/zepto/zepto.js'
+      },
+      underscore: {
+        src: [
+          'components/underscore/underscore.js'
+        ],
+        dest: 'www/components/underscore/underscore.js'
+      },
+      backbone: {
+        src: [
+          'components/backbone/backbone.js'
+        ],
+        dest: 'www/components/backbone/backbone.js'
+      },
+      backstack: {
+        src: [
+          'components/backstack/backstack.js'
+        ],
+        dest: 'www/components/backstack/backstack.js'
+      },
+      moment: {
+        src: [
+          'components/moment/moment.js'
+        ],
+        dest: 'www/components/moment/moment.js'
       }
     },
     uglify: {
@@ -27,6 +70,12 @@ module.exports = function(grunt) {
           '<%= concat.dist.dest %>'
         ],
         dest: 'www/js/<%= pkg.name %>.min.js'
+      },
+      zepto: {
+        src: [
+          'www/components/zepto/zepto.js'
+        ],
+        dest: 'www/components/zepto/zepto.min.js'
       }
     },
     watch: {

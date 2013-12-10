@@ -67,8 +67,8 @@ body {
 }
  
 .nav .btn:active {
-  background-color: #e4e4e4;
-  color: #999;
+  color: #000;
+  text-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
  
 .nav .right {
@@ -84,11 +84,11 @@ body {
 }
  
 .nav .btn.right {
-  /*border-left: 1px solid #aaa;*/
+  font-size: 200%;
 }
  
 .nav .btn.left {
-  /*border-right: 1px solid #aaa;*/
+  font-size: 200%;
 }
  
 a.btn {

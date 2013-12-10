@@ -1,0 +1,17 @@
+{
+  "name": "Encryptr",
+  "version": "0.1.0",
+  "main": "www/index.html",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components"
+  ],
+  "dependencies": {
+    "zepto": "https://github.com/madrobby/zepto/archive/v1.1.0.zip",
+    "underscore": "~1.5.2",
+    "backbone": "~1.1.0",
+    "backstack": "https://github.com/pwalczyszyn/backstack.git",
+    "moment": "~2.0.0"
+  }
+}

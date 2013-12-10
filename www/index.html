@@ -14,12 +14,12 @@
     <div id="nav" class="nav">
       <a class="btn menu-btn left">&#8801;</a>
       <a class="btn back-btn left hidden">&#8592;</a>
-      <div class="title"><i class="fa fa-lock"></i> Encryptr</i></div>
-      <a class="btn more-btn right">&#65049;</a>
+      <div class="title"><i class="fa fa-lock"></i> <strong>Encryptr</strong></i></div>
+      <a class="btn more-btn right">+</a>
     </div>
     <div id="subviews" class="subviews scrollable"></div>
-    <div class="login">
-      <h3 class="middle"><i class="fa fa-lock"></i> Encryptr</i></h3>
+    <div id="login" class="login">
+      <h2 class="middle"><i class="fa fa-lock"></i> Encryptr</i></h2>
       <div>
         <form name="login-form" class="login-form">
           <div class="login-input">
@@ -43,8 +43,16 @@
     </div>
     </div>
   </div>
+  <!-- Zepto -->
+  <script type="text/javascript" src="components/zepto/zepto.js"></script>
   <script type="text/javascript" src="cordova.js"></script>
+  <!-- Components -->
+  <script type="text/javascript" src="components/underscore/underscore.js"></script>
+  <script type="text/javascript" src="components/backbone/backbone.js"></script>
+  <script type="text/javascript" src="components/backstack/backstack.js"></script>
+  <script type="text/javascript" src="components/moment/moment.js"></script>
   <script type="text/javascript" src="js/crypton.js"></script>
+  <script type="text/javascript" src="js/backbone.crypton.js"></script>
   <script type="text/javascript" src="js/Encryptr.js"></script>
   <script type="text/javascript">
     window.app = new Encryptr(); window.app.init();

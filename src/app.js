@@ -1,12 +1,13 @@
 var Encryptr = (function (window, console, undefined) {
   "use strict";
-  console = console || {};
-  console.log = console.log || function() {};
+  console       = console || {};
+  console.log   = console.log || function() {};
+  var Backbone  = window.Backbone,
+      _         = window._,
+      $         = window.Zepto;
 
-  
- 
   var Encryptr = function () {
-  this.online = true; // assume a hopeful default
+    this.online = true; // assume a hopeful default
   };
  
   Encryptr.prototype.init = function() {
@@ -15,6 +16,21 @@ var Encryptr = (function (window, console, undefined) {
     window.document.addEventListener("pause", this.onPause, false);
     window.document.addEventListener("offline", this.setOffline, false);
     window.document.addEventListener("online", this.setOnline, false);
+    // Render the login view (and bind its events)
+    this.loginView = new this.LoginView().render();
+    // Hax for Android 2.x not groking :active
+    $(document).on("touchstart", "a", function(event) {
+      var $this = $(this);
+      $this.addClass("active");
+    });
+    $(document).on("touchend", "a", function(event) {
+      var $this = $(this);
+      $this.removeClass("active");
+    });
+    $(document).on("touchmove", "a", function(event) {
+      var $this = $(this);
+      $this.removeClass("active");
+    });
   };
  
   Encryptr.prototype.onDeviceReady = function(event) {
@@ -49,4 +65,4 @@ var Encryptr = (function (window, console, undefined) {
  
   return Encryptr;
  
-})(window, window.console);
+})(this, this.console);
