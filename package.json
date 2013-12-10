@@ -18,6 +18,12 @@
     "grunt-contrib-uglify": "~0.2.0",
     "grunt-contrib-watch": "~0.3.1",
     "grunt-shell": "0.2.x",
-    "temporary": "0.0.5"
+    "temporary": "0.0.5",
+    "mocha": "~1.8.1",
+    "chai": "~1.8.0",
+    "sinon": "~1.7.3",
+    "sinon-chai": "~2.4.0",
+    "chai-jquery": "~1.1.2",
+    "mocha-phantomjs": "~2.0.0"
   }
 }

@@ -62,6 +62,15 @@ module.exports = function(grunt) {
           'components/moment/moment.js'
         ],
         dest: 'www/components/moment/moment.js'
+      },
+      tests: {
+        options: {
+          banner: '<%= meta.banner %>'
+        },
+        src: [
+          'tests/**/*.js'
+        ],
+        dest: 'www/tests/<%= pkg.name %>-tests.js'
       }
     },
     uglify: {
@@ -97,6 +106,39 @@ module.exports = function(grunt) {
       },
       debug_blackberry10: {
         command: 'cordova build blackberry10 && cordova emulate blackberry10'
+      },
+      // Some different reporters...
+      mochaspec: {
+        command:
+          './node_modules/.bin/mocha-phantomjs www/tests/index.html',
+        options: {
+          failOnError: true,
+          stdout: true
+        }
+      },
+      mochamin: {
+        command:
+          './node_modules/.bin/mocha-phantomjs -R min www/tests/index.html',
+        options: {
+          failOnError: true,
+          stdout: true
+        }
+      },
+      mochadot: {
+        command:
+          './node_modules/.bin/mocha-phantomjs -R dot www/tests/index.html',
+        options: {
+          failOnError: true,
+          stdout: true
+        }
+      },
+      mochatap: {
+        command:
+          './node_modules/.bin/mocha-phantomjs -R tap www/tests/index.html',
+        options: {
+          failOnError: true,
+          stdout: true
+        }
       }
     },
     jshint: {
@@ -130,6 +172,7 @@ module.exports = function(grunt) {
   
 
   // Custom tasks
+  grunt.registerTask('test', ['jshint', 'concat', 'min', 'shell:mochaspec']);
   grunt.registerTask('min', ['uglify']); // polyfil for uglify
   grunt.registerTask('debug','Create a debug build', function(platform) {
     grunt.task.run('jshint','concat','min');

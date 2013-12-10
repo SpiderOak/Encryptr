@@ -22,6 +22,7 @@ body {
   left: 0;
   bottom: 0;
   right: 0;
+  overflow: hidden;
 }
  
 .main {
@@ -84,11 +85,11 @@ body {
 }
  
 .nav .btn.right {
-  font-size: 200%;
+  /* */
 }
  
 .nav .btn.left {
-  font-size: 200%;
+  /* */
 }
  
 a.btn {

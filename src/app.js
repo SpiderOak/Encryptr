@@ -34,7 +34,7 @@ var Encryptr = (function (window, console, undefined) {
   };
  
   Encryptr.prototype.onDeviceReady = function(event) {
-    if (window.device.platform === "iOS" && parseFloat(window.device.version) >= 7.0) {
+    if (window.device && window.device.platform === "iOS" && parseFloat(window.device.version) >= 7.0) {
       window.document.querySelectorAll(".app")[0].style.top = "20px"; // status bar hax
     }
   };
