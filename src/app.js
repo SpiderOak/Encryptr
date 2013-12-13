@@ -16,6 +16,8 @@ var Encryptr = (function (window, console, undefined) {
     window.document.addEventListener("pause", this.onPause, false);
     window.document.addEventListener("offline", this.setOffline, false);
     window.document.addEventListener("online", this.setOnline, false);
+    // Set the hostname for the Crypton server
+    window.crypton.host = "192.168.1.12";
     // Render the login view (and bind its events)
     this.loginView = new this.LoginView().render();
     // Hax for Android 2.x not groking :active
@@ -32,6 +34,11 @@ var Encryptr = (function (window, console, undefined) {
       $this.removeClass("active");
     });
   };
+
+  Encryptr.prototype.noEffect = new window.BackStack.NoEffect();
+  Encryptr.prototype.fadeEffect = new window.BackStack.FadeEffect();
+  Encryptr.prototype.defaultEffect = new window.BackStack.SlideEffect();
+  Encryptr.prototype.defaultPopEffect = new window.BackStack.SlideEffect();
  
   Encryptr.prototype.onDeviceReady = function(event) {
     if (window.device && window.device.platform === "iOS" && parseFloat(window.device.version) >= 7.0) {
