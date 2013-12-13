@@ -3,7 +3,7 @@
  * Copyright (c) 2013 tommy-carlos williams (devgeeks);
  * License: Apache2 (http://www.apache.org/licenses/LICENSE-2.0)
  */
- (function(window, console, app, undefined) {
+ (function(window, console, undefined) {
   "use strict";
   console       = console || {};
   console.log   = console.log || function() {};
@@ -22,115 +22,128 @@
 
   Backbone.sync = function(method, model, options) {
     options = options || {};
-    if (!Backbone.session) {
-      options.error("No available session");
+    if (!window.app.session) {
+      if (options.error) options.error("No available session");
       return;
     }
+    if (!options.container) {
+      if (options.error) options.error("No container specified");
+      return;
+    }
+    var container = options.container;
     console.log(method);
     switch (method) {
       case "read":
         if (model.isNew && model.isNew()) {
-          options.success(model.toJSON());
+          if (options.success) options.success(model.toJSON());
           return;
         }
         if (!model.isNew) {
           console.log("COLLECTION, WHAT NOW?!");
           return;
         }
-        Backbone.session.load("Entries", function(err, entries) {
+        window.app.session.load(container, function(err, entries) {
           if (err) {
             // @TODO: Add a better error object to return
-            options.error(err);
+            if (options.error) options.error(err);
             return;
           }
           entries.get(model.id, function(err, entry) {
-            options.success(entry.attributes);
+            if (options.success) options.success(entry);
           });
         });
         break;
       case "create":
         // @TODO: get rid of hardcoded "window.app" session container var
-        //        ..think of a better way to store the session, maybe Backbone.session?
-        // @TODO: get rid of hardcoded "Entries" container name
-        Backbone.session.load("Entries", function(err, entries) {
+        //   ..think of a better way to store the session, maybe Backbone.session?
+        window.app.session.load(container, function(err, entries) {
           if (err) {
             // @TODO: Add a better error object to return
-            options.error(err);
+            if (options.error) options.error(err);
             return;
           }
           var modelId = guid();
           entries.add(modelId, function(err) {
             if (err) {
               // @TODO: Add a better error object to return
-              options.error(err);
+              if (options.error)  options.error(err);
               return;
             }
             entries.get(modelId, function(err, entry) {
               if (err) {
                 // @TODO: Add a better error object to return
-                options.error(err);
+                if (options.error)  options.error(err);
                 return;
               }
               var modelData = model.toJSON();
               modelData.id = modelId;
-              entry.attributes = modelData;
+              for(var data in modelData) {
+                if (modelData.hasOwnProperty(data)) {
+                  entry[data] = modelData[data];
+                }
+              }
+              // entry.attributes = modelData;
               
               entries.save(function(err) {
                 if (err) {
                   // @TODO: Add a better error object to return
-                  options.error(err);
+                  if (options.error)  options.error(err);
                   return;
                 }
                 model.id = modelId;
-                options.success(model.attributes);
+                if (options.success) options.success(entry);
               });
             });
           });
         });
         break;
       case "update":
-        Backbone.session.load("Entries", function(err, entries) {
+        window.app.session.load(container, function(err, entries) {
           if (err) {
             // @TODO: Add a better error object to return
-            options.error(err);
+            if (options.error)  options.error(err);
             return;
           }
-          entries.get(model.id, function(err, entry) {
-            entry.attributes = model.attributes;
+          entries.get(model[model.idAttribute], function(err, entry) {
+            // entry.attributes = model.attributes;
+            for (var attribute in model.attributes) {
+              entry[attribute] = model.attributes[attribute];
+            }
             entries.save(function(err) {
               if (err) {
                 // @TODO: Add a better error object to return
-                options.error(err);
+                if (options.error)  options.error(err);
                 return;
               }
-              options.success(model.attributes);
+              // ???
+              if (options.success) options.success(entry);
             });
           });
         });
         break;
       case "delete":
-        Backbone.session.load("Entries", function(err, entries) {
+        window.app.session.load(container, function(err, entries) {
           if (err) {
             // @TODO: Add a better error object to return
-            options.error(err);
+            if (options.error)  options.error(err);
             return;
           }
-          delete entries.keys[model.get(model.idAttribute)];
+          delete entries.keys[model[model.idAttribute]];
           if (model.isNew()) {
-            options.success(false);
+            if (options.success) options.success(false);
             return;
           }
           entries.save(function(err) {
             if (err) {
               // @TODO: Add a better error object to return
-              options.error(err);
+              if (options.error)  options.error(err);
               return;
             }
-            options.success(true);
+            if (options.success) options.success(true);
           });
         });
         break;
     }
   };
 
-})(this, this.console, this.app);
+})(this, this.console);
