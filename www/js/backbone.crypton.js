@@ -7,6 +7,7 @@
   "use strict";
   console       = console || {};
   console.log   = console.log || function() {};
+  var debug     = function(msg) { console.log(msg); };
   var Backbone  = window.Backbone,
       _         = window._,
       $         = window.Zepto,
@@ -24,17 +25,17 @@
     var _this = this;
     options = options || {};
     if (!window.app.session) {
-      console.log("ERROR: No available session");
+      debug("ERROR: No available session");
       if (options.error) options.error("No available session");
       return;
     }
     if (!options.container) {
-      console.log("ERROR: No container specified");
+      debug("ERROR: No container specified");
       if (options.error) options.error("No container specified");
       return;
     }
     var container = options.container;
-    console.log(method);
+    debug(method);
     switch (method) {
       case "read":
         if (model.isNew && model.isNew()) {
@@ -42,17 +43,17 @@
           return;
         }
         if (!model.isNew) {
-          console.log("COLLECTION, WHAT NOW?!");
+          debug("COLLECTION, WHAT NOW?!");
           return;
         }
         window.app.session.load(container, function(err, entries) {
           if (err) {
             // @TODO: Add a better error object to return
-            console.log("ERROR: " + err);
+            debug("ERROR: " + err);
             if (options.error) options.error(err);
             return;
           }
-          entries.get(model.id, function(err, entry) {
+          entries.get(model[model.idAttribute], function(err, entry) {
             if (options.success) options.success(entry);
           });
         });
@@ -63,7 +64,7 @@
         window.app.session.load(container, function(err, entries) {
           if (err) {
             // @TODO: Add a better error object to return
-            console.log("ERROR: " + err);
+            debug("ERROR: " + err);
             if (options.error) options.error(err);
             return;
           }
@@ -71,19 +72,19 @@
           entries.add(modelId, function(err) {
             if (err) {
               // @TODO: Add a better error object to return
-              console.log("ERROR: " + err);
+              debug("ERROR: " + err);
               if (options.error)  options.error(err);
               return;
             }
             entries.get(modelId, function(err, entry) {
               if (err) {
                 // @TODO: Add a better error object to return
-                console.log("ERROR: " + err);
+                debug("ERROR: " + err);
                 if (options.error)  options.error(err);
                 return;
               }
               var modelData = model.toJSON();
-              modelData.id = modelData.id || modelId;
+              modelData[model.idAttribute] = modelData[model.idAttribute] || modelId;
               for(var data in modelData) {
                 if (modelData.hasOwnProperty(data)) {
                   entry[data] = modelData[data];
@@ -94,11 +95,11 @@
               entries.save(function(err) {
                 if (err) {
                   // @TODO: Add a better error object to return
-                  console.log("ERROR: " + err);
+                  debug("ERROR: " + err);
                   if (options.error)  options.error(err);
                   return;
                 }
-                model.id = modelId;
+                model[model.idAttribute] = modelId;
                 if (options.success) options.success(entry);
               });
             });
@@ -109,7 +110,7 @@
         window.app.session.load(container, function(err, entries) {
           if (err) {
             // @TODO: Add a better error object to return
-            console.log("ERROR: " + err);
+            debug("ERROR: " + err);
             if (options.error)  options.error(err);
             return;
           }
@@ -120,23 +121,23 @@
                 return;
               }
               // @TODO: Add a better error object to return
-              console.log("ERROR: " + err);
+              debug("ERROR: " + err);
               if (options.error)  options.error(err);
               return;
             }
             // entry.attributes = model.attributes;
 
             for (var attribute in model.attributes) {
-              if (attribute === "id") continue;
+              if (attribute === model.idAttribute) continue;
               if (model.attributes.hasOwnProperty(attribute)) {
-                console.log(attribute);
+                debug(attribute);
                 entry[attribute] = model.attributes[attribute];
               }
             }
             entries.save(function(err) {
               if (err) {
                 // @TODO: Add a better error object to return
-                console.log("ERROR: " + err);
+                debug("ERROR: " + err);
                 if (options.error)  options.error(err);
                 return;
               }
@@ -150,7 +151,7 @@
         window.app.session.load(container, function(err, entries) {
           if (err) {
             // @TODO: Add a better error object to return
-            console.log("ERROR: " + err);
+            debug("ERROR: " + err);
             if (options.error)  options.error(err);
             return;
           }
@@ -162,7 +163,7 @@
           entries.save(function(err) {
             if (err) {
               // @TODO: Add a better error object to return
-              console.log("ERROR: " + err);
+              debug("ERROR: " + err);
               if (options.error)  options.error(err);
               return;
             }
