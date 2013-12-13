@@ -46,14 +46,18 @@
           navigator.notification.alert(err);
         }
         window.app.session = session;
-        window.app.session.create("Entries", function(err) {
-          window.app.session.load("Entries", function(err, entries) {
-            if (err) {
-              navigator.notification.alert(err);
-              return;
-            }
-            _this.dismiss();
-          });
+        window.app.session.load("entries", function(err, entries) {
+          if (err) {
+            navigator.notification.alert(err);
+            return;
+          }
+          // Push a ListView 
+          window.app.navigator.pushView(
+            window.app.EntriesView,
+            { collection: new window.app.EntriesCollection() },
+            window.app.noEffect
+          );
+          _this.dismiss();
         });
       });
     },

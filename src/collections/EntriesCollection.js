@@ -8,7 +8,7 @@
 
   var EntriesCollection = Backbone.Collection.extend({
     initialize: function() {
-      this.container = "Entries"; // default
+      this.container = "entries"; // default
       this.model = Encryptr.prototype.EntryModel; // default
     },
     fetch: function (options) {
@@ -17,7 +17,7 @@
       window.app.session.load(container, function(err, entries) {
         _this.set(
           _.map(entries.keys, function(entry, key){
-            return new _this.model(entry.attributes);
+            return new _this.model(entry);
           })
         );
       });
