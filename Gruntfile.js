@@ -160,27 +160,38 @@ module.exports = function(grunt) {
           cordova: true
         }
       }
+    },
+    dot: {
+      dist: {
+        options: {
+          variable  : 'tmpl',
+          requirejs : false
+        },
+        src  : ['tpl/**/*.html'],
+        dest : 'www/js/<%= pkg.name %>-templates.js'
+      }
     }
   });
 
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-dot-compiler');
   
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   
 
   // Custom tasks
-  grunt.registerTask('test', ['jshint', 'concat', 'min', 'shell:mochaspec']);
+  grunt.registerTask('test', ['jshint', 'dot', 'concat', 'min', 'shell:mochaspec']);
   grunt.registerTask('min', ['uglify']); // polyfil for uglify
   grunt.registerTask('debug','Create a debug build', function(platform) {
-    grunt.task.run('jshint', 'concat', 'min', 'shell:mochadot');
+    grunt.task.run('jshint', 'dot', 'concat', 'min', 'shell:mochadot');
     grunt.task.run('shell:debug_' + platform);
   });
 
   // Default task
-  grunt.registerTask('default', ['jshint', 'concat', 'min', 'shell:mochaspec']);
+  grunt.registerTask('default', ['jshint', 'dot', 'concat', 'min', 'shell:mochaspec']);
   
 
 };

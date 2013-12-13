@@ -28,6 +28,7 @@
     "grunt-contrib-uglify": "~0.2.0",
     "grunt-contrib-watch": "~0.3.1",
     "grunt-shell": "0.2.x",
+    "grunt-dot-compiler": "~0.3.14",
     "temporary": "0.0.5",
     "mocha": "~1.8.1",
     "chai": "~1.8.0",
