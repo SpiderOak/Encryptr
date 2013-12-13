@@ -33,12 +33,27 @@
       $(event.target).closest("div.login-input").removeClass("focused");
     },
     form_submitHandler: function(event) {
+      var _this = this;
       event.preventDefault();
 
       var username = $("#username").val().trim();
-      var password = $("#password").val();
-      // @TODO: Remove the below and actually log in
-      this.dismiss();
+      var passphrase = $("#passphrase").val();
+
+      $("input").blur();
+      
+      window.crypton.authorize(username, passphrase, function(err, session) {
+        if (err) {
+          navigator.notification.alert(err);
+        }
+        window.app.session = session;
+        window.app.session.load("Entries", function(err, entries) {
+          if (err) {
+            navigator.notification.alert(err);
+            return;
+          }
+          _this.dismiss();
+        });
+      });
     },
     loginButton_tapHandler: function(event) {
       event.preventDefault();

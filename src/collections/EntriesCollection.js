@@ -12,12 +12,12 @@
       this.model = Encryptr.prototype.EntryModel; // default
     },
     fetch: function (options) {
-      var that = this;
+      var _this = this;
       var container = options && options.container || this.container;
-      Backbone.session.load(container, function(err, entries) {
-        that.set(
+      window.app.session.load(container, function(err, entries) {
+        _this.set(
           _.map(entries.keys, function(entry, key){
-            return new that.model(entry.attributes);
+            return new _this.model(entry.attributes);
           })
         );
       });
