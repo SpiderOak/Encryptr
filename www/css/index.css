@@ -107,7 +107,7 @@ a.btn {
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 10px;
+  padding: 0;
 }
  
 .hidden {
@@ -169,7 +169,7 @@ input[type="password"] {
 }
 
 #username,
-#password {
+#passphrase {
   border: none;
   margin: 0;
 }
@@ -180,7 +180,7 @@ input[type="password"] {
   border-bottom: 1px solid rgb(200, 199, 204);
 }
 
-#password {
+#passphrase {
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   border-bottom: none;
@@ -223,4 +223,87 @@ a.button.loginButton {
   background: -webkit-linear-gradient(top, #999 0%, #666 100%);
   background: linear-gradient(to bottom, #999 0%, #666 100%);
   color: #fff;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  border-width: 0 0 0 1px;
+}
+
+ul li {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  border-top: 1px solid #ccc;
+  list-style-type: none;
+  margin: 0;
+  padding: 10px;
+  /*-webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);*/
+}
+
+ul li:last-child {
+  border-bottom: 1px solid #ccc;
+}
+
+ul li small {
+  font-size: 60%;
+  display: block;
+  position: static;
+  text-align: left;
+  overflow: hidden;
+  padding-left: 25px;
+  text-overflow: ellipsis;
+}
+
+ul li a {
+  position: relative;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  text-decoration: none;
+  display: block;
+  padding: 10px;
+  margin: -10px;
+  /*-webkit-transform: translateZ(0);
+  transform: translateZ(0);*/
+  color: #000;
+}
+
+ul li a.active {
+  background-image: none;
+  /*background-color: #3366cc;*/
+  background-color: #ccc;
+  color: black;
+}
+
+ul li ::-webkit-input-placeholder {
+  color: #8293a1;
+  text-shadow: #e8ebee 0 1px 0;
+}
+
+ul li.sep {
+  font-size: 90%;
+  padding: 2px 10px;
+  background-color: #666;
+  color: white;
+  border: none;
+}
+
+.entriesViewLoading .sep {
+  background-color: #e4e4e4;
+  color: #000;
+}
+
+.entriesViewLoading li {
+  text-align: center;
+}
+
+.entriesViewLoading {
+  display: none;
+}
+
+.entriesViewLoading.loadingEntries {
+  display: block;
 }
