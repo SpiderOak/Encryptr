@@ -46,12 +46,14 @@
           navigator.notification.alert(err);
         }
         window.app.session = session;
-        window.app.session.load("Entries", function(err, entries) {
-          if (err) {
-            navigator.notification.alert(err);
-            return;
-          }
-          _this.dismiss();
+        window.app.session.create("Entries", function(err) {
+          window.app.session.load("Entries", function(err, entries) {
+            if (err) {
+              navigator.notification.alert(err);
+              return;
+            }
+            _this.dismiss();
+          });
         });
       });
     },
