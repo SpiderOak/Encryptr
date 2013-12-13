@@ -21,12 +21,15 @@
   }
 
   Backbone.sync = function(method, model, options) {
+    var _this = this;
     options = options || {};
     if (!window.app.session) {
+      console.log("ERROR: No available session");
       if (options.error) options.error("No available session");
       return;
     }
     if (!options.container) {
+      console.log("ERROR: No container specified");
       if (options.error) options.error("No container specified");
       return;
     }
@@ -45,6 +48,7 @@
         window.app.session.load(container, function(err, entries) {
           if (err) {
             // @TODO: Add a better error object to return
+            console.log("ERROR: " + err);
             if (options.error) options.error(err);
             return;
           }
@@ -59,6 +63,7 @@
         window.app.session.load(container, function(err, entries) {
           if (err) {
             // @TODO: Add a better error object to return
+            console.log("ERROR: " + err);
             if (options.error) options.error(err);
             return;
           }
@@ -66,17 +71,19 @@
           entries.add(modelId, function(err) {
             if (err) {
               // @TODO: Add a better error object to return
+              console.log("ERROR: " + err);
               if (options.error)  options.error(err);
               return;
             }
             entries.get(modelId, function(err, entry) {
               if (err) {
                 // @TODO: Add a better error object to return
+                console.log("ERROR: " + err);
                 if (options.error)  options.error(err);
                 return;
               }
               var modelData = model.toJSON();
-              modelData.id = modelId;
+              modelData.id = modelData.id || modelId;
               for(var data in modelData) {
                 if (modelData.hasOwnProperty(data)) {
                   entry[data] = modelData[data];
@@ -87,6 +94,7 @@
               entries.save(function(err) {
                 if (err) {
                   // @TODO: Add a better error object to return
+                  console.log("ERROR: " + err);
                   if (options.error)  options.error(err);
                   return;
                 }
@@ -101,17 +109,34 @@
         window.app.session.load(container, function(err, entries) {
           if (err) {
             // @TODO: Add a better error object to return
+            console.log("ERROR: " + err);
             if (options.error)  options.error(err);
             return;
           }
           entries.get(model[model.idAttribute], function(err, entry) {
+            if (err) {
+              if (err === "Key does not exist") {
+                Backbone.sync("create", model, options);
+                return;
+              }
+              // @TODO: Add a better error object to return
+              console.log("ERROR: " + err);
+              if (options.error)  options.error(err);
+              return;
+            }
             // entry.attributes = model.attributes;
+
             for (var attribute in model.attributes) {
-              entry[attribute] = model.attributes[attribute];
+              if (attribute === "id") continue;
+              if (model.attributes.hasOwnProperty(attribute)) {
+                console.log(attribute);
+                entry[attribute] = model.attributes[attribute];
+              }
             }
             entries.save(function(err) {
               if (err) {
                 // @TODO: Add a better error object to return
+                console.log("ERROR: " + err);
                 if (options.error)  options.error(err);
                 return;
               }
@@ -125,6 +150,7 @@
         window.app.session.load(container, function(err, entries) {
           if (err) {
             // @TODO: Add a better error object to return
+            console.log("ERROR: " + err);
             if (options.error)  options.error(err);
             return;
           }
@@ -136,6 +162,7 @@
           entries.save(function(err) {
             if (err) {
               // @TODO: Add a better error object to return
+              console.log("ERROR: " + err);
               if (options.error)  options.error(err);
               return;
             }
