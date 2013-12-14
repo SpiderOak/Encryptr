@@ -144,18 +144,22 @@ module.exports = function(grunt) {
     jshint: {
       files: ['Gruntfile.js', 'src/*.js', 'src/**/*.js'],
       options: {
-        curly: true,
-        eqeqeq: true,
-        immed: true,
-        latedef: true,
+        eqeqeq: false,
+        laxbreak: true,
+        undef: true,
         newcap: true,
         noarg: true,
-        sub: true,
-        undef: true,
+        strict: false,
+        trailing: true,
+        onecase: true,
         boss: true,
-        devel: true,
         eqnull: true,
+        onevar: false,
+        evil: true,
+        regexdash: true,
         browser: true,
+        wsh: true,
+        sub: true,
         globals: {
           cordova: true
         }
@@ -177,10 +181,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-dot-compiler');
-  
+
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
-  
+
 
   // Custom tasks
   grunt.registerTask('test', ['jshint', 'dot', 'concat', 'min', 'shell:mochaspec']);
@@ -192,6 +196,6 @@ module.exports = function(grunt) {
 
   // Default task
   grunt.registerTask('default', ['jshint', 'dot', 'concat', 'min', 'shell:mochaspec']);
-  
+
 
 };

@@ -129,7 +129,8 @@ a.btn {
   font-size: 70%;
 }
  
-.login {
+.login,
+.signup {
   position: absolute;
   top: 0;
   left: 0;
@@ -139,6 +140,11 @@ a.btn {
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   z-index: 101;
+}
+
+.signup {
+  background: -webkit-linear-gradient(top, #ccc 0%, #999 100%);
+  background: linear-gradient(to bottom, #ccc 0%, #999 100%);
 }
 
 .middle {
@@ -160,7 +166,7 @@ textarea, select {
   margin: 0;
   display: block;
   width: 100%;
-  font: normal 100% "Roboto", Helvetica, Arial, sans-serif;
+  font: normal 100% -apple-system-font, "Roboto", Helvetica, Arial, sans-serif;
   outline: 0 none;
 }
 
@@ -179,18 +185,22 @@ input[type="password"] {
 }
 
 #username,
-#passphrase {
+#newusername,
+#passphrase,
+#newpassphrase {
   border: none;
   margin: 0;
 }
 
+#newusername,
 #username {
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   border-bottom: 1px solid rgb(200, 199, 204);
 }
 
-#passphrase {
+#passphrase,
+#newpassphrase {
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
   border-bottom: none;
@@ -202,6 +212,14 @@ div.login-input {
 
 .spacer5 {
   height: 0;
+}
+
+a {
+  color: inherit;
+}
+
+a.active {
+  color: #999;
 }
 
 a.button,
@@ -221,6 +239,12 @@ button {
   color: #666;
 }
 
+a.button.primary {
+  background: -webkit-linear-gradient(top, #999 0%, #666 100%);
+  background: linear-gradient(to bottom, #999 0%, #666 100%);
+  color: #fff;
+}
+
 a.button.active {
   color: #333;
   background: -webkit-linear-gradient(top, #ddd 0%, #bbb 100%);
@@ -229,10 +253,12 @@ a.button.active {
   outline:0;
 }
 
-a.button.loginButton {
-  background: -webkit-linear-gradient(top, #999 0%, #666 100%);
-  background: linear-gradient(to bottom, #999 0%, #666 100%);
+a.button.primary.active {
   color: #fff;
+  background: -webkit-linear-gradient(top, #888 0%, #555 100%);
+  background: linear-gradient(to bottom, #888 0%, #555 100%);
+  box-shadow: none;
+  outline:0;
 }
 
 ul {

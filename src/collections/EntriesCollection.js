@@ -21,6 +21,10 @@
           })
         );
       });
+    },
+    sync: function() {
+      // ...
+      console.log("@TODO: EntriesCollection.sync");
     }
   });
 

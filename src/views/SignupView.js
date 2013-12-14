@@ -6,24 +6,26 @@
     _         = window._,
     $         = window.Zepto;
 
-  var LoginView = Backbone.View.extend({
-    el: "#login",
+  var SignupView = Backbone.View.extend({
+    className: "signup",
     events: {
       "submit form": "form_submitHandler",
-      "tap .loginButton": "loginButton_tapHandler",
-      "tap .signupButton": "signupButton_tapHandler"
+      "tap .signupButton": "signupButton_tapHandler",
+      "tap a.backToLogin": "backToLogin_tapHandler"
     },
     init: function() {
       _.bindAll(this,
           "input_focusHandler",
           "input_blurHandler",
           "form_submitHandler",
-          "loginButton_tapHandler",
-          "signupButton_tapHandler");
-      $(document).on("focus", "#login input", this.input_focusHandler);
-      $(document).on("blur", "#login input", this.input_blurHandler);
+          "signupButton_tapHandler",
+          "backToLogin_tapHandler");
+      $(document).on("focus", ".signup input", this.input_focusHandler);
+      $(document).on("blur", ".signup input", this.input_blurHandler);
     },
     render: function() {
+      this.$el.html(window.tmpl["signupView"]({}));
+      $(".main").append(this.el);
       return this;
     },
     input_focusHandler: function(event) {
@@ -36,46 +38,54 @@
       var _this = this;
       event.preventDefault();
 
-      var username = $("#username").val().trim();
-      var passphrase = $("#passphrase").val();
+      var username = $("#newusername").val().trim();
+      var passphrase = $("#newpassphrase").val();
 
       $("input").blur();
 
-      window.crypton.authorize(username, passphrase, function(err, session) {
+      window.crypton.generateAccount(username, passphrase, function(err, account) {
         if (err) {
           navigator.notification.alert(
-            "Username or Passphrase is incorrect",
+            err,
             function() {},
-            "Authentication error");
+            "Signup error");
+            return;
         }
-        window.app.session = session;
-        window.app.session.load("entries", function(err, entries) {
+        // Now log in...
+        window.crypton.authorize(username, passphrase, function(err, session) {
           if (err) {
-            navigator.notification.alert(err);
+            navigator.notification.alert(
+              err,
+              function() {},
+              "Authentication error");
             return;
           }
-          // Set up MainView
-          window.app.mainView = new window.app.MainView().render();
-          // Push a ListView 
-          window.app.navigator.pushView(
-            window.app.EntriesView,
-            { collection: new window.app.EntriesCollection() },
-            window.app.noEffect
-          );
-          _this.dismiss();
+          window.app.session = session;
+          window.app.session.create("entries", function(err, entries){
+            if (err) {
+              navigator.notification.alert(err);
+              return;
+            }
+            // Push a ListView 
+            window.app.navigator.pushView(
+              window.app.EntriesView,
+              { collection: new window.app.EntriesCollection() },
+              window.app.noEffect
+            );
+            window.app.loginView.dismiss();
+            _this.dismiss();
+          });
         });
       });
     },
-    loginButton_tapHandler: function(event) {
+    signupButton_tapHandler: function(event) {
       event.preventDefault();
       this.form_submitHandler(event);
     },
-    signupButton_tapHandler: function(event) {
-      this.signupView = new Encryptr.prototype.SignupView();
-      this.signupView.dismiss();
-      this.signupView.render();
-      this.disable();
-      this.signupView.show();
+    backToLogin_tapHandler: function(event) {
+      // window.app.loginView.show();
+      window.app.loginView.enable();
+      this.dismiss();
     },
     dismiss: function() {
       if (!this.$el.hasClass("dismissed")) {
@@ -92,15 +102,9 @@
         this.$el.animate({"-webkit-transform":"translate3d(0,0,0)"}, 250);
         this.$el.removeClass("dismissed");
       }
-    },
-    disable: function() {
-      this.$("input").attr("disabled", true);
-    },
-    enable: function() {
-      this.$("input").removeAttr("disabled");
     }
   });
 
-  Encryptr.prototype.LoginView = LoginView;
+  Encryptr.prototype.SignupView = SignupView;
 
 })(this, this.console, this.Encryptr);

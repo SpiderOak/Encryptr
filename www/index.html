@@ -11,12 +11,7 @@
   <body ontouchstart="">
   <div class="app">
     <div id="main" class="main">
-      <div id="nav" class="nav">
-        <a class="btn menu-btn left"><i class="fa fa-ellipsis-v"></i></a>
-        <a class="btn back-btn left hidden"><i class="fa fa-arrow-left"></i></a>
-        <div class="title">Encryptr</div>
-        <a class="btn add-btn right"><i class="fa fa-plus"></i></a>
-      </div>
+      <div id="nav" class="nav"></div>
       <div id="subviews" class="subviews" style="overflow: auto !important; -webkit-overflow-scrolling: touch;"></div>
       <div id="login" class="login">
         <h2 class="middle"><i class="fa fa-lock"></i> Encryptr</h2>
@@ -34,7 +29,7 @@
                          placeholder="Passphrase"
                          tabindex="2" />
             </div>
-            <a class="button loginButton" tabindex="-1">Log in</a>
+            <a class="button loginButton primary" tabindex="-1">Log in</a>
             <a class="button signupButton" tabindex="-1">Sign up</a>
             <input type="submit" style="visibility:hidden" tabindex="-1"/>
           </form>

@@ -10,28 +10,22 @@
     events: {
       // ...
     },
-    initialize: function () {
+    initialize: function() {
       _.bindAll(this, "render", "addAll", "addOne");
       this.collection.bind("reset", this.addAll, this);
       this.collection.bind("add", this.addOne, this);
       this.subViews = [];
     },
-  
-    render: function () {
-      console.log("render");
+    render: function() {
       this.$el.html(window.tmpl["entriesView"]({}));
       this.collection.fetch();
       return this;
     },
-  
     addAll: function () {
-      console.log("addAll");
       this.$("ul").html("");
       this.collection.each(this.addOne);
     },
-  
-    addOne: function (model) {
-      console.log("addOne");
+    addOne: function(model) {
       var view = new Encryptr.prototype.EntriesListItemView({
         model: model
       });
@@ -47,10 +41,12 @@
     events: {
       "tap a": "a_tapHandler"
     },
-    init: function() {
+    initialize: function() {
       _.bindAll(this, "render");
+      this.model.bind("change", this.render);
     },
     render: function() {
+      console.log("render");
       this.$el.html(
         window.tmpl["entriesListItemView"](
           this.model.toJSON()
@@ -59,7 +55,7 @@
       return this;
     },
     a_tapHandler: function(event) {
-      // ...
+      $(".nav .btn.left").toggleClass("hidden");
     }
   });
   Encryptr.prototype.EntriesListItemView = EntriesListItemView;
