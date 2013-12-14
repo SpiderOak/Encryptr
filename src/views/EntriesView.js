@@ -46,7 +46,6 @@
       this.model.bind("change", this.render);
     },
     render: function() {
-      console.log("render");
       this.$el.html(
         window.tmpl["entriesListItemView"](
           this.model.toJSON()
