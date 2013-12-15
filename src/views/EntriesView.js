@@ -31,6 +31,12 @@
       });
       this.$("ul").append(view.render().el);
       this.subViews.push(view);
+    },
+    close: function() {
+      _.each(this.subViews, function(view) {
+        view.close();
+      });
+      this.remove();
     }
   });
   Encryptr.prototype.EntriesView = EntriesView;
@@ -54,7 +60,13 @@
       return this;
     },
     a_tapHandler: function(event) {
+      if (!$(".menu").hasClass("dismissed")) {
+        return;
+      }
       $(".nav .btn.left").toggleClass("hidden");
+    },
+    close: function() {
+      this.remove();
     }
   });
   Encryptr.prototype.EntriesListItemView = EntriesListItemView;

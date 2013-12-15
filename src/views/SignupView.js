@@ -13,7 +13,7 @@
       "tap .signupButton": "signupButton_tapHandler",
       "tap a.backToLogin": "backToLogin_tapHandler"
     },
-    init: function() {
+    initialize: function() {
       _.bindAll(this,
           "input_focusHandler",
           "input_blurHandler",

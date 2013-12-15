@@ -11,14 +11,19 @@
     events: {
       "tap .menu-btn": "menuButton_tapHandler",
       "tap .back-btn": "backButton_tapHandler",
-      "tap .add-btn": "addButton_tapHandler"
+      "tap .add-btn": "addButton_tapHandler",
+      "tap .nav": "menuClose_tapHandler",
+      "tap .subviews": "menuClose_tapHandler"
     },
-    init: function(options) {
+    initialize: function(options) {
       _.bindAll(this,
           "menuButton_tapHandler",
           "backButton_tapHandler",
           "addButton_tapHandler",
-          "backbuttonDisplay");
+          "backButtonDisplay");
+      this.menuView = new Encryptr.prototype.MenuView().render();
+      this.menuView.dismiss();
+      this.$el.append(this.menuView.el);
     },
     render: function() {
       this.$(".nav").html(
@@ -28,7 +33,7 @@
     },
     menuButton_tapHandler: function(event) {
       event.preventDefault();
-      console.log("menu");
+      this.menuView.toggle();
     },
     backButton_tapHandler: function(event) {
       event.preventDefault();
@@ -36,6 +41,9 @@
       window.app.navigator.popView(window.app.defaultPopEffect);
     },
     addButton_tapHandler: function(event) {
+      if (!this.menuView.$el.hasClass("dismissed")) {
+        return;
+      }
       console.log("add");
       event.preventDefault();
     },
@@ -50,6 +58,20 @@
       }
       this.$(".back-btn").addClass("hidden");
       this.$(".menu-btn").removeClass("hidden");
+    },
+    menuClose_tapHandler: function(event) {
+      if (!this.menuView.$el.hasClass("dismissed") &&
+          !$(event.target).hasClass("fa-ellipsis-v") &&
+          !$(event.target).hasClass("menu-btn")) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        this.menuView.dismiss();
+      }
+    },
+    close: function() {
+      this.menuView.close();
+      this.remove();
     }
   });
 

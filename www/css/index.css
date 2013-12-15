@@ -85,13 +85,22 @@ body {
   left: 0;
   top: 0;
 }
- 
-.nav .btn.right {
-  /* */
+
+.menu {
+  position: absolute;
+  top: 44px;
+  left: 0;
+  width: 150px;
+  background-color: #e4e4e4;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
 }
- 
-.nav .btn.left {
-  /* */
+
+.menu ul li {
+  background-color: #e4e4e4;
+}
+
+.menu ul li a.active {
+  background-color: #ccc;
 }
  
 a.btn {
