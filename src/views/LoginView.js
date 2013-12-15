@@ -71,15 +71,15 @@
       this.form_submitHandler(event);
     },
     signupButton_tapHandler: function(event) {
+      this.disable();
       this.signupView = new Encryptr.prototype.SignupView();
       this.signupView.dismiss();
       this.signupView.render();
-      this.disable();
       this.signupView.show();
     },
     dismiss: function() {
       if (!this.$el.hasClass("dismissed")) {
-        this.$("input").attr("disabled", true);
+        // this.$("input").attr("disabled", true);
         this.$el.animate({"-webkit-transform":"translate3d(0,100%,0)"}, 100);
         this.$el.addClass("dismissed");
         // Clear username and password values
@@ -88,7 +88,7 @@
     },
     show: function() {
       if (this.$el.hasClass("dismissed")) {
-        this.$("input").removeAttr("disabled");
+        // this.$("input").removeAttr("disabled");
         this.$el.animate({"-webkit-transform":"translate3d(0,0,0)"}, 250);
         this.$el.removeClass("dismissed");
       }

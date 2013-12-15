@@ -63,9 +63,6 @@
       if (!this.menuView.$el.hasClass("dismissed") &&
           !$(event.target).hasClass("fa-ellipsis-v") &&
           !$(event.target).hasClass("menu-btn")) {
-        event.preventDefault();
-        event.stopPropagation();
-        event.stopImmediatePropagation();
         this.menuView.dismiss();
       }
     },

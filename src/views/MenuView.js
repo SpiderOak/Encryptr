@@ -9,17 +9,33 @@
   var MenuView = Backbone.View.extend({
     className: "menu",
     events: {
-      "tap a": "a_tapHandler"
+      "tap .menu-settings": "settings_tapHandler",
+      "tap .menu-logout": "logout_tapHandler"
     },
     initialize: function() {
-      _.bindAll(this, "a_tapHandler");
+      _.bindAll(this, "settings_tapHandler", "logout_tapHandler");
     },
     render: function() {
       this.$el.html(window.tmpl["menuView"]({}));
       return this;
     },
-    a_tapHandler: function(event) {
+    settings_tapHandler: function(event) {
       this.dismiss();
+    },
+    logout_tapHandler: function(event) {
+      event.preventDefault();
+      window.app.loginView.disable();
+      this.dismiss();
+      // Throw up the login screen
+      window.app.loginView.show();
+      window.setTimeout(function() {
+        window.app.session = undefined;
+        window.app.navigator.popAll(window.app.noEffect);
+        window.app.mainView.menuView.close();
+      },100);
+      window.setTimeout(function() {
+        window.app.loginView.enable();
+      },350);
     },
     dismiss: function() {
       if (!this.$el.hasClass("dismissed")) {
