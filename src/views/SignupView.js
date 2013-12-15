@@ -66,6 +66,8 @@
               navigator.notification.alert(err);
               return;
             }
+            // Set up MainView
+            window.app.mainView = new window.app.MainView().render();
             // Push a ListView 
             window.app.navigator.pushView(
               window.app.EntriesView,

@@ -24,6 +24,7 @@
       $(document).on("blur", "#login input", this.input_blurHandler);
     },
     render: function() {
+      this.signupView = new Encryptr.prototype.SignupView();
       return this;
     },
     input_focusHandler: function(event) {
@@ -72,7 +73,6 @@
     },
     signupButton_tapHandler: function(event) {
       this.disable();
-      this.signupView = new Encryptr.prototype.SignupView();
       this.signupView.dismiss();
       this.signupView.render();
       this.signupView.show();
