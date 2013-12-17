@@ -39,22 +39,24 @@
     },
     dismiss: function() {
       if (!this.$el.hasClass("dismissed")) {
+        var _this = this;
         this.$("input").attr("disabled", true);
         this.$el.animate({
-          "-webkit-transform":"scale3d(0.5,0.5,0.5) translate3d(-50%,-50%,0)",
+          "-webkit-transform":"scale3d(0.8,0.8,0.8) translate3d(-10%,-10%,0)",
           "opacity":"0"
-        }, 100, "linear");
-        this.$el.addClass("dismissed");
+        }, 100, "linear", function() {
+          _this.$el.addClass("dismissed");
+        });
       }
     },
     show: function() {
       if (this.$el.hasClass("dismissed")) {
+        this.$el.removeClass("dismissed");
         this.$("input").removeAttr("disabled");
         this.$el.animate({
           "-webkit-transform":"scale3d(1,1,1) translate3d(0,0,0)",
           "opacity":"1"
-        }, 150, "linear");
-        this.$el.removeClass("dismissed");
+        }, 100, "linear");
       }
     },
     toggle: function() {

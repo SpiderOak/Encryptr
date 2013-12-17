@@ -23,6 +23,7 @@
 
   Backbone.sync = function(method, model, options) {
     var _this = this;
+    var session = window.app.accountModel.get("session");
     var errorHandler = function (err, options) {
       debug("ERROR: " + err);
       return options.error && options.error(err);
@@ -31,7 +32,7 @@
       return options.success && options.success(resp);
     };
     options = options || {};
-    if (!window.app.accountModel.session) {
+    if (!session) {
       debug("ERROR: No available session");
       return options.error && options.error("No available session");
     }
@@ -52,7 +53,7 @@
           // Should we be calling model.collection.sync?
           return;
         }
-        window.app.accountModel.session.load(container, function(err, entries) {
+        session.load(container, function(err, entries) {
           if (err) return errorHandler(err, options);
           entries.get(model[model.idAttribute], function(err, entry) {
             return successHandler(entry);
@@ -60,7 +61,7 @@
         });
         break;
       case "create":
-        window.app.accountModel.session.load(container, function(err, entries) {
+        session.load(container, function(err, entries) {
           if (err) return errorHandler(err, options);
           var modelId = guid();
           entries.add(modelId, function(err) {
@@ -85,7 +86,7 @@
         });
         break;
       case "update":
-        window.app.accountModel.session.load(container, function(err, entries) {
+        session.load(container, function(err, entries) {
           if (err) return errorHandler(err, options);
           entries.get(model[model.idAttribute], function(err, entry) {
             if (err) {
@@ -110,7 +111,7 @@
         });
         break;
       case "delete":
-        window.app.accountModel.session.load(container, function(err, entries) {
+        session.load(container, function(err, entries) {
           if (err) return errorHandler(err, options);
           delete entries.keys[model[model.idAttribute]];
           if (model.isNew()) {

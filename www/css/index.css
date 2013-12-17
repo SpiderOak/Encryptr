@@ -353,6 +353,10 @@ ul li.sep {
   display: block;
 }
 
+.menu.dismissed {
+  display: none;
+}
+
 /* Override some defaults from offline js */
 .offline-ui {
   top: auto;
