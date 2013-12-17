@@ -352,3 +352,14 @@ ul li.sep {
 .entriesViewLoading.loadingEntries {
   display: block;
 }
+
+/* Override some defaults from offline js */
+.offline-ui {
+  top: auto;
+  bottom: 0;
+  padding: 5px !important;
+}
+
+.offline-ui-retry {
+  line-height: 30px !important;
+}

@@ -24,7 +24,8 @@ var Encryptr = (function (window, console, undefined) {
       direction: "right"
     });
     // Set the hostname for the Crypton server
-    window.crypton.host = "192.168.1.12";
+    // window.crypton.host = "192.168.1.12";
+    window.crypton.host = "localhost";
     // Render the login view (and bind its events)
     this.loginView = new this.LoginView().render();
     // Hax for Android 2.x not groking :active

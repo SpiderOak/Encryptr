@@ -12,6 +12,8 @@
     "underscore": "~1.5.2",
     "backbone": "~1.1.0",
     "backstack": "https://github.com/pwalczyszyn/backstack.git",
-    "moment": "~2.0.0"
+    "moment": "~2.0.0",
+    "offline-js-min": "https://raw.github.com/HubSpot/offline/v0.4.7/offline.min.js",
+    "offline-css": "http://github.hubspot.com/offline/themes/offline-theme-default.css"
   }
 }

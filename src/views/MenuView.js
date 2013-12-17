@@ -29,7 +29,7 @@
       // Throw up the login screen
       window.app.loginView.show();
       window.setTimeout(function() {
-        window.app.session = undefined;
+        delete window.app.session;
         window.app.navigator.popAll(window.app.noEffect);
         window.app.mainView.menuView.close();
       },100);

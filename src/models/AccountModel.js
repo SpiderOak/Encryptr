@@ -9,7 +9,7 @@
   var AccountModel = Backbone.Model.extend({
     defaults: {
       username: "",
-      password: "",
+      passphrase: "",
       session: undefined
     },
     initialize: function() {

@@ -63,6 +63,18 @@ module.exports = function(grunt) {
         ],
         dest: 'www/components/moment/moment.js'
       },
+      offlinejs: {
+        src: [
+          'components/offline-js-min/index.js'
+        ],
+        dest: 'www/components/offline-js-min/index.js'
+      },
+      offlinecss: {
+        src: [
+          'components/offline-css/index.css'
+        ],
+        dest: 'www/components/offline-css/index.css'
+      },
       tests: {
         options: {
           banner: '<%= meta.banner %>'

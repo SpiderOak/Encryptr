@@ -22,6 +22,7 @@
   }
 
   Backbone.sync = function(method, model, options) {
+    var _this = this;
     var errorHandler = function (err, options) {
       debug("ERROR: " + err);
       return options.error && options.error(err);
@@ -29,9 +30,8 @@
     var successHandler = function(resp) {
       return options.success && options.success(resp);
     };
-    var _this = this;
     options = options || {};
-    if (!window.app.session) {
+    if (!window.app.accountModel.session) {
       debug("ERROR: No available session");
       return options.error && options.error("No available session");
     }
@@ -48,10 +48,11 @@
           return successHandler(model.toJSON());
         }
         if (!model.isNew) {
-          debug("COLLECTION, WHAT NOW?!");
+          debug("Collection: This should not happen.");
+          // Should we be calling model.collection.sync?
           return;
         }
-        window.app.session.load(container, function(err, entries) {
+        window.app.accountModel.session.load(container, function(err, entries) {
           if (err) return errorHandler(err, options);
           entries.get(model[model.idAttribute], function(err, entry) {
             return successHandler(entry);
@@ -59,7 +60,7 @@
         });
         break;
       case "create":
-        window.app.session.load(container, function(err, entries) {
+        window.app.accountModel.session.load(container, function(err, entries) {
           if (err) return errorHandler(err, options);
           var modelId = guid();
           entries.add(modelId, function(err) {
@@ -84,7 +85,7 @@
         });
         break;
       case "update":
-        window.app.session.load(container, function(err, entries) {
+        window.app.accountModel.session.load(container, function(err, entries) {
           if (err) return errorHandler(err, options);
           entries.get(model[model.idAttribute], function(err, entry) {
             if (err) {
@@ -109,7 +110,7 @@
         });
         break;
       case "delete":
-        window.app.session.load(container, function(err, entries) {
+        window.app.accountModel.session.load(container, function(err, entries) {
           if (err) return errorHandler(err, options);
           delete entries.keys[model[model.idAttribute]];
           if (model.isNew()) {
