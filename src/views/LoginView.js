@@ -37,6 +37,8 @@
       var _this = this;
       event.preventDefault();
 
+      $(".blocker").show();
+
       var username = $("#username").val().trim();
       var passphrase = $("#passphrase").val();
 
@@ -48,6 +50,8 @@
             "Username or Passphrase is incorrect",
             function() {},
             "Authentication error");
+          $(".blocker").hide();
+          return;
         }
         window.app.session = session;
         window.app.accountModel = new window.app.AccountModel({
@@ -58,6 +62,7 @@
         window.app.session.load("entries", function(err, entries) {
           if (err) {
             navigator.notification.alert(err);
+            $(".blocker").hide();
             return;
           }
           // Set up MainView
@@ -68,6 +73,7 @@
             { collection: new window.app.EntriesCollection() },
             window.app.noEffect
           );
+          $(".blocker").hide();
           _this.dismiss();
         });
       });

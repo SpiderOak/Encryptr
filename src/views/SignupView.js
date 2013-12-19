@@ -38,6 +38,8 @@
       var _this = this;
       event.preventDefault();
 
+      $(".blocker").show();
+
       var username = $("#newusername").val().trim();
       var passphrase = $("#newpassphrase").val();
 
@@ -49,7 +51,8 @@
             err,
             function() {},
             "Signup error");
-            return;
+          $(".blocker").hide();
+          return;
         }
         // Now log in...
         window.crypton.authorize(username, passphrase, function(err, session) {
@@ -58,12 +61,14 @@
               err,
               function() {},
               "Authentication error");
+            $(".blocker").hide();
             return;
           }
           window.app.session = session;
           window.app.session.create("entries", function(err, entries){
             if (err) {
               navigator.notification.alert(err);
+              $(".blocker").hide();
               return;
             }
             // Set up MainView
@@ -74,6 +79,7 @@
               { collection: new window.app.EntriesCollection() },
               window.app.noEffect
             );
+            $(".blocker").hide();
             window.app.loginView.dismiss();
             _this.dismiss();
           });

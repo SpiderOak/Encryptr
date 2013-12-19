@@ -7,6 +7,7 @@
   $         = window.Zepto;
 
   var EntriesView = Backbone.View.extend({
+    destructionPolicy: "never",
     events: {
       // ...
     },
@@ -49,7 +50,7 @@
     },
     initialize: function() {
       _.bindAll(this, "render");
-      this.model.bind("change", this.render);
+      this.model.bind("change", this.render, this);
     },
     render: function() {
       this.$el.html(
@@ -60,10 +61,15 @@
       return this;
     },
     a_tapHandler: function(event) {
+      var _this = this;
       if (!$(".menu").hasClass("dismissed")) {
         return;
       }
-      $(".nav .btn.left").toggleClass("hidden");
+      // $(".nav .btn.left").toggleClass("hidden");
+      window.app.mainView.backButtonDisplay(true);
+      window.app.navigator.pushView(window.app.EntryView, {
+        model: _this.model
+      }, window.app.defaultEffect);
     },
     close: function() {
       this.remove();

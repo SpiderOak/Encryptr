@@ -1,0 +1,9 @@
+<ul>
+	<li><strong>{{= it.label }}</strong></li>
+	<li class="sep">Type</li>
+	<li><em>{{= it.type }}</em></li>
+	{{ _.each(it.items, function(item) { }}
+	<li class="sep">{{= item.key}}</li>
+	<li><a>{{= item.value }}</a></li>
+	{{ }); }}
+</ul>

@@ -39,6 +39,7 @@
       event.preventDefault();
       console.log("back");
       window.app.navigator.popView(window.app.defaultPopEffect);
+      this.backButtonDisplay(false);
     },
     addButton_tapHandler: function(event) {
       if (!this.menuView.$el.hasClass("dismissed")) {
