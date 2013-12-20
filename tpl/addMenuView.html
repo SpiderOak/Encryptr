@@ -1,0 +1,5 @@
+<ul>
+{{ _.each(it.types, function(type, index) { }}
+	<li><a data-model="{{= index }}">{{= type.prototype.displayName }}</a></li>
+{{ }); }}
+</ul>

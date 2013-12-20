@@ -23,7 +23,10 @@
           "backButtonDisplay");
       this.menuView = new Encryptr.prototype.MenuView().render();
       this.menuView.dismiss();
+      this.addMenuView = new Encryptr.prototype.AddMenuView().render();
+      this.addMenuView.dismiss();
       this.$el.append(this.menuView.el);
+      this.$el.append(this.addMenuView.el);
     },
     render: function() {
       this.$(".nav").html(
@@ -45,8 +48,8 @@
       if (!this.menuView.$el.hasClass("dismissed")) {
         return;
       }
-      console.log("add");
       event.preventDefault();
+      this.addMenuView.toggle();
     },
     setTitle: function(title) {
       this.$(".nav .title").html(title);
@@ -66,10 +69,15 @@
           !$(event.target).hasClass("menu-btn")) {
         this.menuView.dismiss();
       }
+      if (!this.addMenuView.$el.hasClass("dismissed") &&
+          !$(event.target).hasClass("fa-plus") &&
+          !$(event.target).hasClass("menu-btn")) {
+        this.addMenuView.dismiss();
+      }
     },
     close: function() {
       this.menuView.close();
-      this.remove();
+      this.addMenuView.close();
     }
   });
 

@@ -86,20 +86,28 @@ body {
   top: 0;
 }
 
-.menu {
+.menu,
+.addMenu {
   position: absolute;
   top: 44px;
   left: 0;
-  width: 150px;
+  min-width: 150px;
   background-color: #e4e4e4;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
 }
 
-.menu ul li {
+.addMenu {
+  left: auto;
+  right: 0;
+}
+
+.menu ul li,
+.addMenu ul li {
   background-color: #e4e4e4;
 }
 
-.menu ul li a.active {
+.menu ul li a.active,
+.addMenu ul li a.active {
   background-color: #ccc;
 }
  

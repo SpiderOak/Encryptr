@@ -25,7 +25,7 @@
     },
     render: function() {
       this.$el.html(window.tmpl["signupView"]({}));
-      $(".main").append(this.el);
+      $(".app").append(this.el);
       return this;
     },
     input_focusHandler: function(event) {

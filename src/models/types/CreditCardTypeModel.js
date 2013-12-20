@@ -7,17 +7,20 @@
     $         = window.Zepto;
 
   var CreditCardTypeModel = Encryptr.prototype.EntryModel.extend({
+    displayName: "Credit Card",
     defaults: {
       type: "Credit Card",
       items: [
-        { key: "Name on card", value: "" },
-        { key: "Card Number", value: "" },
-        { key: "CVV", value: "" },
-        { key: "Expiry", value: "" }
+        { key: "Type", value: "", placeholder: "Mastercard" },
+        { key: "Name on card", value: "", placeholder: "J Bloggs" },
+        { key: "Card Number", value: "", placeholder: "123456789012345" },
+        { key: "CVV", value: "", placeholder: "123" },
+        { key: "Expiry", value: "", placeholder: "01/15" }
       ]
     }
   });
 
-  Encryptr.prototype.CreditCardTypeModel = CreditCardTypeModel;
+  Encryptr.prototype.types = Encryptr.prototype.types || {};
+  Encryptr.prototype.types.CreditCardTypeModel = CreditCardTypeModel;
 
 })(this, this.console, this.Encryptr);

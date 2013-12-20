@@ -5,7 +5,7 @@
   "newcap": true,
   "noarg": true,
   "strict": false,
-  "trailing": true,
+  "trailing": false,
   "onecase": true,
   "boss": true,
   "eqnull": true,

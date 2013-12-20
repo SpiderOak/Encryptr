@@ -6,43 +6,31 @@
     _         = window._,
     $         = window.Zepto;
 
-  var MenuView = Backbone.View.extend({
-    className: "menu",
+  var AddMenuView = Backbone.View.extend({
+    className: "addMenu",
     events: {
-      "tap .menu-settings": "settings_tapHandler",
-      "tap .menu-logout": "logout_tapHandler"
+      "tap a": "a_tapHandler"
     },
     initialize: function() {
-      _.bindAll(this, "settings_tapHandler", "logout_tapHandler");
+      _.bindAll(this, "a_tapHandler");
     },
     render: function() {
-      this.$el.html(window.tmpl["menuView"]({}));
+      this.$el.html(window.tmpl["addMenuView"]({
+        types: Encryptr.prototype.types
+      }));
       return this;
     },
-    settings_tapHandler: function(event) {
+    a_tapHandler: function(event) {
       this.dismiss();
-    },
-    logout_tapHandler: function(event) {
-      event.preventDefault();
-      window.app.loginView.disable();
-      this.dismiss();
-      // Throw up the login screen
-      window.app.loginView.show();
-      window.setTimeout(function() {
-        delete window.app.session;
-        window.app.navigator.popAll(window.app.noEffect);
-        window.app.mainView.close();
-      },100);
-      window.setTimeout(function() {
-        window.app.loginView.enable();
-      },350);
+      var typeModel = $(event.target).data("model");
+      window.entryModel = new window.app.types[typeModel]();
     },
     dismiss: function() {
       if (!this.$el.hasClass("dismissed")) {
         var _this = this;
         this.$("input").attr("disabled", true);
         this.$el.animate({
-          "-webkit-transform":"scale3d(0.8,0.8,0.8) translate3d(-10%,-10%,0)",
+          "-webkit-transform":"scale3d(0.8,0.8,0.8) translate3d(10%,-10%,0)",
           "opacity":"0"
         }, 100, "linear", function() {
           _this.$el.addClass("dismissed");
@@ -71,6 +59,6 @@
     }
   });
 
-  Encryptr.prototype.MenuView = MenuView;
+  Encryptr.prototype.AddMenuView = AddMenuView;
 
 })(this, this.console, this.Encryptr);
