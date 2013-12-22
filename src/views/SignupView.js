@@ -7,7 +7,7 @@
     $         = window.Zepto;
 
   var SignupView = Backbone.View.extend({
-    className: "signup",
+    className: "signup hidden",
     events: {
       "submit form": "form_submitHandler",
       "tap .signupButton": "signupButton_tapHandler",
@@ -96,19 +96,22 @@
       this.dismiss();
     },
     dismiss: function() {
-      if (!this.$el.hasClass("dismissed")) {
-        this.$("input").attr("disabled", true);
-        this.$el.animate({"-webkit-transform":"translate3d(0,100%,0)"}, 100);
-        this.$el.addClass("dismissed");
+      var _this = this;
+      if (!_this.$el.hasClass("dismissed")) {
+        _this.$("input").attr("disabled", true);
+        _this.$el.animate({"-webkit-transform":"translate3d(0,100%,0)"}, 100, "ease-in-out", function() {
+          _this.$el.addClass("dismissed");
+        });
         // Clear username and password values
         this.$("input").val("");
       }
     },
     show: function() {
-      if (this.$el.hasClass("dismissed")) {
-        this.$("input").removeAttr("disabled");
-        this.$el.animate({"-webkit-transform":"translate3d(0,0,0)"}, 250);
-        this.$el.removeClass("dismissed");
+      var _this = this;
+      if (_this.$el.hasClass("dismissed")) {
+        _this.$("input").removeAttr("disabled");
+        _this.$el.removeClass("dismissed");
+        _this.$el.animate({"-webkit-transform":"translate3d(0,0,0)"}, 250, "ease-in-out");
       }
     }
   });

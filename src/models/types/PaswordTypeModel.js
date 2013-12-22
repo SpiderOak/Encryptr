@@ -12,9 +12,9 @@
       label: "",
       type: "Password",
       items: [
-        { key: "Username", value: "", placeholder: "" },
-        { key: "Password", value: "", placeholder: "" },
-        { key: "Site URL", value: "", placeholder: "http://www.example.com" }
+        { id: "username", key: "Username", value: "", placeholder: "Username" },
+        { id: "password", key: "Password", value: "", placeholder: "Password" },
+        { id: "url", key: "Site URL", value: "", placeholder: "http://www.example.com" }
       ]
     }
   });

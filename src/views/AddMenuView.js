@@ -21,9 +21,13 @@
       return this;
     },
     a_tapHandler: function(event) {
+      event.stopPropagation();
+      event.preventDefault();
       this.dismiss();
       var typeModel = $(event.target).data("model");
-      window.entryModel = new window.app.types[typeModel]();
+      window.app.navigator.pushView(window.app.EditView, {
+        model: new window.app.types[typeModel]()
+      }, window.app.defaultEffect);
     },
     dismiss: function() {
       if (!this.$el.hasClass("dismissed")) {

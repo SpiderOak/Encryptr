@@ -12,14 +12,16 @@
       // ...
     },
     initialize: function() {
-      _.bindAll(this, "render", "addAll", "addOne");
+      _.bindAll(this, "render", "addAll", "addOne", "viewActivate", "viewDeactivate");
       this.collection.bind("reset", this.addAll, this);
       this.collection.bind("add", this.addOne, this);
+      this.on("viewActivate",this.viewActivate);
+      this.on("viewDeactivate",this.viewDeactivate);
+
       this.subViews = [];
     },
     render: function() {
       this.$el.html(window.tmpl["entriesView"]({}));
-      this.collection.fetch();
       return this;
     },
     addAll: function () {
@@ -32,6 +34,12 @@
       });
       this.$("ul").append(view.render().el);
       this.subViews.push(view);
+    },
+    viewActivate: function(event) {
+      this.collection.fetch();
+    },
+    viewDeactivate: function(event) {
+      // ...
     },
     close: function() {
       _.each(this.subViews, function(view) {
@@ -65,8 +73,6 @@
       if (!$(".menu").hasClass("dismissed")) {
         return;
       }
-      // $(".nav .btn.left").toggleClass("hidden");
-      window.app.mainView.backButtonDisplay(true);
       window.app.navigator.pushView(window.app.EntryView, {
         model: _this.model
       }, window.app.defaultEffect);

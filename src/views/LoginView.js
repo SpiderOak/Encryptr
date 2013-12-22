@@ -24,7 +24,12 @@
       $(document).on("blur", "#login input", this.input_blurHandler);
     },
     render: function() {
-      this.signupView = new Encryptr.prototype.SignupView();
+      var _this = this;
+      _this.signupView = new Encryptr.prototype.SignupView().render();
+      _this.signupView.dismiss();
+      window.setTimeout(function() {
+        _this.signupView.$el.removeClass("hidden");
+      }, 100);
       return this;
     },
     input_focusHandler: function(event) {
@@ -84,24 +89,24 @@
     },
     signupButton_tapHandler: function(event) {
       this.disable();
-      this.signupView.dismiss();
-      this.signupView.render();
       this.signupView.show();
     },
     dismiss: function() {
-      if (!this.$el.hasClass("dismissed")) {
+      var _this = this;
+      if (!_this.$el.hasClass("dismissed")) {
         // this.$("input").attr("disabled", true);
-        this.$el.animate({"-webkit-transform":"translate3d(0,100%,0)"}, 100);
-        this.$el.addClass("dismissed");
+        _this.$el.animate({"-webkit-transform":"translate3d(0,100%,0)"}, 100, "ease-in-out", function() {
+          _this.$el.addClass("dismissed");
+        });
         // Clear username and password values
-        this.$("input").val("");
+        _this.$("input").val("");
       }
     },
     show: function() {
-      if (this.$el.hasClass("dismissed")) {
-        // this.$("input").removeAttr("disabled");
-        this.$el.animate({"-webkit-transform":"translate3d(0,0,0)"}, 250);
-        this.$el.removeClass("dismissed");
+      var _this = this;
+      if (_this.$el.hasClass("dismissed")) {
+        _this.$el.removeClass("dismissed");
+        _this.$el.animate({"-webkit-transform":"translate3d(0,0,0)"}, 250, "ease-in-out");
       }
     },
     disable: function() {

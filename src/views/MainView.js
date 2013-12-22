@@ -42,7 +42,7 @@
       event.preventDefault();
       console.log("back");
       window.app.navigator.popView(window.app.defaultPopEffect);
-      this.backButtonDisplay(false);
+      // this.backButtonDisplay(false);
     },
     addButton_tapHandler: function(event) {
       if (!this.menuView.$el.hasClass("dismissed")) {
@@ -71,7 +71,7 @@
       }
       if (!this.addMenuView.$el.hasClass("dismissed") &&
           !$(event.target).hasClass("fa-plus") &&
-          !$(event.target).hasClass("menu-btn")) {
+          !$(event.target).hasClass("add-btn")) {
         this.addMenuView.dismiss();
       }
     },

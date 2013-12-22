@@ -11,11 +11,11 @@
     defaults: {
       type: "Credit Card",
       items: [
-        { key: "Type", value: "", placeholder: "Mastercard" },
-        { key: "Name on card", value: "", placeholder: "J Bloggs" },
-        { key: "Card Number", value: "", placeholder: "123456789012345" },
-        { key: "CVV", value: "", placeholder: "123" },
-        { key: "Expiry", value: "", placeholder: "01/15" }
+        { id: "cardType", key: "Type", value: "", placeholder: "Mastercard" },
+        { id: "nameOnCard", key: "Name on card", value: "", placeholder: "J Bloggs" },
+        { id: "cardNumber", key: "Card Number", value: "", placeholder: "123456789012345" },
+        { id: "cVV", key: "CVV", value: "", placeholder: "123" },
+        { id: "expiry", key: "Expiry", value: "", placeholder: "01/15" }
       ]
     }
   });

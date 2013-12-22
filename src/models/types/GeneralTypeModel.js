@@ -11,7 +11,7 @@
     defaults: {
       type: "General",
       items: [
-        { key: "Text", value: "", placeholder: "Text here" }
+        { id: "text", key: "Text", value: "", placeholder: "Text here" }
       ]
     }
   });
