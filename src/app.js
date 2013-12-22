@@ -16,13 +16,7 @@ var Encryptr = (function (window, console, undefined) {
     window.document.addEventListener("pause", this.onPause, false);
     window.document.addEventListener("offline", this.setOffline, false);
     window.document.addEventListener("online", this.setOnline, false);
-    // Backstack effects
-    this.noEffect = new window.BackStack.NoEffect();
-    this.fadeEffect = new window.BackStack.FadeEffect();
-    this.defaultEffect = new this.FastSlideEffect();
-    this.defaultPopEffect = new this.FastSlideEffect({
-      direction: "right"
-    });
+
     // Set the hostname for the Crypton server
     // window.crypton.host = "192.168.1.12";
     window.crypton.host = "localhost";
@@ -47,6 +41,22 @@ var Encryptr = (function (window, console, undefined) {
     if (window.device && window.device.platform === "iOS" && parseFloat(window.device.version) >= 7.0) {
       window.document.querySelectorAll(".app")[0].style.top = "20px"; // status bar hax
     }
+    // Backstack effects
+    if (window.device && window.device.platform === "iOS") {
+      Encryptr.prototype.noEffect = new window.BackStack.NoEffect();
+      Encryptr.prototype.fadeEffect = new window.BackStack.FadeEffect();
+      Encryptr.prototype.defaultEffect = new Encryptr.prototype.FastSlideEffect();
+      Encryptr.prototype.defaultPopEffect = new Encryptr.prototype.FastSlideEffect({
+        direction: "right"
+      });
+    } else {
+      Encryptr.prototype.noEffect = new window.BackStack.NoEffect();
+      Encryptr.prototype.fadeEffect = new window.BackStack.FadeEffect();
+      Encryptr.prototype.defaultEffect = new window.BackStack.NoEffect();
+      Encryptr.prototype.defaultPopEffect = new window.BackStack.NoEffect();
+    }
+    window.document.addEventListener("backbutton", Encryptr.prototype.onBackButton, false);
+    window.document.addEventListener("menubutton", Encryptr.prototype.onMenuButton, false);
   };
 
   Encryptr.prototype.setOffline = function(event) {
@@ -72,6 +82,18 @@ var Encryptr = (function (window, console, undefined) {
   };
 
   Encryptr.prototype.onBackButton = function(event) {
+    if ($(".menu").is(":visible")) {
+      window.app.mainView.menuView.dismiss();
+      return;
+    }
+    if ($(".addMenu").is(":visible")) {
+      window.app.mainView.addMenuView.dismiss();
+      return;
+    }
+    if ($(".back-btn").is(":visible")) {
+      window.app.navigator.popView(window.app.defaultPopEffect);
+      return;
+    }
     navigator.app.exitApp();
   };
 
