@@ -26,7 +26,9 @@
       this.dismiss();
       var typeModel = $(event.target).data("model");
       window.app.navigator.pushView(window.app.EditView, {
-        model: new window.app.types[typeModel]()
+        model: new window.app.EntryModel(
+          new window.app.types[typeModel]()
+        )
       }, window.app.defaultEffect);
     },
     dismiss: function() {

@@ -6,20 +6,18 @@
     _         = window._,
     $         = window.Zepto;
 
-  var PasswordTypeModel = Encryptr.prototype.EntryModel.extend({
-    displayName: "Password",
-    defaults: {
-      label: "",
-      type: "Password",
-      items: [
-        { id: "username", key: "Username", value: "", placeholder: "Username" },
-        { id: "password", key: "Password", value: "", placeholder: "Password" },
-        { id: "url", key: "Site URL", value: "", placeholder: "http://www.example.com" }
-      ]
-    }
-  });
+  var PasswordType = function() {
+    this.type = "Password";
+    this.items = [
+      { id: "username", key: "Username", value: "", placeholder: "Username" },
+      { id: "password", key: "Password", value: "", placeholder: "Password" },
+      { id: "url", key: "Site URL", value: "", placeholder: "http://www.example.com" }
+    ];
+  };
+
+  PasswordType.prototype.displayName = "Password";
 
   Encryptr.prototype.types = Encryptr.prototype.types || {};
-  Encryptr.prototype.types.PasswordTypeModel = PasswordTypeModel;
+  Encryptr.prototype.types.PasswordType = PasswordType;
 
 })(this, this.console, this.Encryptr);

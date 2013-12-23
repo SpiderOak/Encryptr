@@ -6,17 +6,16 @@
     _         = window._,
     $         = window.Zepto;
 
-  var GeneralTypeModel = Encryptr.prototype.EntryModel.extend({
-    displayName: "General",
-    defaults: {
-      type: "General",
-      items: [
-        { id: "text", key: "Text", value: "", placeholder: "Text here" }
-      ]
-    }
-  });
+  var GeneralType = function() {
+    this.type = "General";
+    this.items = [
+      { id: "text", key: "Text", value: "", placeholder: "Text here" }
+    ];
+  };
+
+  GeneralType.prototype.displayName = "General";
 
   Encryptr.prototype.types = Encryptr.prototype.types || {};
-  Encryptr.prototype.types.GeneralTypeModel = GeneralTypeModel;
+  Encryptr.prototype.types.GeneralType = GeneralType;
 
 })(this, this.console, this.Encryptr);
