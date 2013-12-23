@@ -38,7 +38,7 @@
         this.$el.animate({
           "-webkit-transform":"scale3d(0.8,0.8,0.8) translate3d(10%,-10%,0)",
           "opacity":"0"
-        }, 100, "linear", function() {
+        }, 100, "ease-in-out", function() {
           _this.$el.addClass("dismissed");
         });
       }
@@ -50,7 +50,7 @@
         this.$el.animate({
           "-webkit-transform":"scale3d(1,1,1) translate3d(0,0,0)",
           "opacity":"1"
-        }, 100, "linear");
+        }, 100, "ease-in-out");
       }
     },
     toggle: function() {
