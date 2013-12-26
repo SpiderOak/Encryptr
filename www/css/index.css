@@ -230,9 +230,15 @@ input[type="password"] {
   border-bottom-right-radius: 5px;
   border-bottom: none;
 }
+
 div.login-input {
   -webkit-box-sizing: border-box;
   padding: 0 20px;
+}
+
+.signupLink,
+.backToLoginLink {
+  margin-top: 20px;
 }
 
 .spacer5 {
@@ -259,29 +265,25 @@ button {
   border-radius: 5px;
   text-decoration: none;
   text-align: center;
-  background: -webkit-linear-gradient(top, #eee 0%, #ccc 100%);
-  background: linear-gradient(to bottom, #eee 0%, #ccc 100%);
+  background-color: #ccc;
   color: #666;
 }
 
 a.button.primary {
-  background: -webkit-linear-gradient(top, #999 0%, #666 100%);
-  background: linear-gradient(to bottom, #999 0%, #666 100%);
+  background-color: #999;
   color: #fff;
 }
 
 a.button.active {
   color: #333;
-  background: -webkit-linear-gradient(top, #ddd 0%, #bbb 100%);
-  background: linear-gradient(to bottom, #ddd 0%, #bbb 100%);
+  background-color: #ddd;
   box-shadow: none;
   outline:0;
 }
 
 a.button.primary.active {
   color: #fff;
-  background: -webkit-linear-gradient(top, #888 0%, #555 100%);
-  background: linear-gradient(to bottom, #888 0%, #555 100%);
+  background-color: #888;
   box-shadow: none;
   outline:0;
 }
