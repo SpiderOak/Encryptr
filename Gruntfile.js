@@ -65,9 +65,10 @@ module.exports = function(grunt) {
       },
       offlinejs: {
         src: [
-          'components/offline-js-min/index.js'
+          'components/offline-js/js/*.js',
+          '!components/offline-js/js/snake.js'
         ],
-        dest: 'www/components/offline-js-min/index.js'
+        dest: 'www/components/offline-js/index.js'
       },
       offlinecss: {
         src: [
@@ -97,6 +98,12 @@ module.exports = function(grunt) {
           'www/components/zepto/zepto.js'
         ],
         dest: 'www/components/zepto/zepto.min.js'
+      },
+      offlinejs: {
+        src: [
+          'www/components/offline-js/index.js'
+        ],
+        dest: 'www/components/offline-js/index.min.js'
       }
     },
     watch: {
