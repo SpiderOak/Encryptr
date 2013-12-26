@@ -73,9 +73,9 @@ module.exports = function(grunt) {
       },
       offlinecss: {
         src: [
-          'components/offline-css/index.css'
+          'components/offline-js/themes/offline-theme-default.css'
         ],
-        dest: 'www/components/offline-css/index.css'
+        dest: 'www/components/offline-js/index.css'
       },
       tests: {
         options: {
