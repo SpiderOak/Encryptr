@@ -27,6 +27,7 @@ module.exports = function(grunt) {
           'components/zepto/src/assets.js',
           'components/zepto/src/data.js',
           'components/zepto/src/detect.js',
+          'components/zepto/src/deferred.js',
           'components/zepto/src/event.js',
           'components/zepto/src/form.js',
           'components/zepto/src/fx.js',
@@ -65,9 +66,10 @@ module.exports = function(grunt) {
       },
       offlinejs: {
         src: [
-          'components/offline-js-min/index.js'
+          'components/offline-js/js/*.js',
+          '!components/offline-js/js/snake.js'
         ],
-        dest: 'www/components/offline-js-min/index.js'
+        dest: 'www/components/offline-js/index.js'
       },
       offlinecss: {
         src: [
@@ -97,6 +99,12 @@ module.exports = function(grunt) {
           'www/components/zepto/zepto.js'
         ],
         dest: 'www/components/zepto/zepto.min.js'
+      },
+      offlinejs: {
+        src: [
+          'www/components/offline-js/index.js'
+        ],
+        dest: 'www/components/offline-js/index.min.js'
       }
     },
     watch: {
