@@ -70,7 +70,7 @@
     },
     a_tapHandler: function(event) {
       var _this = this;
-      if (!$(".menu").hasClass("dismissed")) {
+      if (!$(".menu").hasClass("dismissed") || !$(".addMenu").hasClass("dismissed")) {
         return;
       }
       window.app.navigator.pushView(window.app.EntryView, {

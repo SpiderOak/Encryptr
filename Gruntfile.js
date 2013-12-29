@@ -40,42 +40,12 @@ module.exports = function(grunt) {
         ],
         dest: 'www/components/zepto/zepto.js'
       },
-      underscore: {
-        src: [
-          'components/underscore/underscore.js'
-        ],
-        dest: 'www/components/underscore/underscore.js'
-      },
-      backbone: {
-        src: [
-          'components/backbone/backbone.js'
-        ],
-        dest: 'www/components/backbone/backbone.js'
-      },
-      backstack: {
-        src: [
-          'components/backstack/backstack.js'
-        ],
-        dest: 'www/components/backstack/backstack.js'
-      },
-      moment: {
-        src: [
-          'components/moment/moment.js'
-        ],
-        dest: 'www/components/moment/moment.js'
-      },
       offlinejs: {
         src: [
           'components/offline-js/js/*.js',
           '!components/offline-js/js/snake.js'
         ],
         dest: 'www/components/offline-js/index.js'
-      },
-      offlinecss: {
-        src: [
-          'components/offline-js/themes/offline-theme-default.css'
-        ],
-        dest: 'www/components/offline-js/index.css'
       },
       tests: {
         options: {
@@ -85,6 +55,19 @@ module.exports = function(grunt) {
           'tests/**/*.js'
         ],
         dest: 'www/tests/<%= pkg.name %>-tests.js'
+      }
+    },
+    copy: {
+      main: {
+        files: [
+          {expand: true, flatten: true, src: ['components/font-awesome/css/*'], dest: 'www/components/font-awesome/css/'},
+          {expand: true, flatten: true, src: ['components/font-awesome/fonts/*'], dest: 'www/components/font-awesome/fonts/'},
+          {expand: true, flatten: true, src: ['components/moment/moment.js'], dest: 'www/components/moment/'},
+          {expand: true, flatten: true, src: ['components/underscore/underscore*.js'], dest: 'www/components/underscore/'},
+          {expand: true, flatten: true, src: ['components/backstack/backstack*.js'], dest: 'www/components/backstack/'},
+          {expand: true, flatten: true, src: ['components/backbone/backbone*.js'], dest: 'www/components/backbone/'},
+          {expand: true, flatten: true, src: ['components/offline-js/themes/offline-theme-default.css'], dest: 'www/components/offline-js/themes/'}
+        ]
       }
     },
     uglify: {
@@ -201,21 +184,22 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-dot-compiler');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
 
   // Custom tasks
-  grunt.registerTask('test', ['jshint', 'dot', 'concat', 'min', 'shell:mochaspec']);
+  grunt.registerTask('test', ['jshint', 'dot', 'copy', 'concat', 'min', 'shell:mochaspec']);
   grunt.registerTask('min', ['uglify']); // polyfil for uglify
   grunt.registerTask('debug','Create a debug build', function(platform) {
-    grunt.task.run('jshint', 'dot', 'concat', 'min', 'shell:mochadot');
+    grunt.task.run('jshint', 'dot', 'copy', 'concat', 'min', 'shell:mochadot');
     grunt.task.run('shell:debug_' + platform);
   });
 
   // Default task
-  grunt.registerTask('default', ['jshint', 'dot', 'concat', 'min', 'shell:mochaspec']);
+  grunt.registerTask('default', ['jshint', 'dot', 'copy', 'concat', 'min', 'shell:mochaspec']);
 
 
 };
