@@ -83,6 +83,12 @@ p {
   right: 0;
   top: 0;
 }
+
+.nav .right2 {
+  position: absolute;
+  right: 44px;
+  top: 0;
+}
  
 .nav .left {
   position: absolute;

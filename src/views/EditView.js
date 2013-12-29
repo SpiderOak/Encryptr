@@ -24,6 +24,9 @@
       this.addAll();
       this.$("input").attr("disabled", true);
       $(".nav .save-btn").on("tap", this.form_submitHandler);
+      if (this.model.id) {
+        $(".nav .delete-btn").on("tap", this.delete_tapHandler);
+      }
       return this;
     },
     addAll: function () {
@@ -45,6 +48,7 @@
     form_submitHandler: function(event) {
       var _this = this;
       event.preventDefault();
+      $("input").blur();
       $(".blocker").show();
       var items = this.model.get("items");
       _.each(_this.$("ul.editable input"), function(input) {
@@ -77,7 +81,12 @@
       window.app.mainView.backButtonDisplay(true);
       $(".nav .btn.right").addClass("hidden");
       $(".nav .save-btn").removeClass("hidden");
-      window.app.mainView.setTitle(this.model.displayName);
+      if (this.model.id) {
+        $(".nav .delete-btn").removeClass("hidden");
+        window.app.mainView.setTitle("Edit");
+      } else {
+        window.app.mainView.setTitle(this.model.get("displayName"));
+      }
       window.setTimeout(function() {
         _this.$("input").removeAttr("disabled");
       }, 100);
@@ -90,6 +99,7 @@
       $(".nav .save-btn").off("tap", this.form_submitHandler);
     },
     close: function() {
+      $(".nav .save-btn").off("tap", this.form_submitHandler);
       _.each(this.subViews, function(view) {
         view.close();
       });
