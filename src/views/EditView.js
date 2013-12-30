@@ -12,7 +12,7 @@
       "submit form": "form_submitHandler"
     },
     initialize: function() {
-      _.bindAll(this, "render", "addAll", "addOne", "form_submitHandler", "viewActivate", "viewDeactivate");
+      _.bindAll(this, "render", "addAll", "addOne", "form_submitHandler", "delete_tapHandler", "viewActivate", "viewDeactivate");
       this.on("viewActivate",this.viewActivate);
       this.on("viewDeactivate",this.viewDeactivate);
       this.model.bind("all", this.addAll, this);
@@ -76,6 +76,16 @@
         }
       });
     },
+    delete_tapHandler: function(event) {
+      var _this = this;
+      var message = "Delete this entry?";
+      navigator.notification.confirm(message, function(button) {
+        if (button === 1) {
+          _this.model.destroy();
+          window.app.navigator.popView(window.app.defaultPopEffect);
+        }
+      }, "Confirm delete");
+    },
     viewActivate: function(event) {
       var _this = this;
       window.app.mainView.backButtonDisplay(true);
@@ -97,9 +107,11 @@
       $(".nav .add-btn").removeClass("hidden");
       window.app.mainView.setTitle("Encryptr");
       $(".nav .save-btn").off("tap", this.form_submitHandler);
+      $(".nav .delete-btn").off("tap", this.delete_tapHandler);
     },
     close: function() {
       $(".nav .save-btn").off("tap", this.form_submitHandler);
+      $(".nav .delete-btn").off("tap", this.delete_tapHandler);
       _.each(this.subViews, function(view) {
         view.close();
       });

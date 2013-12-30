@@ -15,6 +15,7 @@
       _.bindAll(this, "render", "addAll", "addOne", "viewActivate", "viewDeactivate");
       this.collection.bind("reset", this.addAll, this);
       this.collection.bind("add", this.addOne, this);
+      this.collection.bind("remove", this.addAll, this);
       this.on("viewActivate",this.viewActivate);
       this.on("viewDeactivate",this.viewDeactivate);
 
