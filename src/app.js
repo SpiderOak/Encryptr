@@ -44,18 +44,15 @@ var Encryptr = (function (window, console, undefined) {
       window.document.querySelectorAll(".app")[0].style.top = "20px"; // status bar hax
     }
     // Backstack effects
+    Encryptr.prototype.noEffect = new window.BackStack.NoEffect();
+    Encryptr.prototype.fadeEffect = new window.BackStack.FadeEffect();
+    Encryptr.prototype.defaultEffect = new window.BackStack.NoEffect();
+    Encryptr.prototype.defaultPopEffect = new window.BackStack.NoEffect();
     if (window.device && window.device.platform === "iOS") {
-      Encryptr.prototype.noEffect = new window.BackStack.NoEffect();
-      Encryptr.prototype.fadeEffect = new window.BackStack.FadeEffect();
       Encryptr.prototype.defaultEffect = new Encryptr.prototype.FastSlideEffect();
       Encryptr.prototype.defaultPopEffect = new Encryptr.prototype.FastSlideEffect({
         direction: "right"
       });
-    } else {
-      Encryptr.prototype.noEffect = new window.BackStack.NoEffect();
-      Encryptr.prototype.fadeEffect = new window.BackStack.FadeEffect();
-      Encryptr.prototype.defaultEffect = new window.BackStack.NoEffect();
-      Encryptr.prototype.defaultPopEffect = new window.BackStack.NoEffect();
     }
     window.document.addEventListener("backbutton", Encryptr.prototype.onBackButton, false);
     window.document.addEventListener("menubutton", Encryptr.prototype.onMenuButton, false);
