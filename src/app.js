@@ -35,6 +35,8 @@ var Encryptr = (function (window, console, undefined) {
       var $this = $(this);
       $this.removeClass("active");
     });
+
+    window.FastClick.attach(document.body);
   };
 
   Encryptr.prototype.onDeviceReady = function(event) {

@@ -10,16 +10,16 @@
     className: "signup hidden",
     events: {
       "submit form": "form_submitHandler",
-      "tap .signupButton": "signupButton_tapHandler",
-      "tap a.backToLogin": "backToLogin_tapHandler"
+      "click .signupButton": "signupButton_clickHandler",
+      "click a.backToLogin": "backToLogin_clickHandler"
     },
     initialize: function() {
       _.bindAll(this,
           "input_focusHandler",
           "input_blurHandler",
           "form_submitHandler",
-          "signupButton_tapHandler",
-          "backToLogin_tapHandler");
+          "signupButton_clickHandler",
+          "backToLogin_clickHandler");
       $(document).on("focus", ".signup input", this.input_focusHandler);
       $(document).on("blur", ".signup input", this.input_blurHandler);
     },
@@ -86,11 +86,11 @@
         });
       });
     },
-    signupButton_tapHandler: function(event) {
+    signupButton_clickHandler: function(event) {
       event.preventDefault();
       this.form_submitHandler(event);
     },
-    backToLogin_tapHandler: function(event) {
+    backToLogin_clickHandler: function(event) {
       // window.app.loginView.show();
       window.app.loginView.enable();
       this.dismiss();

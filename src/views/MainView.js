@@ -9,17 +9,17 @@
   var MainView = Backbone.View.extend({
     el: "#main",
     events: {
-      "tap .menu-btn": "menuButton_tapHandler",
-      "tap .back-btn": "backButton_tapHandler",
-      "tap .add-btn": "addButton_tapHandler",
-      "tap .nav": "menuClose_tapHandler",
-      "tap .subviews": "menuClose_tapHandler"
+      "click .menu-btn": "menuButton_clickHandler",
+      "click .back-btn": "backButton_clickHandler",
+      "click .add-btn": "addButton_clickHandler",
+      "click .nav": "menuClose_clickHandler",
+      "click .subviews": "menuClose_clickHandler"
     },
     initialize: function(options) {
       _.bindAll(this,
-          "menuButton_tapHandler",
-          "backButton_tapHandler",
-          "addButton_tapHandler",
+          "menuButton_clickHandler",
+          "backButton_clickHandler",
+          "addButton_clickHandler",
           "backButtonDisplay");
       this.menuView = new Encryptr.prototype.MenuView().render();
       this.menuView.dismiss();
@@ -34,17 +34,17 @@
       );
       return this;
     },
-    menuButton_tapHandler: function(event) {
+    menuButton_clickHandler: function(event) {
       event.preventDefault();
       this.menuView.toggle();
     },
-    backButton_tapHandler: function(event) {
+    backButton_clickHandler: function(event) {
       event.preventDefault();
       console.log("back");
       window.app.navigator.popView(window.app.defaultPopEffect);
       // this.backButtonDisplay(false);
     },
-    addButton_tapHandler: function(event) {
+    addButton_clickHandler: function(event) {
       if (!this.menuView.$el.hasClass("dismissed")) {
         return;
       }
@@ -63,7 +63,7 @@
       this.$(".back-btn").addClass("hidden");
       this.$(".menu-btn").removeClass("hidden");
     },
-    menuClose_tapHandler: function(event) {
+    menuClose_clickHandler: function(event) {
       if (!this.menuView.$el.hasClass("dismissed") &&
           !$(event.target).hasClass("fa-ellipsis-v") &&
           !$(event.target).hasClass("menu-btn")) {

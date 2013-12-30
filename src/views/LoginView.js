@@ -10,16 +10,16 @@
     el: "#login",
     events: {
       "submit form": "form_submitHandler",
-      "tap .loginButton": "loginButton_tapHandler",
-      "tap .signupButton": "signupButton_tapHandler"
+      "click .loginButton": "loginButton_clickHandler",
+      "click .signupButton": "signupButton_clickHandler"
     },
     initialize: function() {
       _.bindAll(this,
           "input_focusHandler",
           "input_blurHandler",
           "form_submitHandler",
-          "loginButton_tapHandler",
-          "signupButton_tapHandler");
+          "loginButton_clickHandler",
+          "signupButton_clickHandler");
       $(document).on("focus", "#login input", this.input_focusHandler);
       $(document).on("blur", "#login input", this.input_blurHandler);
     },
@@ -83,11 +83,11 @@
         });
       });
     },
-    loginButton_tapHandler: function(event) {
+    loginButton_clickHandler: function(event) {
       event.preventDefault();
       this.form_submitHandler(event);
     },
-    signupButton_tapHandler: function(event) {
+    signupButton_clickHandler: function(event) {
       this.disable();
       this.signupView.show();
     },

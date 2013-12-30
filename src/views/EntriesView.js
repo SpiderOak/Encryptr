@@ -55,7 +55,7 @@
     tagName: "li",
     className: "entry",
     events: {
-      "tap a": "a_tapHandler"
+      "click a": "a_clickHandler"
     },
     initialize: function() {
       _.bindAll(this, "render");
@@ -69,7 +69,7 @@
       );
       return this;
     },
-    a_tapHandler: function(event) {
+    a_clickHandler: function(event) {
       var _this = this;
       if (!$(".menu").hasClass("dismissed") || !$(".addMenu").hasClass("dismissed")) {
         return;

@@ -12,7 +12,7 @@
     },
     initialize: function() {
       this.model.bind("change", this.render, this);
-      _.bindAll(this, "render", "editButton_tapHandler", "delete_tapHandler", "viewActivate", "viewDeactivate");
+      _.bindAll(this, "render", "editButton_clickHandler", "delete_clickHandler", "viewActivate", "viewDeactivate");
       this.on("viewActivate",this.viewActivate);
       this.on("viewDeactivate",this.viewDeactivate);
     },
@@ -22,18 +22,18 @@
           this.model.toJSON()
         )
       );
-      $(".nav .edit-btn").on("tap", this.editButton_tapHandler);
-      $(".nav .delete-btn").on("tap", this.delete_tapHandler);
+      $(".nav .edit-btn").on("click", this.editButton_clickHandler);
+      $(".nav .delete-btn").on("click", this.delete_clickHandler);
       return this;
     },
-    editButton_tapHandler: function(event) {
+    editButton_clickHandler: function(event) {
       window.app.navigator.replaceView(
         window.app.EditView,
         {model: this.model},
         window.app.noEffect
       );
     },
-    delete_tapHandler: function(event) {
+    delete_clickHandler: function(event) {
       var _this = this;
       var message = "Delete this entry?";
       navigator.notification.confirm(message, function(button) {
@@ -56,12 +56,12 @@
       $(".nav .btn.right").addClass("hidden");
       $(".nav .add-btn.right").removeClass("hidden");
       window.app.mainView.setTitle("Encryptr");
-      $(".nav .edit-btn").off("tap", this.editButton_tapHandler);
-      $(".nav .delete-btn").off("tap", this.delete_tapHandler);
+      $(".nav .edit-btn").off("click", this.editButton_clickHandler);
+      $(".nav .delete-btn").off("click", this.delete_clickHandler);
     },
     close: function() {
-      $(".nav .edit-btn").off("tap", this.editButton_tapHandler);
-      $(".nav .delete-btn").off("tap", this.delete_tapHandler);
+      $(".nav .edit-btn").off("click", this.editButton_clickHandler);
+      $(".nav .delete-btn").off("click", this.delete_clickHandler);
       this.remove();
     }
   });

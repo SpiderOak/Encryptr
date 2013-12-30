@@ -14,6 +14,7 @@
     "backstack": "https://github.com/pwalczyszyn/backstack.git",
     "moment": "~2.0.0",
     "offline-js": "https://github.com/HubSpot/offline/archive/v0.4.7.zip",
-    "font-awesome": "latest"
+    "font-awesome": "latest",
+    "fastclick": "latest"
   }
 }

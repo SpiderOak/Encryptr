@@ -9,10 +9,10 @@
   var AddMenuView = Backbone.View.extend({
     className: "addMenu",
     events: {
-      "tap a": "a_tapHandler"
+      "click a": "a_clickHandler"
     },
     initialize: function() {
-      _.bindAll(this, "a_tapHandler");
+      _.bindAll(this, "a_clickHandler");
     },
     render: function() {
       this.$el.html(window.tmpl["addMenuView"]({
@@ -20,7 +20,7 @@
       }));
       return this;
     },
-    a_tapHandler: function(event) {
+    a_clickHandler: function(event) {
       event.stopPropagation();
       event.preventDefault();
       this.dismiss();

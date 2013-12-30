@@ -42,7 +42,7 @@ We use `grunt` commands to do most of the project operations, like:
 
 * running the app:
 ** ios: `grunt debug:ios`
-** Android: `grunt debug:Android`
+** Android: `grunt debug:android`
 
 * testing: `grunt test`
 * linting the sources: `grunt jshint`
