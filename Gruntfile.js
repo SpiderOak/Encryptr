@@ -192,7 +192,10 @@ module.exports = function(grunt) {
 
 
   // Custom tasks
-  grunt.registerTask('test', ['jshint', 'dot', 'copy', 'concat', 'min', 'shell:mochaspec']);
+  grunt.registerTask('test', 'Do mocha test, default spec', function(which) {
+    grunt.task.run('jshint', 'dot', 'copy', 'concat', 'min');
+    grunt.task.run('shell:mocha' + (which || 'spec'));
+  });
   grunt.registerTask('min', ['uglify']); // polyfil for uglify
   grunt.registerTask('debug','Create a debug build', function(platform) {
     grunt.task.run('jshint', 'dot', 'copy', 'concat', 'min', 'shell:mochadot');
