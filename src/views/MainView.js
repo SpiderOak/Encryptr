@@ -40,9 +40,12 @@
     },
     backButton_clickHandler: function(event) {
       event.preventDefault();
-      console.log("back");
-      window.app.navigator.popView(window.app.defaultPopEffect);
-      // this.backButtonDisplay(false);
+      this.backButtonDisplay(false);
+      // console.log("back");
+      // console.log(Date.now());
+      if (window.app.navigator.viewsStack.length > 1) {
+        window.app.navigator.popView(window.app.defaultPopEffect);
+      }
     },
     addButton_clickHandler: function(event) {
       if (!this.menuView.$el.hasClass("dismissed")) {
