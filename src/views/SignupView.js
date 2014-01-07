@@ -65,6 +65,11 @@
             return;
           }
           window.app.session = session;
+          window.app.accountModel = new window.app.AccountModel({
+            username: username,
+            passphrase: passphrase,
+            session: session
+          });
           window.app.session.create("entries", function(err, entries){
             if (err) {
               navigator.notification.alert(err);
