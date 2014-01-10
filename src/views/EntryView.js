@@ -12,7 +12,7 @@
     },
     initialize: function() {
       this.model.bind("change", this.render, this);
-      _.bindAll(this, "render", "editButton_clickHandler", "delete_clickHandler", "viewActivate", "viewDeactivate");
+      _.bindAll(this, "render", "editButton_clickHandler", "deleteButton_clickHandler", "viewActivate", "viewDeactivate");
       this.on("viewActivate",this.viewActivate);
       this.on("viewDeactivate",this.viewDeactivate);
     },
@@ -22,8 +22,8 @@
           this.model.toJSON()
         )
       );
-      $(".nav .edit-btn").on("click", this.editButton_clickHandler, this);
-      $(".nav .delete-btn").on("click", this.delete_clickHandler, this);
+      window.app.mainView.on("deleteentry", this.deleteButton_clickHandler, this);
+      window.app.mainView.once("editentry", this.editButton_clickHandler, this);
       return this;
     },
     editButton_clickHandler: function(event) {
@@ -33,7 +33,7 @@
         window.app.noEffect
       );
     },
-    delete_clickHandler: function(event) {
+    deleteButton_clickHandler: function(event) {
       var _this = this;
       var message = "Delete this entry?";
       navigator.notification.confirm(message, function(button) {
@@ -56,11 +56,10 @@
       $(".nav .btn.right").addClass("hidden");
       $(".nav .add-btn.right").removeClass("hidden");
       window.app.mainView.setTitle("Encryptr");
-      $(".nav .delete-btn").off("click", this.delete_clickHandler, this);
+      window.app.mainView.off("editentry", null, null);
+      window.app.mainView.off("deleteentry", null, null);
     },
     close: function() {
-      $(".nav .edit-btn").off("click", this.editButton_clickHandler, this);
-      $(".nav .delete-btn").off("click", this.delete_clickHandler, this);
       this.remove();
     }
   });

@@ -7,7 +7,6 @@
   $         = window.Zepto;
 
   var EditView = Backbone.View.extend({
-    destructionPolicy: "never",
     events: {
       "submit form": "form_submitHandler"
     },
@@ -21,9 +20,9 @@
     render: function() {
       var _this = this;
       this.$el.html(window.tmpl["editView"](this.model.toJSON()));
+      window.app.mainView.on("saveentry", this.form_submitHandler, this);
       this.addAll();
       this.$("input").attr("disabled", true);
-      $(".nav .save-btn").on("click", this.form_submitHandler, this);
       return this;
     },
     addAll: function () {
@@ -44,7 +43,7 @@
     },
     form_submitHandler: function(event) {
       var _this = this;
-      event.preventDefault();
+      if (event) event.preventDefault();
       $("input").blur();
       $(".blocker").show();
       var items = this.model.get("items");
@@ -88,10 +87,11 @@
       $(".nav .btn.right").addClass("hidden");
       $(".nav .add-btn").removeClass("hidden");
       window.app.mainView.setTitle("Encryptr");
-      $(".nav .save-btn").off("click", this.form_submitHandler, this);
+      window.app.mainView.off("saveentry", null, null);
+      window.app.mainView.off("editentry", null, null);
+      window.app.mainView.off("deleteentry", null, null);
     },
     close: function() {
-      $(".nav .save-btn").off("click", this.form_submitHandler, this);
       _.each(this.subViews, function(view) {
         view.close();
       });
