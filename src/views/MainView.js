@@ -11,6 +11,9 @@
     events: {
       "click .menu-btn": "menuButton_clickHandler",
       "click .back-btn": "backButton_clickHandler",
+      "click .edit-btn": "editButton_clickHandler",
+      "click .save-btn": "saveButton_clickHandler",
+      "click .delete-btn": "deleteButton_clickHandler",
       "click .add-btn": "addButton_clickHandler",
       "click .nav": "menuClose_clickHandler",
       "click .subviews": "menuClose_clickHandler"
@@ -20,6 +23,9 @@
           "menuButton_clickHandler",
           "backButton_clickHandler",
           "addButton_clickHandler",
+          "saveButton_clickHandler",
+          "editButton_clickHandler",
+          "deleteButton_clickHandler",
           "backButtonDisplay");
       this.menuView = new Encryptr.prototype.MenuView().render();
       this.menuView.dismiss();
@@ -53,6 +59,15 @@
       }
       event.preventDefault();
       this.addMenuView.toggle();
+    },
+    editButton_clickHandler: function(event) {
+      this.trigger("editentry");
+    },
+    saveButton_clickHandler: function(event) {
+      this.trigger("saveentry");
+    },
+    deleteButton_clickHandler: function(event) {
+      this.trigger("deleteentry");
     },
     setTitle: function(title) {
       this.$(".nav .title").html(title);
