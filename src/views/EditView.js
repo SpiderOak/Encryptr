@@ -23,7 +23,7 @@
       this.$el.html(window.tmpl["editView"](this.model.toJSON()));
       this.addAll();
       this.$("input").attr("disabled", true);
-      $(".nav .save-btn").on("click", this.form_submitHandler);
+      $(".nav .save-btn").on("click", this.form_submitHandler, this);
       return this;
     },
     addAll: function () {
@@ -88,10 +88,10 @@
       $(".nav .btn.right").addClass("hidden");
       $(".nav .add-btn").removeClass("hidden");
       window.app.mainView.setTitle("Encryptr");
-      $(".nav .save-btn").off("click", this.form_submitHandler);
+      $(".nav .save-btn").off("click", this.form_submitHandler, this);
     },
     close: function() {
-      $(".nav .save-btn").off("click", this.form_submitHandler);
+      $(".nav .save-btn").off("click", this.form_submitHandler, this);
       _.each(this.subViews, function(view) {
         view.close();
       });

@@ -22,8 +22,8 @@
           this.model.toJSON()
         )
       );
-      $(".nav .edit-btn").on("click", this.editButton_clickHandler);
-      $(".nav .delete-btn").on("click", this.delete_clickHandler);
+      $(".nav .edit-btn").on("click", this.editButton_clickHandler, this);
+      $(".nav .delete-btn").on("click", this.delete_clickHandler, this);
       return this;
     },
     editButton_clickHandler: function(event) {
@@ -56,12 +56,11 @@
       $(".nav .btn.right").addClass("hidden");
       $(".nav .add-btn.right").removeClass("hidden");
       window.app.mainView.setTitle("Encryptr");
-      $(".nav .edit-btn").off("click", this.editButton_clickHandler);
-      $(".nav .delete-btn").off("click", this.delete_clickHandler);
+      $(".nav .delete-btn").off("click", this.delete_clickHandler, this);
     },
     close: function() {
-      $(".nav .edit-btn").off("click", this.editButton_clickHandler);
-      $(".nav .delete-btn").off("click", this.delete_clickHandler);
+      $(".nav .edit-btn").off("click", this.editButton_clickHandler, this);
+      $(".nav .delete-btn").off("click", this.delete_clickHandler, this);
       this.remove();
     }
   });
