@@ -1,7 +1,9 @@
 Encryptr
 ========
 
-A sample [Apache Cordova](http://cordova.apache.org/) application using [Crypton.io](https://github.com/SpiderOak/crypton)
+Encryptr is a zero-knowledge cloud-based password manager / e-wallet. 
+
+It's also a sample [Apache Cordova](http://cordova.apache.org/) application using [Crypton.io](https://github.com/SpiderOak/crypton)
 
 ## Requirements
 
