@@ -3,7 +3,7 @@ Image resources
 
 ### Icon
 
-The Encryptr icon isbased on a photo of a rotor from an Enigma machine.
+The Encryptr icon is based on a photo of a rotor from an Enigma machine.
 
 "An Enigma machine rotor, showing the side with flat electrical contacts. The turnover notch is visible on the left of the rotor."
 
