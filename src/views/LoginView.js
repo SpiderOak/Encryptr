@@ -72,7 +72,7 @@
           }
           // Set up MainView
           window.app.mainView = new window.app.MainView().render();
-          // Push a ListView 
+          // Push an EntriesView 
           var entriesCollection = new window.app.EntriesCollection();
           window.app.navigator.pushView(
             window.app.EntriesView,
