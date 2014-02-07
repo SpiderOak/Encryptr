@@ -12,7 +12,12 @@
     },
     initialize: function() {
       this.model.bind("change", this.render, this);
-      _.bindAll(this, "render", "editButton_clickHandler", "deleteButton_clickHandler", "viewActivate", "viewDeactivate");
+      _.bindAll(this,
+          "render",
+          "editButton_clickHandler",
+          "deleteButton_clickHandler",
+          "viewActivate",
+          "viewDeactivate");
       this.on("viewActivate",this.viewActivate);
       this.on("viewDeactivate",this.viewDeactivate);
     },
