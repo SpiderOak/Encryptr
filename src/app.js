@@ -20,6 +20,9 @@ var Encryptr = (function (window, console, undefined) {
     // Set the hostname for the Crypton server
     // window.crypton.host = "192.168.1.12";
     window.crypton.host = "localhost";
+
+    window.Offline.options =
+          {checks: {image: {url: "https://crypton.io/images/crypton.png"}}};
     // Render the login view (and bind its events)
     this.loginView = new this.LoginView().render();
     // Hax for Android 2.x not groking :active
@@ -98,6 +101,20 @@ var Encryptr = (function (window, console, undefined) {
 
   Encryptr.prototype.onMenuButton = function(event) {
     // ...
+  };
+
+  Encryptr.prototype.randomString = function(length) {
+    var charset = "!@#$%^&*()_+{}:<>?|,[];./~ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var i;
+    var result = "";
+    if(window.crypto && window.crypto.getRandomValues) {
+      var values = new Uint32Array(length);
+      window.crypto.getRandomValues(values);
+      for(i = 0; i < length; i++) {
+          result += charset[values[i] % charset.length];
+      }
+    }
+    return result; // If you can't say something nice, don's say anything at all
   };
 
   return Encryptr;
