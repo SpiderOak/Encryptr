@@ -4,12 +4,45 @@
 	<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width" />
 	<title>Encryptr, by Devgeeks</title>
 </head>
-<body>
+<body style="padding: 0; margin: 0;">
 	<a href="https://github.com/devgeeks/Encryptr"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
-	<div class="app-description">
-		<h2>Encryptr</h2>
-		<div>Encryptr is a zero-knowledge cloud-based password manager / e-wallet.</div>
-		<div>It's also a sample Apache Cordova application using Crypton.io</div>
+	<div class="page">
+		<div class="app-description">
+			<h3>Encryptr</h3>
+			<div>Encryptr is a zero-knowledge cloud-based password manager / e-wallet.</div>
+			<div>&nbsp;</div>
+			<div>&nbsp;</div>
+		</div>
 	</div>
+	<style scoped>
+		.page {
+			height: 100%;
+			background: url(shot.png) no-repeat center center fixed; 
+			-webkit-background-size: cover;
+			-moz-background-size: cover;
+			-o-background-size: cover;
+			background-size: cover;
+		}
+		.app-description {
+			position: absolute;
+			top: 20px;
+			left: 20px;
+			max-width: 300px;
+			padding: 0 25px;
+			border-radius: 10px;
+			background-color: rgba(0, 0, 0, 0.3);
+			color: #fff;
+			font-family: Helvetica, Arial, sans-serif;
+			text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+		}
+		.app-description a {
+			color: inherit;
+		}
+		@media all and (max-width: 500px) {
+			.app-description {
+				top: 120px;
+			}
+		}
+	</style>
 </body>
 </html>
