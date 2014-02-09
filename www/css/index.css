@@ -100,7 +100,9 @@ a {
   background-color: #e4e4e4;
 }
 .menu ul li a.active,
-.addMenu ul li a.active {
+.addMenu ul li a.active,
+.menu ul li a:active,
+.addMenu ul li a:active {
   background-color: #cccccc;
 }
 .addMenu {
@@ -224,20 +226,23 @@ div.login-input {
 a {
   color: inherit;
 }
-a.active {
+a.active,
+a:active {
   color: #999999;
 }
 a.button.primary {
   background-color: #999999;
   color: #ffffff;
 }
-a.button.primary.active {
+a.button.primary.active,
+a.button.primary:active {
   color: #ffffff;
   background-color: #888888;
   box-shadow: none;
   outline: 0;
 }
-a.button.active {
+a.button.active,
+a.button:active {
   color: #333333;
   background-color: #dddddd;
   box-shadow: none;
@@ -307,7 +312,8 @@ ul li a {
   margin: -10px;
   color: #000000;
 }
-ul li a.active {
+ul li a.active,
+ul li a:active {
   background-image: none;
   background-color: #3366cc;
   background-color: #dddddd;
