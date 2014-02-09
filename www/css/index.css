@@ -107,7 +107,8 @@ h1 {
   background-color: #333333;
   color: #ffffff;
 }
-.menu ul li a {
+.menu ul li a,
+.addMenu ul li a {
   color: #ffffff;
 }
 .menu ul li a.active,
@@ -190,7 +191,7 @@ select {
   margin: 0;
   display: block;
   width: 100%;
-  font: normal 100% -apple-system-font, "Roboto", Helvetica, Arial, sans-serif;
+  font: normal 100% "Source Sans Pro";
   outline: 0 none;
 }
 input[type="text"],
