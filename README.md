@@ -5,6 +5,8 @@ Encryptr is a zero-knowledge cloud-based password manager / e-wallet.
 
 It's also a sample [Apache Cordova](http://cordova.apache.org/) application using [Crypton.io](https://github.com/SpiderOak/crypton)
 
+![screenshot](http://f.cl.ly/items/2n1r3V1D0L3k3p1q2T2O/encryptr-screenshot.png)
+
 ## Requirements
 
 - Cordova CLI - [https://github.com/apache/cordova-cli/](https://github.com/apache/cordova-cli/)
