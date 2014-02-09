@@ -403,6 +403,26 @@ ul .spinner > div.sep {
 .dismissed {
   display: none;
 }
+.toast {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  display: inline-block;
+  text-align: center;
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  width: 250px;
+  margin-left: -125px;
+  padding: 10px;
+  background-color: #000;
+  color: #ccc;
+  opacity: 0;
+  border-radius: 5px;
+  border: 1px solid #fff;
+  z-index: 10002;
+  -webkit-transition: opacity 0.5s ease-out;
+  transition: opacity 0.5s ease-out;
+}
 .offline-ui {
   top: auto;
   bottom: 0;
