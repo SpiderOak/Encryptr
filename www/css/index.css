@@ -8,9 +8,9 @@ body {
   -webkit-user-select: none;
   user-select: none;
   font-family: "Source Sans Pro";
-  background-color: #dddddd;
+  background-color: #333333;
   font-size: 100%;
-  font-weight: 100;
+  font-weight: 200;
   padding: 0;
   margin: 0;
 }
@@ -46,14 +46,15 @@ h1 {
   left: 0;
   right: 0;
   height: 44px;
-  background-color: #dddddd;
-  border-bottom: 1px solid #999999;
+  background-color: #333333;
+  border-bottom: 1px solid #ffffff;
   z-index: 2;
 }
 .nav .title {
   position: absolute;
   left: 80px;
   right: 80px;
+  color: #ffffff;
   text-align: center;
   line-height: 44px;
   font-size: 110%;
@@ -67,14 +68,14 @@ h1 {
   line-height: 44px;
   height: 44px;
   padding: 0 10px;
-  color: #666666;
+  color: rgba(255, 255, 255, 0.7);
 }
 .nav .btn.disabled {
-  color: #bbbbbb;
+  color: #cccccc;
 }
 .nav .btn:active {
-  color: #000000;
-  text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
 }
 .nav .right {
   position: absolute;
@@ -97,18 +98,24 @@ h1 {
   top: 44px;
   left: 0;
   min-width: 150px;
-  background-color: #e4e4e4;
+  background-color: #333333;
+  color: #ffffff;
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
 }
 .menu ul li,
 .addMenu ul li {
-  background-color: #e4e4e4;
+  background-color: #333333;
+  color: #ffffff;
+}
+.menu ul li a {
+  color: #ffffff;
 }
 .menu ul li a.active,
 .addMenu ul li a.active,
 .menu ul li a:active,
 .addMenu ul li a:active {
-  background-color: #cccccc;`
+  background-color: #999999;
+  color: #ffffff;
 }
 .addMenu {
   left: auto;
@@ -124,7 +131,7 @@ a.btn {
 .subviews {
   box-sizing: border-box;
   position: absolute;
-  background-color: #e4e4e4;
+  background-color: #f6f6f6;
   top: 44px;
   left: 0;
   right: 0;
@@ -145,7 +152,7 @@ a.btn {
   display: none;
 }
 .small {
-  font-size: 70%;
+  font-size: 60%;
 }
 .login,
 .signup {
@@ -154,14 +161,15 @@ a.btn {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #dddddd;
+  background-color: #333333;
+  color: #ffffff;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   z-index: 101;
 }
 .signup {
-  background: -webkit-linear-gradient(top, #dddddd 0%, #aaaaaa 100%);
-  background: linear-gradient(to bottom, #dddddd 0%, #aaaaaa 100%);
+  background: -webkit-linear-gradient(top, #333333 0%, #000000 100%);
+  background: linear-gradient(to bottom, #333333 0%, #000000 100%);
 }
 .middle {
   text-align: center;
@@ -236,20 +244,19 @@ a:active {
   color: #999999;
 }
 a.button.primary {
-  background-color: #999999;
-  border-color: rgba(248, 248, 248, 0.8);
+  background-color: rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.8);
   color: #ffffff;
 }
 a.button.primary.active,
 a.button.primary:active {
   color: #ffffff;
-  background-color: #888888;
-  border: 1px solid rgba(248, 248, 248, 0.8);
+  background-color: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.8);
 }
 a.button.active,
 a.button:active {
-  color: #444444;
-  background-color: #dddddd;
+  background-color: rgba(0, 0, 0, 0.4);
   box-shadow: none;
   outline: 0;
 }
@@ -258,12 +265,12 @@ button {
   display: block;
   margin: 10px 20px;
   padding: 12px 40px;
-  border: 1px solid #999999;
+  border: 1px solid rgba(255, 255, 255, 0.8);
   border-radius: 5px;
   text-decoration: none;
   text-align: center;
   background-color: inherit;
-  color: #666666;
+  color: rgba(255, 255, 255, 0.8);
 }
 ul {
   margin: 0;
@@ -332,6 +339,10 @@ ul li.sep {
   border-top: 1px solid #ddd;
   color: #aaa;
   font-weight: 300;
+}
+ul li.entry {
+  font-size: 120%;
+  font-weight: 100;
 }
 ul .entriesViewLoading .sep {
   background-color: #e4e4e4;

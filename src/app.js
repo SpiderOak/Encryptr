@@ -19,7 +19,7 @@ var Encryptr = (function (window, console, undefined) {
 
     // Set the hostname for the Crypton server
     // window.crypton.host = "192.168.1.12";
-    window.crypton.host = "localhost";
+    window.crypton.host = "devgeeks.org";
 
     window.Offline.options =
           {checks: {image: {url: "https://crypton.io/images/crypton.png"}}};
@@ -48,6 +48,9 @@ var Encryptr = (function (window, console, undefined) {
   Encryptr.prototype.onDeviceReady = function(event) {
     if (window.device && window.device.platform === "iOS" && parseFloat(window.device.version) >= 7.0) {
       window.document.querySelectorAll(".app")[0].style.top = "20px"; // status bar hax
+    }
+    if (window.StatusBar && $.os.ios) {
+      window.StatusBar.styleLightContent();
     }
     // Backstack effects
     Encryptr.prototype.noEffect = new window.BackStack.NoEffect();
