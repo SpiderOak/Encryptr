@@ -7,9 +7,10 @@ body {
   -webkit-text-size-adjust: none;
   -webkit-user-select: none;
   user-select: none;
-  font-family: -apple-system-font, "HelveticaNueue", Helvetica, Arial, sans-serif;
-  background-color: #cccccc;
+  font-family: "Source Sans Pro";
+  background-color: #dddddd;
   font-size: 100%;
+  font-weight: 100;
   padding: 0;
   margin: 0;
 }
@@ -18,6 +19,9 @@ p {
 }
 a {
   cursor: pointer;
+}
+h1 {
+  padding: 0;
 }
 .app {
   background-color: #ffffff;
@@ -42,7 +46,7 @@ a {
   left: 0;
   right: 0;
   height: 44px;
-  background-color: #cccccc;
+  background-color: #dddddd;
   border-bottom: 1px solid #999999;
   z-index: 2;
 }
@@ -52,6 +56,7 @@ a {
   right: 80px;
   text-align: center;
   line-height: 44px;
+  font-size: 110%;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -93,7 +98,7 @@ a {
   left: 0;
   min-width: 150px;
   background-color: #e4e4e4;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.4);
 }
 .menu ul li,
 .addMenu ul li {
@@ -103,7 +108,7 @@ a {
 .addMenu ul li a.active,
 .menu ul li a:active,
 .addMenu ul li a:active {
-  background-color: #cccccc;
+  background-color: #cccccc;`
 }
 .addMenu {
   left: auto;
@@ -149,14 +154,14 @@ a.btn {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #cccccc;
+  background-color: #dddddd;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   z-index: 101;
 }
 .signup {
-  background: -webkit-linear-gradient(top, #cccccc 0%, #999999 100%);
-  background: linear-gradient(to bottom, #cccccc 0%, #999999 100%);
+  background: -webkit-linear-gradient(top, #dddddd 0%, #aaaaaa 100%);
+  background: linear-gradient(to bottom, #dddddd 0%, #aaaaaa 100%);
 }
 .middle {
   text-align: center;
@@ -232,18 +237,18 @@ a:active {
 }
 a.button.primary {
   background-color: #999999;
+  border-color: rgba(248, 248, 248, 0.8);
   color: #ffffff;
 }
 a.button.primary.active,
 a.button.primary:active {
   color: #ffffff;
   background-color: #888888;
-  box-shadow: none;
-  outline: 0;
+  border: 1px solid rgba(248, 248, 248, 0.8);
 }
 a.button.active,
 a.button:active {
-  color: #333333;
+  color: #444444;
   background-color: #dddddd;
   box-shadow: none;
   outline: 0;
@@ -252,15 +257,12 @@ a.button,
 button {
   display: block;
   margin: 10px 20px;
-  padding: 8px 40px;
-  border-top: 1px solid rgba(255, 255, 255, 0.34);
-  border-right: 1px solid rgba(0, 0, 0, 0.04);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.43);
-  border-left: 1px solid rgba(0, 0, 0, 0.04);
+  padding: 12px 40px;
+  border: 1px solid #999999;
   border-radius: 5px;
   text-decoration: none;
   text-align: center;
-  background-color: #cccccc;
+  background-color: inherit;
   color: #666666;
 }
 ul {
@@ -315,7 +317,6 @@ ul li a {
 ul li a.active,
 ul li a:active {
   background-image: none;
-  background-color: #3366cc;
   background-color: #dddddd;
   color: black;
 }
@@ -330,7 +331,7 @@ ul li.sep {
   border: none;
   border-top: 1px solid #ddd;
   color: #aaa;
-  font-weight: bold;
+  font-weight: 300;
 }
 ul .entriesViewLoading .sep {
   background-color: #e4e4e4;
@@ -385,7 +386,7 @@ ul .spinner > div.sep {
   border: none;
   border-top: 1px solid #e4e4e4;
   color: #aaaaaa;
-  font-weight: bold;
+  font-weight: 300;
 }
 .entriesViewLoading .sep {
   background-color: #e4e4e4;
