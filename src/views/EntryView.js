@@ -8,7 +8,7 @@
 
   var EntryView = Backbone.View.extend({
     events: {
-      "click .copyable": "a_clickHandler"
+      "longTap .copyable": "copyable_longTapHandler"
     },
     initialize: function() {
       this.model.bind("change", this.render, this);
@@ -16,13 +16,16 @@
           "render",
           "editButton_clickHandler",
           "deleteButton_clickHandler",
-          "a_clickHandler",
           "viewActivate",
           "viewDeactivate");
       this.on("viewActivate",this.viewActivate);
       this.on("viewDeactivate",this.viewDeactivate);
+      if (!window.app.toastView) {
+        window.app.toastView = new window.app.ToastView();
+      }
     },
     render: function() {
+      var _this = this;
       this.$el.html(
         window.tmpl["entryView"](
           this.model.toJSON()
@@ -30,11 +33,26 @@
       );
       window.app.mainView.on("deleteentry", this.deleteButton_clickHandler, this);
       window.app.mainView.once("editentry", this.editButton_clickHandler, this);
+
+      // Desktop polyfill for longTap
+      var timer = null;
+      this.$(".copyable").on("mousedown", function(event) {
+        timer = setTimeout( function() {
+          _this.copyable_longTapHandler(event);
+        }, 750 );
+      });
+      this.$(".copyable").on("mouseup", function(event) {
+        clearTimeout( timer );
+      });
+
       return this;
     },
-    a_clickHandler: function(event) {
+    copyable_longTapHandler: function(event) {
+      event.preventDefault();
+      event.stopPropagation();
       var text = $(event.target).text();
       window.app.copyToClipboard(text);
+      window.app.toastView.show("Copied to clipboard");
     },
     editButton_clickHandler: function(event) {
       window.app.navigator.replaceView(
