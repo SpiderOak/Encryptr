@@ -8,7 +8,7 @@
 
   var EntryView = Backbone.View.extend({
     events: {
-      "click a": "a_clickHandler"
+      "click .copyable": "a_clickHandler"
     },
     initialize: function() {
       this.model.bind("change", this.render, this);

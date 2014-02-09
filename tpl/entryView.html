@@ -4,6 +4,6 @@
 	<li><em>{{= it.type }}</em></li> -->
 	{{ _.each(it.items, function(item) { }}
 	{{? item.value }}<li class="sep">{{= item.key}}</li>
-	<li><a>{{= item.value }}</a></li>{{? }}
+	<li><a class="copyable">{{= item.value }}</a></li>{{? }}
 	{{ }); }}
 </ul>
