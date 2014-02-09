@@ -65,7 +65,7 @@ var Encryptr = (function (window, console, undefined) {
 
     // Platform specific clipboard plugin / code
     if ($.os.ios || $.os.android) {
-      Encryptr.prototype.copyToClipboard = window.cordova.clipboard.copy;
+      Encryptr.prototype.copyToClipboard = window.cordova.plugins.clipboard.copy;
     } else if ($.os.bb10) {
       Encryptr.prototype.copyToClipboard = window.community.clipboard.setText;
     } else if ($.os.nodeWebkit && window.require ) { // How to *actually* detect node-webkit ?
