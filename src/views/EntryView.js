@@ -8,7 +8,7 @@
 
   var EntryView = Backbone.View.extend({
     events: {
-      // ...
+      "click a": "a_clickHandler"
     },
     initialize: function() {
       this.model.bind("change", this.render, this);
@@ -16,6 +16,7 @@
           "render",
           "editButton_clickHandler",
           "deleteButton_clickHandler",
+          "a_clickHandler",
           "viewActivate",
           "viewDeactivate");
       this.on("viewActivate",this.viewActivate);
@@ -30,6 +31,10 @@
       window.app.mainView.on("deleteentry", this.deleteButton_clickHandler, this);
       window.app.mainView.once("editentry", this.editButton_clickHandler, this);
       return this;
+    },
+    a_clickHandler: function(event) {
+      var text = $(event.target).text();
+      window.app.copyToClipboard(text);
     },
     editButton_clickHandler: function(event) {
       window.app.navigator.replaceView(

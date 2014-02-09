@@ -16,6 +16,9 @@ body {
 p {
   padding: 10px;
 }
+a {
+  cursor: pointer;
+}
 .app {
   background-color: #ffffff;
   position: absolute;

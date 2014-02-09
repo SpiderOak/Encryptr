@@ -23,6 +23,9 @@ var Encryptr = (function (window, console, undefined) {
 
     window.Offline.options =
           {checks: {image: {url: "https://crypton.io/images/crypton.png"}}};
+
+    var isNodeWebkit = (typeof process == "object");
+    if (isNodeWebkit) $.os.nodeWebkit = true;
     // Render the login view (and bind its events)
     this.loginView = new this.LoginView().render();
     // Hax for Android 2.x not groking :active
@@ -59,6 +62,22 @@ var Encryptr = (function (window, console, undefined) {
     }
     window.document.addEventListener("backbutton", Encryptr.prototype.onBackButton, false);
     window.document.addEventListener("menubutton", Encryptr.prototype.onMenuButton, false);
+
+    // Platform specific clipboard plugin / code
+    if ($.os.ios || $.os.android) {
+      Encryptr.prototype.copyToClipboard = window.cordova.clipboard.copy;
+    } else if ($.os.bb10) {
+      Encryptr.prototype.copyToClipboard = window.community.clipboard.setText;
+    } else if ($.os.nodeWebkit && window.require ) { // How to *actually* detect node-webkit ?
+      var gui = window.require('nw.gui');
+      window.clipboard = gui.Clipboard.get();
+      Encryptr.prototype.copyToClipboard = function(text) {
+        window.clipboard.set(text, 'text');
+      };
+    } else {
+      // Fallback to empty browser polyfill
+      Encryptr.prototype.copyToClipboard = function() {};
+    }
   };
 
   Encryptr.prototype.setOffline = function(event) {
