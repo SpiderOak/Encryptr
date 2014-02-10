@@ -10,7 +10,7 @@ body {
   font-family: "Source Sans Pro";
   background-color: #333333;
   font-size: 100%;
-  font-weight: 200;
+  font-weight: 300;
   padding: 0;
   margin: 0;
 }
@@ -343,7 +343,7 @@ ul li.sep {
 }
 ul li.entry {
   font-size: 120%;
-  font-weight: 100;
+  font-weight: 200;
 }
 ul .entriesViewLoading .sep {
   background-color: #e4e4e4;
