@@ -20,16 +20,32 @@
       this.on("viewDeactivate",this.viewDeactivate);
 
       this.subViews = [];
+      this.hasItems = false;
     },
     render: function() {
       this.$el.html(window.tmpl["entriesView"]({}));
       return this;
     },
     addAll: function () {
-      this.$("ul").html("");
+      if (this.collection.models.length === 0) {
+        window.setTimeout(function() {
+          $(".emptyEntries").show();
+        }, 300);
+      } else {
+        $(".emptyEntries").hide();
+      }
+      this.$("ul").html("<li class='sep'>Entries</li>");
       this.collection.each(this.addOne);
     },
     addOne: function(model) {
+      $(".emptyEntries").hide();
+      if (this.collection.models.length === 0) {
+        window.setTimeout(function() {
+          $(".emptyEntries").show();
+        }, 300);
+      } else {
+        $(".emptyEntries").hide();
+      }
       var view = new Encryptr.prototype.EntriesListItemView({
         model: model
       });

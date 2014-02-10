@@ -273,6 +273,19 @@ button {
   background-color: inherit;
   color: rgba(255, 255, 255, 0.8);
 }
+.emptyEntries {
+  position: relative;
+  top: 100px;
+  width: 200px;
+  font-size: 180%;
+  font-weight: bold;
+  margin: 0 auto;
+  color: #ccc;
+  text-align: center;
+}
+.emptyEntries small {
+  font-size: 40%;
+}
 ul {
   margin: 0;
   padding: 0;
