@@ -103,13 +103,13 @@ module.exports = function(grunt) {
         stdout: true
       },
       debug_ios: {
-        command: 'cordova build ios && cordova emulate ios'
+        command: './node_modules/.bin/cordova -d emulate ios'
       },
       debug_android: {
-        command: 'cordova build android && cordova emulate android'
+        command: './node_modules/.bin/cordova -d run android'
       },
       debug_blackberry10: {
-        command: 'cordova build blackberry10 && cordova emulate blackberry10'
+        command: './node_modules/.bin/cordova -d emulate blackberry10'
       },
       // Some different reporters...
       mochaspec: {
