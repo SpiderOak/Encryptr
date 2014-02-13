@@ -64,24 +64,15 @@
           passphrase: passphrase,
           session: session
         });
-        window.app.session.load("entries", function(err, entries) {
-          if (err) {
-            navigator.notification.alert(err);
-            $(".blocker").hide();
-            return;
-          }
-          // Set up MainView
-          window.app.mainView = new window.app.MainView().render();
-          // Push an EntriesView 
-          var entriesCollection = new window.app.EntriesCollection();
-          window.app.navigator.pushView(
-            window.app.EntriesView,
-            { collection: entriesCollection },
-            window.app.noEffect
-          );
-          $(".blocker").hide();
-          _this.dismiss();
-        });
+        window.app.mainView = new window.app.MainView().render();
+        var entriesCollection = new window.app.EntriesCollection();
+        window.app.navigator.pushView(
+          window.app.EntriesView,
+          { collection: entriesCollection },
+          window.app.noEffect
+        );
+        _this.dismiss();
+        $(".blocker").hide();
       });
     },
     loginButton_clickHandler: function(event) {

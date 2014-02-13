@@ -27,6 +27,7 @@
       return this;
     },
     addAll: function () {
+      this.$(".entriesViewLoading").removeClass("loadingEntries");
       if (this.collection.models.length === 0) {
         window.setTimeout(function() {
           $(".emptyEntries").show();
@@ -34,11 +35,12 @@
       } else {
         $(".emptyEntries").hide();
       }
-      this.$("ul").html("<li class='sep'>Entries</li>");
+      this.$(".entries").html("");
       this.collection.each(this.addOne);
     },
     addOne: function(model) {
       $(".emptyEntries").hide();
+      this.$(".entriesViewLoading").removeClass("loadingEntries");
       if (this.collection.models.length === 0) {
         window.setTimeout(function() {
           $(".emptyEntries").show();
@@ -49,11 +51,20 @@
       var view = new Encryptr.prototype.EntriesListItemView({
         model: model
       });
-      this.$("ul").append(view.render().el);
+      this.$(".entries").append(view.render().el);
       this.subViews.push(view);
     },
     viewActivate: function(event) {
-      this.collection.fetch();
+      var _this = this;
+      this.collection.fetch({
+        success: function(entries) {
+          if (entries.length === 0) {
+            _this.addAll();
+          }
+        }, error: function(err) {
+          console.log(err); // @TODO: Handle this error
+        }
+      });
     },
     viewDeactivate: function(event) {
       // ...

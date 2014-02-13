@@ -274,6 +274,7 @@ button {
   color: rgba(255, 255, 255, 0.8);
 }
 .emptyEntries {
+  display: none;
   position: relative;
   top: 100px;
   width: 200px;
@@ -290,7 +291,7 @@ ul {
   margin: 0;
   padding: 0;
   border-width: 0 0 0 1px;
-  box-shadow: 0 -3px 5px rgba(0, 0, 0, 0.4);
+  /*box-shadow: 0 -3px 5px rgba(0, 0, 0, 0.4);*/
   /* Override some defaults from offline js */
   /* Spinner */
 }
@@ -305,7 +306,7 @@ ul li {
   border-top: 1px solid #cccccc;
   list-style-type: none;
   margin: 0;
-  padding: 10px;
+  padding: 15px;
   /*background-color: #3366cc;*/
   color: black;
 }
@@ -331,8 +332,8 @@ ul li a {
   overflow: hidden;
   text-decoration: none;
   display: block;
-  padding: 10px;
-  margin: -10px;
+  padding: 15px;
+  margin: -15px;
   color: #000000;
 }
 ul li a.active,
@@ -347,7 +348,7 @@ ul li ::-webkit-input-placeholder {
 }
 ul li.sep {
   font-size: 90%;
-  padding: 2px 10px;
+  padding: 5px 10px;
   background-color: white;
   border: none;
   border-top: 1px solid #ddd;
@@ -358,15 +359,15 @@ ul li.entry {
   font-size: 120%;
   font-weight: 200;
 }
-ul .entriesViewLoading .sep {
-  background-color: #e4e4e4;
-  color: #000;
-}
-ul .entriesViewLoading li {
+ul .entriesViewLoading {
   text-align: center;
 }
 ul .entriesViewLoading {
   display: none;
+}
+ul .entriesViewLoading.sep {
+  color: #000;
+  background-color: #ddd;
 }
 ul .entriesViewLoading.loadingEntries {
   display: block;
