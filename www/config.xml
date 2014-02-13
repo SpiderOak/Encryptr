@@ -9,6 +9,7 @@
     </author>
     <content src="index.html" />
     <access origin="https://crypton.io" subdomains="true" />
+    <access origin="https://devgeeks.org" subdomains="true" />
     <preference name="orientation" value="default" />
     <preference name="target-device" value="universal" />
     <preference name="fullscreen" value="false" />
