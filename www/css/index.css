@@ -147,7 +147,7 @@ a.btn {
   bottom: -1px;
 }
 .subviews > div {
-  overflow: visible ;
+  overflow: auto !important ;
 }
 .hidden {
   display: none;
