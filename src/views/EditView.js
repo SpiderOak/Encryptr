@@ -44,6 +44,10 @@
     form_submitHandler: function(event) {
       var _this = this;
       if (event) event.preventDefault();
+      if ($('input[name="label"]')[0].value === "") {
+        window.app.toastView.show("Label, please.");
+        return;
+      }
       $("input").blur();
       $(".blocker").show();
       var items = this.model.get("items");
