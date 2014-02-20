@@ -16,6 +16,9 @@
       this.on("viewDeactivate",this.viewDeactivate);
       this.model.bind("all", this.addAll, this);
       this.subViews = [];
+      if (!window.app.toastView) {
+        window.app.toastView = new window.app.ToastView();
+      }
     },
     render: function() {
       var _this = this;
@@ -44,6 +47,12 @@
     form_submitHandler: function(event) {
       var _this = this;
       if (event) event.preventDefault();
+      if (_this.$('input[name="label"]').val() === "") {
+        window.app.toastView.show("The label is required.");
+        _this.$('input[name="label"]').css("border","1px solid red");
+        return;
+      }
+      _this.$('input[name="label"]').css("border","none");
       $("input").blur();
       $(".blocker").show();
       var items = this.model.get("items");
