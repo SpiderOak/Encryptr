@@ -26,6 +26,10 @@
       event.preventDefault();
       window.app.loginView.disable();
       this.dismiss();
+      if (window.app.settings && window.app.settings.username) {
+        delete window.app.settings.username;
+        window.localStorage.setItem("settings", JSON.stringify(window.app.settings));
+      }
       // Throw up the login screen
       window.app.loginView.show();
       window.setTimeout(function() {

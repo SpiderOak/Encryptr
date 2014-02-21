@@ -17,6 +17,9 @@ var Encryptr = (function (window, console, undefined) {
     window.document.addEventListener("offline", this.setOffline, false);
     window.document.addEventListener("online", this.setOnline, false);
 
+    var settings = window.localStorage.getItem("settings") || "{}";
+    window.app.settings = JSON.parse(settings);
+
     // Set the hostname for the Crypton server
     // window.crypton.host = "192.168.1.12";
     window.crypton.host = "localhost";

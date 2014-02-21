@@ -30,6 +30,10 @@
       window.setTimeout(function() {
         _this.signupView.$el.removeClass("hidden");
       }, 100);
+      if (window.app.settings && window.app.settings.username) {
+        $("#username").val(window.app.settings.username);
+        $("#passphrase").focus();
+      }
       return this;
     },
     input_focusHandler: function(event) {
@@ -58,6 +62,8 @@
           $(".blocker").hide();
           return;
         }
+        window.app.settings = _.extend(window.app.settings, {username: username});
+        window.localStorage.setItem("settings", JSON.stringify(window.app.settings));
         window.app.session = session;
         window.app.accountModel = new window.app.AccountModel({
           username: username,
@@ -98,7 +104,16 @@
       var _this = this;
       if (_this.$el.hasClass("dismissed")) {
         _this.$el.removeClass("dismissed");
-        _this.$el.animate({"-webkit-transform":"translate3d(0,0,0)"}, 250, "ease-in-out");
+        _this.$el.animate({"-webkit-transform":"translate3d(0,0,0)"}, {
+          duration: 250,
+          easing: "ease-in-out",
+          complete: function() {
+            if (window.app.settings && window.app.settings.username) {
+              $("#username").val(window.app.settings.username);
+              $("#passphrase").focus();
+            }
+          }
+        });
       }
     },
     disable: function() {
