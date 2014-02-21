@@ -18,4 +18,5 @@
     <preference name="DisallowOverscroll" value="true" />
     <preference name="AutoHideSplashScreen" value="true" />
     <preference name="BackupWebStorage" value="none" />
+    <preference name="KeyboardDisplayRequiresUserAction" value="false"/>
 </widget>
