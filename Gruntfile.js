@@ -71,6 +71,15 @@ module.exports = function(grunt) {
         ]
       }
     },
+    mochaTest: {
+      test: {
+        options: {
+          reporter: 'spec'
+        },
+        timeout: 30e3,
+        src: ['functional-tests/*.js']
+      }
+    },
     uglify: {
       dist: {
         src: [
@@ -186,6 +195,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-dot-compiler');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-mocha-test');
 
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
