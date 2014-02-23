@@ -455,8 +455,8 @@ ul .spinner > div.sep {
   bottom: 0;
   padding: 5px ;
 }
-.offline-ui-retry {
-  line-height: 30px ;
+.offline-ui .offline-ui-retry {
+  line-height: 2em;
 }
 .spinner {
   width: 100px;
