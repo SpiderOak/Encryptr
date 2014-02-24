@@ -175,6 +175,10 @@ a.btn {
 .middle {
   text-align: center;
 }
+.login-form {
+  max-width: 320px;
+  margin: 0 auto;
+}
 input[type="text"],
 input[type="password"],
 input[type="tel"],
