@@ -72,7 +72,7 @@ describe('Encryptr', function() {
           .waitForElementByCss(".signupButton", 100000)
           .then(function() {
             return browser.elementByCss(".signupButton");
-          });
+          }).should.eventually.be.ok;
       });
       it("should have the correct text", function() {
           return browser.elementByCss(".signupButton")
@@ -130,8 +130,8 @@ describe('Encryptr', function() {
           }).should.eventually.equal("No entries yet\nAdd some now with the '+' above");
       });
     });
-// Log out
-    describe("log out", function() {
+// Start over
+    describe("start over", function() {
       it("should have a menu button", function() {
         return browser
           .waitForElementByCss(".menu-btn", 100000)
@@ -171,7 +171,7 @@ describe('Encryptr', function() {
           })
           .then(function() {
             return browser.elementByCss("input[name=username]");
-          });
+          }).should.eventually.be.ok;
       });
       it("should have a placeholder text of 'Username'", function() {
           return browser.elementByCss("input[name=username]")
@@ -184,7 +184,7 @@ describe('Encryptr', function() {
           .waitForElementByCss("input[name=passphrase]", 100000)
           .then(function() {
             return browser.elementByCss("input[name=passphrase]");
-          });
+          }).should.eventually.be.ok;
       });
       it("should have a placeholder text of 'Passphrase'", function() {
           return browser.elementByCss("input[name=passphrase]")
@@ -242,7 +242,7 @@ describe('Encryptr', function() {
           }).should.eventually.equal("No entries yet\nAdd some now with the '+' above");
       });
     });
-// Create an entry
+// Add entry menu button
     describe("add entry button and menu", function() {
       it("should have an 'add entries' button", function() {
         return browser
@@ -265,7 +265,11 @@ describe('Encryptr', function() {
           }).should.eventually.be.ok;
       });
       it("should show three items in the add menu (General, Credit Card and Password)", function() {
-        // ...
+        return browser
+          .waitForElementByCss(".addMenu:not(.dismissed)")
+          .then(function() {
+            return browser.waitForConditionInBrowser("document.querySelectorAll('.addMenu ul li').length === 3", 100000);
+          }).should.eventually.be.ok;
       });
       it("should hide the add menu when clicked anywhere else", function() {
         return browser.noop()
@@ -280,27 +284,92 @@ describe('Encryptr', function() {
           }).should.eventually.be.ok;
       });
     });
-// Log back out
-    describe("log out", function() {
-      it("should be able to log out", function() {
+// Add an actual General entry
+    describe("add a general entry", function() {
+      it("should navigate to the edit screen for a General entry", function() {
         return browser
-          .waitForElementByCss(".menu-btn", 100000)
+          .waitForElementByCss(".add-btn")
           .then(function() {
-            return $(".menu-btn").click();
+            return $(".add-btn").click();
           })
           .then(function() {
-            return browser.waitForElementByCss(".menu-logout", 100000);
+            return browser.waitForElementByCss(".addMenu:not(.dismissed)");
           })
           .then(function() {
-            return $(".menu-logout").click();
+            return $(".addMenu li a[data-model=GeneralType]");
           })
           .then(function() {
-            return browser.waitForElementByCss(".login:not(.dismissed)", 100000);
+            return $(".addMenu li a[data-model=GeneralType]").click();
           })
           .then(function() {
-            return $(".loginButton").text();
-          }).should.eventually.equal("Log in");
+            return browser.waitForConditionInBrowser("document.querySelectorAll('input[name=label]')[0].disabled === false", 100000);
+          })
+          .then(function() {
+            return $(".nav .title").text();
+          }).should.eventually.equal("General");
+      });
+      it("should have a label input", function() {
+        return browser
+          .waitForElementByCss("input[name=label]", 100000)
+          .then(function() {
+            return browser.elementByCss("input[name=label]");
+          }).should.eventually.be.ok;
+      });
+      it("should have a text input", function() {
+        return browser
+          .waitForElementByCss("input[name=text]", 100000)
+          .then(function() {
+            return browser.elementByCss("input[name=text]");
+          }).should.eventually.be.ok;
+      });
+      it("should have a placeholder text of 'Text here'", function() {
+          return browser.elementByCss("input[name=text]")
+          .then(function(el) {
+            return browser.getAttribute(el, "placeholder");
+          }).should.eventually.equal("Text here");
+      });
+      it("should be able to enter a label", function() {
+        return browser
+          .waitForConditionInBrowser("document.querySelectorAll('input[name=label]')[0].disabled === false", 100000)
+          .then(function() {
+            return $('input[name=label]').val("New general entry");
+          })
+          .then(function() {
+            return $('input[name=label]').val();
+          }).should.eventually.equal("New general entry");
+      });
+      it("should be able to enter a text value", function() {
+        return browser
+          .waitForConditionInBrowser("document.querySelectorAll('input[name=text]')[0].disabled === false", 100000)
+          .then(function() {
+            return $('input[name=text]').val("New text value");
+          })
+          .then(function() {
+            return $('input[name=text]').val();
+          }).should.eventually.equal("New text value");
       });
     });
+// Log back out
+    // describe("log out", function() {
+    //   it("should be able to log out", function() {
+    //     return browser
+    //       .waitForElementByCss(".menu-btn", 100000)
+    //       .then(function() {
+    //         return $(".menu-btn").click();
+    //       })
+    //       .then(function() {
+    //         return browser.waitForElementByCss(".menu-logout", 100000);
+    //       })
+    //       .then(function() {
+    //         return $(".menu-logout").click();
+    //       })
+    //       .then(function() {
+    //         return browser.waitForElementByCss(".login:not(.dismissed)", 100000);
+    //       })
+    //       .then(function() {
+    //         return $(".loginButton").text();
+    //       }).should.eventually.equal("Log in");
+    //   });
+    // });
   });
 });
