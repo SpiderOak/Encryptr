@@ -16,10 +16,13 @@ var wdQuery = require("wd-query");
 chaiAsPromised.transferPromiseness = wd.transferPromiseness;
 
 describe('Encryptr', function() {
-  this.timeout(30000);
+  this.timeout(50000);
   var browser;
   var appURL;
   var $;
+
+  var newusername = "user" + Date.now().toString();
+  var newpassphrase = "shhh" + Date.now().toString();
 
   if (process.env.APPIUM === "android") {
     appURL = projectRoot + "/platforms/android/bin/Encryptr-debug.apk";
@@ -43,28 +46,129 @@ describe('Encryptr', function() {
         browserName: '',
         implicitWaitMs: 500
       })
+      .setAsyncScriptTimeout(30000)
       .windowHandles()
       .then(function(handles) {
         return (process.env.APPIUM === "android") ? browser.window(handles[1]) : browser.window(handles[0]);
       });
   });
 
+  after(function() {
+    return browser.noop()
+    .then(function() { return browser.quit(); }).done();
+  });
+
   // using mocha-as-promised and chai-as-promised is the best way
-  describe("Login", function() {
+  describe("Functional tests", function() {
 
     beforeEach(function() {
       // ...
     });
 
-    after(function() {
-      return browser
-        .quit();
-    });
-
-    describe("logging in", function() {
-      it("should have a username field", function() {
+// Registration :: "user" + Date.now().toString()
+    describe("registration", function() {
+      it("should have a 'Register for an account »' link", function() {
         return browser
-          .waitForElementByCss("input[name=username]", 10000)
+          .waitForElementByCss(".signupButton", 100000)
+          .then(function() {
+            return browser.elementByCss(".signupButton");
+          });
+      });
+      it("should have the correct text", function() {
+          return browser.elementByCss(".signupButton")
+          .then(function(el) {
+            return el.text();
+          }).should.eventually.equal("Register for an account »");
+      });
+      it("should be able to switch to the registration screen", function() {
+        return browser
+          .waitForElementByCss(".signupButton", 100000)
+          .then(function() {
+            return $(".signupButton").click();
+          })
+          .then(function() {
+            return browser.waitForElementByCss("input[name=newusername]", 100000);
+          }).should.eventually.be.ok;
+      });
+      it("should be able to enter a new username", function() {
+        return browser.noop()
+          .then(function() {
+            return $('input[name=newusername]').val(newusername);
+          })
+          .then(function() {
+            return $('input[name=newusername]').val();
+          }).should.eventually.equal(newusername);
+      });
+      it("should be able to enter a new passphrase", function() {
+        return browser.noop()
+          .then(function() {
+            return $('input[name=newpassphrase]').val(newpassphrase);
+          })
+          .then(function() {
+            return $('input[name=newpassphrase]').val();
+          }).should.eventually.equal(newpassphrase);
+      });
+      it("should be able to register", function() {
+        return browser
+          .waitForElementByCss(".button.signupButton", 100000)
+          .then(function() {
+            return $(".button.signupButton").click();
+          })
+          .then(function() {
+            return browser
+              .waitForElementByCss(".login.dismissed", 100000);
+          })
+          .then(function() {
+            return browser
+              .waitForConditionInBrowser("document.querySelectorAll('.emptyEntries')[0].style.display === 'block'", 100000);
+          })
+          .then(function() {
+            return $(".emptyEntries").text();
+          })
+          .then(function(text) {
+            return text;
+          }).should.eventually.equal("No entries yet\nAdd some now with the '+' above");
+      });
+    });
+// Log out
+    describe("log out", function() {
+      it("should have a menu button", function() {
+        return browser
+          .waitForElementByCss(".menu-btn", 100000)
+          .then(function() {
+            return $(".menu-btn");
+          }).should.eventually.be.ok;
+      });
+      it("should be able to log out", function() {
+        return browser
+          .waitForElementByCss(".menu-btn", 100000)
+          .then(function() {
+            return $(".menu-btn").click();
+          })
+          .then(function() {
+            return browser.waitForElementByCss(".menu-logout", 100000);
+          })
+          .then(function() {
+            return $(".menu-logout").click();
+          })
+          .then(function() {
+            return browser.waitForElementByCss(".login:not(.dismissed)", 100000);
+          })
+          .then(function() {
+            return $(".loginButton").text();
+          }).should.eventually.equal("Log in");
+      });
+    });
+// Log back in
+    describe("log in", function() {
+      it("should have a username field", function() {
+        return browser.noop()
+          .then(function() {
+            return browser.waitForConditionInBrowser("document.querySelectorAll('input[name=username]')[0].disabled == false", 10000);
+          })
+          .then(function() {
+            return browser.waitForElementByCss("input[name=username]", 100000);
+          })
           .then(function() {
             return browser.elementByCss("input[name=username]");
           });
@@ -77,7 +181,7 @@ describe('Encryptr', function() {
       });
       it("should have a passphrase field", function() {
         return browser
-          .waitForElementByCss("input[name=passphrase]", 10000)
+          .waitForElementByCss("input[name=passphrase]", 100000)
           .then(function() {
             return browser.elementByCss("input[name=passphrase]");
           });
@@ -89,22 +193,23 @@ describe('Encryptr', function() {
           }).should.eventually.equal("Passphrase");
       });
       it("should be able to enter a username", function() {
-        return browser.noop()
+        return browser
+          .waitForConditionInBrowser("document.querySelectorAll('input[name=username]')[0].disabled === false", 100000)
           .then(function() {
-            return $('input[name=username]').val('test1');
+            return $('input[name=username]').val(newusername);
           })
           .then(function() {
             return $('input[name=username]').val();
-          }).should.eventually.equal("test1");
+          }).should.eventually.equal(newusername);
       });
-      it("should be able to enter a password", function() {
+      it("should be able to enter a passphrase", function() {
         return browser.noop()
           .then(function() {
-            return $('input[name=passphrase]').val('pass1234');
+            return $('input[name=passphrase]').val(newpassphrase);
           })
           .then(function() {
             return $('input[name=passphrase]').val();
-          }).should.eventually.equal("pass1234");
+          }).should.eventually.equal(newpassphrase);
       });
       it("should have a login button", function() {
         return browser.noop()
@@ -122,17 +227,64 @@ describe('Encryptr', function() {
             return $(".loginButton").click();
           })
           .then(function() {
-            return browser.waitForElementByCss(".entriesViewLoading", 100000);
+            return browser
+              .waitForElementByCss(".login.dismissed", 100000);
           })
           .then(function() {
-            return $(".entriesViewLoading").text();
+            return browser
+              .waitForConditionInBrowser("document.querySelectorAll('.emptyEntries')[0].style.display === 'block'", 100000);
+          })
+          .then(function() {
+            return $(".emptyEntries").text();
+          })
+          .then(function(text) {
+            return text;
+          }).should.eventually.equal("No entries yet\nAdd some now with the '+' above");
+      });
+    });
+// Create an entry
+    describe("add entry button and menu", function() {
+      it("should have an 'add entries' button", function() {
+        return browser
+          .waitForElementByCss(".add-btn", 100000)
+          .then(function() {
+            return $(".add-btn i.fa-plus");
+          }).should.eventually.be.ok;
+      });
+      it("should show the add menu when clicked", function() {
+        return browser
+          .waitForElementByCss(".add-btn")
+          .then(function() {
+            return $(".add-btn").click();
+          })
+          .then(function() {
+            return browser.waitForElementByCss(".addMenu:not(.dismissed)");
+          })
+          .then(function() {
+            return $(".addMenu:not(.dismissed)");
+          }).should.eventually.be.ok;
+      });
+      it("should show three items in the add menu (General, Credit Card and Password)", function() {
+        // ...
+      });
+      it("should hide the add menu when clicked anywhere else", function() {
+        return browser.noop()
+          .then(function() {
+            return $(".emptyEntries").click();
+          })
+          .then(function() {
+            return browser.waitForElementByCss(".addMenu.dismissed", 100000);
+          })
+          .then(function() {
+            return $(".addMenu.dismissed");
           }).should.eventually.be.ok;
       });
     });
-    describe("logging out", function() {
+// Log back out
+    describe("log out", function() {
       it("should be able to log out", function() {
         return browser
-          .waitForElementByCss(".menu-btn")
+          .waitForElementByCss(".menu-btn", 100000)
           .then(function() {
             return $(".menu-btn").click();
           })
