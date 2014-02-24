@@ -351,23 +351,23 @@ describe('Encryptr', function() {
       });
       it("should be able to save the new entry", function() {
         return browser
-          .waitForElementByCss(".save-btn")
+          .waitForElementByCss(".save-btn", 100000)
           .then(function() {
             return $(".save-btn").click();
           });
       });
       it("should have saved a new general entry", function() {
         return browser
-          .waitForElementByCss("li.entry")
+          .waitForElementByCss("li.entry", 100000)
           .then(function() {
             return $("li.entry");
           }).should.eventually.be.ok;
       });
       it("should have the entered label", function() {
         return browser
-          .waitForElementByCss("li.entry a > div:first-child")
+          .waitForElementByCss("li.entry a > div:first-child", 100000)
           .then(function() {
-            return $("li.entry a > div:first-child").text()
+            return $("li.entry a > div:first-child").text();
           }).should.eventually.equal("New general entry");
       });
       it("should be a general entry", function() {
@@ -382,7 +382,49 @@ describe('Encryptr', function() {
       });
     });
 // View a general entry
-// Back out of an entry
+    describe("view a general entry", function() {
+      it("should be able to click on an entry and view it", function() {
+        return browser
+          .waitForElementByCss("li.entry:first-child", 100000)
+          .then(function() {
+            return $("li.entry a:first-child").click();
+          })
+          .then(function() {
+            return browser.waitForElementByCss("ul li strong", 100000); // improve this
+          }).should.eventually.be.ok;
+      });
+      it("should have a label with the correct text", function() {
+        return browser
+          .waitForElementByCss("ul li strong")
+          .then(function() {
+            return $("ul li strong").text();
+          }).should.eventually.equal("New general entry");
+      });
+      it("should have a text value with the correct text", function() {
+        return browser
+          .waitForElementByCss(".copyable")
+          .then(function() {
+            return $(".copyable").text();
+          }).should.eventually.equal("New text value");
+      });
+    });
+// Back out of viewing an entry
+// THIS EXPOSES THE "BACK POPS ALL OFF THE STACK" BUG!
+    describe("back out of viewing an entry", function() {
+      it("should be able to click on the back button and go back", function() {
+        return browser
+          .waitForElementByCss(".back-btn:not(.hidden)", 100000)
+          .then(function() {
+            return browser.waitForElementByCss(".back-btn:not(.hidden) .fa-arrow-left");
+          })
+          .then(function() {
+            return $(".back-btn:not(.hidden)").click();
+          })
+          .then(function() {
+            return browser.waitForConditionInBrowser("document.querySelectorAll('.nav .title')[0].innerText === 'Encryptr'", 100000);
+          }).should.eventually.be.ok;
+      });
+    });
 // Edit a general entry
 // Back out of editing an entry
 // Delete a general entry
