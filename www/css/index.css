@@ -22,6 +22,7 @@ a {
 }
 h1 {
   padding: 0;
+  font-family: "Jura Light", sans-serif;
 }
 .app {
   background-color: #ffffff;
@@ -57,7 +58,8 @@ h1 {
   color: #ffffff;
   text-align: center;
   line-height: 44px;
-  font-size: 110%;
+  font-family: "Jura Light", sans-serif;
+  font-size: 140%;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -195,7 +197,7 @@ select {
   margin: 0;
   display: block;
   width: 100%;
-  font: normal 100% "Source Sans Pro";
+  font: normal 100% "Source Sans Pro", sans-serif;
   outline: 0 none;
 }
 input[type="text"],
@@ -281,8 +283,8 @@ button {
   display: none;
   position: relative;
   top: 100px;
-  width: 200px;
-  font-size: 180%;
+  width: 300px;
+  font-size: 230%;
   font-weight: bold;
   margin: 0 auto;
   color: #ccc;
