@@ -348,28 +348,59 @@ describe('Encryptr', function() {
             return $('input[name=text]').val();
           }).should.eventually.equal("New text value");
       });
+      it("should be able to save the new entry", function() {
+        return browser
+          .waitForElementByCss(".save-btn")
+          .then(function() {
+            return $(".save-btn").click();
+          });
+      });
+      it("should have saved a new general entry", function() {
+        return browser
+          .waitForElementByCss("li.entry")
+          .then(function() {
+            return $("li.entry");
+          }).should.eventually.be.ok;
+      });
+      it("should have the entered label", function() {
+        return browser
+          .waitForElementByCss("li.entry a > div:first-child")
+          .then(function() {
+            return $("li.entry a > div:first-child").text()
+          }).should.eventually.equal("New general entry");
+      });
+      it("should be a general entry", function() {
+        return browser
+          .waitForElementByCss("li.entry", 100000)
+          .then(function() {
+            return browser.waitForElementByCss("li.entry .small", 100000);
+          })
+          .then(function() {
+            return $("li.entry .small").text();
+          }).should.eventually.equal("General");
+      });
     });
 // Log back out
-    // describe("log out", function() {
-    //   it("should be able to log out", function() {
-    //     return browser
-    //       .waitForElementByCss(".menu-btn", 100000)
-    //       .then(function() {
-    //         return $(".menu-btn").click();
-    //       })
-    //       .then(function() {
-    //         return browser.waitForElementByCss(".menu-logout", 100000);
-    //       })
-    //       .then(function() {
-    //         return $(".menu-logout").click();
-    //       })
-    //       .then(function() {
-    //         return browser.waitForElementByCss(".login:not(.dismissed)", 100000);
-    //       })
-    //       .then(function() {
-    //         return $(".loginButton").text();
-    //       }).should.eventually.equal("Log in");
-    //   });
-    // });
+    describe("log out", function() {
+      it("should be able to log out", function() {
+        return browser
+          .waitForElementByCss(".menu-btn", 100000)
+          .then(function() {
+            return $(".menu-btn").click();
+          })
+          .then(function() {
+            return browser.waitForElementByCss(".menu-logout", 100000);
+          })
+          .then(function() {
+            return $(".menu-logout").click();
+          })
+          .then(function() {
+            return browser.waitForElementByCss(".login:not(.dismissed)", 100000);
+          })
+          .then(function() {
+            return $(".loginButton").text();
+          }).should.eventually.equal("Log in");
+      });
+    });
   });
 });
