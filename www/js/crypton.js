@@ -433,10 +433,32 @@ var Session = crypton.Session = function (id) {
     secure: true
   });
 
+  // watch for incoming Inbox messages
   this.socket.on('message', function (data) {
     that.inbox.get(data.messageId, function (err, message) {
       that.emit('message', message);
     });
+  });
+
+  // watch for container update notifications
+  this.socket.on('containerUpdate', function (containerNameHmac) {
+    // if any of the cached containers match the HMAC
+    // in the notification, sync the container and
+    // call the listener if one has been set
+    for (var i in that.containers) {
+      var container = that.containers[i];
+      var temporaryHmac = container.containerNameHmac || container.getPublicName();
+
+      if (temporaryHmac == containerNameHmac) {
+        container.sync(function (err) {
+          if (container._listener) {
+            container._listener();
+          }
+        });
+
+        break;
+      }
+    }
   });
 };
 
@@ -1173,6 +1195,27 @@ Container.prototype.share = function (peer, callback) {
       });
     });
   });
+};
+
+/**!
+ * ### watch(listener)
+ * Attach a listener to the container
+ * which is called if it is written to by a peer
+ *
+ * This is called after the container is synced
+ *
+ * @param {Function} callback
+ */
+Container.prototype.watch = function (listener) {
+  this._listener = listener;
+};
+
+/**!
+ * ### unwatch()
+ * Remove an attached listener
+ */
+Container.prototype.unwatch = function () {
+  delete this._listener;
 };
 
 })();
