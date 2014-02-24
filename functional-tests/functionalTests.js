@@ -284,7 +284,8 @@ describe('Encryptr', function() {
           }).should.eventually.be.ok;
       });
     });
-// Add an actual General entry
+// Back out of adding an entry
+// Add a General entry
     describe("add a general entry", function() {
       it("should navigate to the edit screen for a General entry", function() {
         return browser
@@ -380,6 +381,20 @@ describe('Encryptr', function() {
           }).should.eventually.equal("General");
       });
     });
+// View a general entry
+// Back out of an entry
+// Edit a general entry
+// Back out of editing an entry
+// Delete a general entry
+// Add a password entry
+// View a password entry
+// Copy a password to the clipboard
+// Edit a password entry
+// Delete a password entry
+// Add a credit card entry
+// View a credit card entry
+// Edit a credit card entry
+// Delete a credit card entry
 // Log back out
     describe("log out", function() {
       it("should be able to log out", function() {
