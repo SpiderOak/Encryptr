@@ -409,16 +409,15 @@ describe('Encryptr', function() {
       });
     });
 // Back out of viewing an entry
-// THIS EXPOSES THE "BACK POPS ALL OFF THE STACK" BUG!
     describe("back out of viewing an entry", function() {
       it("should be able to click on the back button and go back", function() {
         return browser
           .waitForElementByCss(".back-btn:not(.hidden)", 100000)
           .then(function() {
-            return browser.waitForElementByCss(".back-btn:not(.hidden) .fa-arrow-left");
+            return browser.waitForElementByCss(".back-btn:not(.hidden) .fa-arrow-left", 100000);
           })
           .then(function() {
-            return $(".back-btn:not(.hidden)").click();
+            return $(".back-btn").click();
           })
           .then(function() {
             return browser.waitForConditionInBrowser("document.querySelectorAll('.nav .title')[0].innerText === 'Encryptr'", 100000);
