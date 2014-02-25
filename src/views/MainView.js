@@ -46,6 +46,8 @@
     },
     backButton_clickHandler: function(event) {
       event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
       this.backButtonDisplay(false);
       // console.log("back");
       // console.log(Date.now());

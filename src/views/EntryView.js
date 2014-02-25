@@ -80,7 +80,6 @@
       window.app.mainView.setTitle(this.model.get("label"));
     },
     viewDeactivate: function(event) {
-      window.app.mainView.backButtonDisplay(false);
       $(".nav .btn.right").addClass("hidden");
       $(".nav .add-btn.right").removeClass("hidden");
       window.app.mainView.setTitle("Encryptr");
