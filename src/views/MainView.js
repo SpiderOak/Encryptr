@@ -26,13 +26,17 @@
           "saveButton_clickHandler",
           "editButton_clickHandler",
           "deleteButton_clickHandler",
-          "backButtonDisplay");
+          "backButtonDisplay"
+      );
       this.menuView = new Encryptr.prototype.MenuView().render();
       this.menuView.dismiss();
       this.addMenuView = new Encryptr.prototype.AddMenuView().render();
       this.addMenuView.dismiss();
+      this.dialogView = new Encryptr.prototype.DialogView().render();
+      this.dialogView.dismiss();
       this.$el.append(this.menuView.el);
       this.$el.append(this.addMenuView.el);
+      this.$el.append(this.dialogView.el);
     },
     render: function() {
       this.$(".nav").html(
@@ -82,6 +86,12 @@
       }
       this.$(".back-btn").addClass("hidden");
       this.$(".menu-btn").removeClass("hidden");
+    },
+    cancelDialogButton_clickHandler: function(event) {
+      // ...
+    },
+    acceptDialogButton_clickHandler: function(event) {
+      // ...
     },
     menuClose_clickHandler: function(event) {
       if (!this.menuView.$el.hasClass("dismissed") &&

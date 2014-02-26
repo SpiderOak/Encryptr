@@ -63,13 +63,16 @@
     },
     deleteButton_clickHandler: function(event) {
       var _this = this;
-      var message = "Delete this entry?";
-      navigator.notification.confirm(message, function(button) {
-        if (button === 1) {
+      window.app.mainView.dialogView.show({
+        title: "Confirm delete",
+        subtitle: "Delete this entry?"
+      }, function(event) {
+        console.log(event);
+        if (event.type === "dialogAccept") {
           _this.model.destroy();
           window.app.navigator.popView(window.app.defaultPopEffect);
         }
-      }, "Confirm delete");
+      });
     },
     viewActivate: function(event) {
       var _this = this;
@@ -80,6 +83,7 @@
       window.app.mainView.setTitle(this.model.get("label"));
     },
     viewDeactivate: function(event) {
+      window.app.mainView.backButtonDisplay(false);
       $(".nav .btn.right").addClass("hidden");
       $(".nav .add-btn.right").removeClass("hidden");
       window.app.mainView.setTitle("Encryptr");

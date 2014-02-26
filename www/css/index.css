@@ -94,6 +94,52 @@ h1 {
   left: 0;
   top: 0;
 }
+.modal {
+  position: absolute;
+  top: 44px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.modal.dismissed {
+  display: none;
+}
+.modal .dialog {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 150px;
+  background-color: #333333;
+  color: #ffffff;
+  padding: 10px;
+}
+.modal .dialog .title {
+  text-align: center;
+  font-weight: bold;
+  padding: 10px;
+}
+.modal .dialog .subtitle {
+  text-align: center;
+  padding: 10px;
+}
+.modal .dialog .buttons {
+  position: relative;
+  width: 300px;
+  margin: 0 auto;
+}
+.dialog .buttons .dialog-cancel-btn {
+  position: absolute;
+  right: 0;
+  margin-left: 0;
+  font-weight: bold;
+}
+.dialog .buttons .dialog-accept-btn {
+  position: absolute;
+  left: 0;
+  margin-right: 0;
+}
 .menu,
 .addMenu {
   position: absolute;
