@@ -21,6 +21,8 @@ describe('Encryptr', function() {
   var appURL;
   var $;
 
+  var waitTimeout = 10000;
+
   var newusername = "user" + Date.now().toString();
   var newpassphrase = "shhh" + Date.now().toString();
 
@@ -46,7 +48,7 @@ describe('Encryptr', function() {
         browserName: '',
         implicitWaitMs: 500
       })
-      .setAsyncScriptTimeout(30000)
+      // .setAsyncScriptTimeout(30000)
       .windowHandles()
       .then(function(handles) {
         return (process.env.APPIUM === "android") ? browser.window(handles[1]) : browser.window(handles[0]);
@@ -66,10 +68,10 @@ describe('Encryptr', function() {
     });
 
 // Registration :: "user" + Date.now().toString()
-    describe("registration", function() {
+    describe("Registration", function() {
       it("should have a 'Register for an account »' link", function() {
         return browser
-          .waitForElementByCss(".signupButton", 100000)
+          .waitForElementByCss(".signupButton", waitTimeout)
           .then(function() {
             return browser.elementByCss(".signupButton");
           }).should.eventually.be.ok;
@@ -82,12 +84,12 @@ describe('Encryptr', function() {
       });
       it("should be able to switch to the registration screen", function() {
         return browser
-          .waitForElementByCss(".signupButton", 100000)
+          .waitForElementByCss(".signupButton", waitTimeout)
           .then(function() {
             return $(".signupButton").click();
           })
           .then(function() {
-            return browser.waitForElementByCss("input[name=newusername]", 100000);
+            return browser.waitForElementByCss("input[name=newusername]", waitTimeout);
           }).should.eventually.be.ok;
       });
       it("should be able to enter a new username", function() {
@@ -110,17 +112,17 @@ describe('Encryptr', function() {
       });
       it("should be able to register", function() {
         return browser
-          .waitForElementByCss(".button.signupButton", 100000)
+          .waitForElementByCss(".button.signupButton", waitTimeout)
           .then(function() {
             return $(".button.signupButton").click();
           })
           .then(function() {
             return browser
-              .waitForElementByCss(".login.dismissed", 100000);
+              .waitForElementByCss(".login.dismissed", waitTimeout);
           })
           .then(function() {
             return browser
-              .waitForConditionInBrowser("document.querySelectorAll('.emptyEntries')[0].style.display === 'block'", 100000);
+              .waitFor(wd.asserters.jsCondition("document.querySelectorAll('.emptyEntries')[0].style.display === 'block'"), waitTimeout);
           })
           .then(function() {
             return $(".emptyEntries").text();
@@ -131,28 +133,28 @@ describe('Encryptr', function() {
       });
     });
 // Start over
-    describe("start over", function() {
+    describe("Start over", function() {
       it("should have a menu button", function() {
         return browser
-          .waitForElementByCss(".menu-btn", 100000)
+          .waitForElementByCss(".menu-btn", waitTimeout)
           .then(function() {
             return $(".menu-btn");
           }).should.eventually.be.ok;
       });
       it("should be able to log out", function() {
         return browser
-          .waitForElementByCss(".menu-btn", 100000)
+          .waitForElementByCss(".menu-btn", waitTimeout)
           .then(function() {
             return $(".menu-btn").click();
           })
           .then(function() {
-            return browser.waitForElementByCss(".menu-logout", 100000);
+            return browser.waitForElementByCss(".menu-logout", waitTimeout);
           })
           .then(function() {
             return $(".menu-logout").click();
           })
           .then(function() {
-            return browser.waitForElementByCss(".login:not(.dismissed)", 100000);
+            return browser.waitForElementByCss(".login:not(.dismissed)", waitTimeout);
           })
           .then(function() {
             return $(".loginButton").text();
@@ -160,14 +162,14 @@ describe('Encryptr', function() {
       });
     });
 // Log back in
-    describe("log in", function() {
+    describe("Log in", function() {
       it("should have a username field", function() {
         return browser.noop()
           .then(function() {
-            return browser.waitForConditionInBrowser("document.querySelectorAll('input[name=username]')[0].disabled == false", 10000);
+            return browser.waitFor(wd.asserters.jsCondition("document.querySelectorAll('input[name=username]')[0].disabled == false"), waitTimeout);
           })
           .then(function() {
-            return browser.waitForElementByCss("input[name=username]", 100000);
+            return browser.waitForElementByCss("input[name=username]", waitTimeout);
           })
           .then(function() {
             return browser.elementByCss("input[name=username]");
@@ -181,7 +183,7 @@ describe('Encryptr', function() {
       });
       it("should have a passphrase field", function() {
         return browser
-          .waitForElementByCss("input[name=passphrase]", 100000)
+          .waitForElementByCss("input[name=passphrase]", waitTimeout)
           .then(function() {
             return browser.elementByCss("input[name=passphrase]");
           }).should.eventually.be.ok;
@@ -194,7 +196,7 @@ describe('Encryptr', function() {
       });
       it("should be able to enter a username", function() {
         return browser
-          .waitForConditionInBrowser("document.querySelectorAll('input[name=username]')[0].disabled === false", 100000)
+          .waitFor(wd.asserters.jsCondition("document.querySelectorAll('input[name=username]')[0].disabled === false"), waitTimeout)
           .then(function() {
             return $('input[name=username]').val(newusername);
           })
@@ -214,7 +216,7 @@ describe('Encryptr', function() {
       it("should have a login button", function() {
         return browser.noop()
           .then(function() {
-            return browser.waitForElementByCss(".loginButton", 100000);
+            return browser.waitForElementByCss(".loginButton", waitTimeout);
           })
           .then(function() {
             return $('.loginButton').text();
@@ -228,11 +230,11 @@ describe('Encryptr', function() {
           })
           .then(function() {
             return browser
-              .waitForElementByCss(".login.dismissed", 100000);
+              .waitForElementByCss(".login.dismissed", waitTimeout);
           })
           .then(function() {
             return browser
-              .waitForConditionInBrowser("document.querySelectorAll('.emptyEntries')[0].style.display === 'block'", 100000);
+              .waitFor(wd.asserters.jsCondition("document.querySelectorAll('.emptyEntries')[0].style.display === 'block'"), waitTimeout);
           })
           .then(function() {
             return $(".emptyEntries").text();
@@ -243,10 +245,10 @@ describe('Encryptr', function() {
       });
     });
 // Add entry menu button
-    describe("add entry button and menu", function() {
+    describe("Add entry button and menu", function() {
       it("should have an 'add entries' button", function() {
         return browser
-          .waitForElementByCss(".add-btn", 100000)
+          .waitForElementByCss(".add-btn", waitTimeout)
           .then(function() {
             return $(".add-btn i.fa-plus");
           }).should.eventually.be.ok;
@@ -268,7 +270,8 @@ describe('Encryptr', function() {
         return browser
           .waitForElementByCss(".addMenu:not(.dismissed)")
           .then(function() {
-            return browser.waitForConditionInBrowser("document.querySelectorAll('.addMenu ul li').length === 3", 100000);
+            return browser
+              .waitFor(wd.asserters.jsCondition("document.querySelectorAll('.addMenu ul li').length === 3"), waitTimeout);
           }).should.eventually.be.ok;
       });
       it("should hide the add menu when clicked anywhere else", function() {
@@ -277,7 +280,7 @@ describe('Encryptr', function() {
             return $(".emptyEntries").click();
           })
           .then(function() {
-            return browser.waitForElementByCss(".addMenu.dismissed", 100000);
+            return browser.waitForElementByCss(".addMenu.dismissed", waitTimeout);
           })
           .then(function() {
             return $(".addMenu.dismissed");
@@ -285,8 +288,51 @@ describe('Encryptr', function() {
       });
     });
 // Back out of adding an entry
+    describe("Back out of adding an entry", function() {
+      before(function() {
+        return browser
+          .waitForElementByCss(".add-btn")
+          .then(function() {
+            return $(".add-btn").click();
+          })
+          .then(function() {
+            return browser.waitForElementByCss(".addMenu:not(.dismissed)");
+          })
+          .then(function() {
+            return $(".addMenu li a[data-model=GeneralType]");
+          })
+          .then(function() {
+            return $(".addMenu li a[data-model=GeneralType]").click();
+          })
+          .then(function() {
+            return browser
+              .waitFor(wd.asserters.jsCondition("document.querySelectorAll('input[name=label]')[0].disabled === false"), waitTimeout);
+          })
+          .then(function() {
+            return $(".nav .title").text();
+          }).should.eventually.equal("General");
+      });
+      it("should be able to click on the back button and go back", function() {
+        return browser
+          .waitForElementByCss(".back-btn:not(.hidden)", waitTimeout)
+          .then(function() {
+            return browser.waitForElementByCss(".back-btn:not(.hidden)", waitTimeout);
+          })
+          .then(function() {
+            return $(".back-btn").click();
+          })
+          .then(function() {
+            return browser
+              .waitFor(wd.asserters.jsCondition("document.querySelectorAll('.nav .title')[0].innerText === 'Encryptr'"), waitTimeout);
+          })
+          .then(function() {
+            return browser
+              .waitFor(wd.asserters.jsCondition("document.querySelectorAll('.emptyEntries')[0].style.display === 'block'"), waitTimeout);
+          }).should.eventually.be.ok;
+      });
+    });
 // Add a General entry
-    describe("add a general entry", function() {
+    describe("Add a general entry", function() {
       it("should navigate to the edit screen for a General entry", function() {
         return browser
           .waitForElementByCss(".add-btn")
@@ -303,7 +349,8 @@ describe('Encryptr', function() {
             return $(".addMenu li a[data-model=GeneralType]").click();
           })
           .then(function() {
-            return browser.waitForConditionInBrowser("document.querySelectorAll('input[name=label]')[0].disabled === false", 100000);
+            return browser
+              .waitFor(wd.asserters.jsCondition("document.querySelectorAll('input[name=label]')[0].disabled === false"), waitTimeout);
           })
           .then(function() {
             return $(".nav .title").text();
@@ -311,14 +358,14 @@ describe('Encryptr', function() {
       });
       it("should have a label input", function() {
         return browser
-          .waitForElementByCss("input[name=label]", 100000)
+          .waitForElementByCss("input[name=label]", waitTimeout)
           .then(function() {
             return browser.elementByCss("input[name=label]");
           }).should.eventually.be.ok;
       });
       it("should have a text input", function() {
         return browser
-          .waitForElementByCss("input[name=text]", 100000)
+          .waitForElementByCss("input[name=text]", waitTimeout)
           .then(function() {
             return browser.elementByCss("input[name=text]");
           }).should.eventually.be.ok;
@@ -331,7 +378,7 @@ describe('Encryptr', function() {
       });
       it("should be able to enter a label", function() {
         return browser
-          .waitForConditionInBrowser("document.querySelectorAll('input[name=label]')[0].disabled === false", 100000)
+          .waitFor(wd.asserters.jsCondition("document.querySelectorAll('input[name=label]')[0].disabled === false"), waitTimeout)
           .then(function() {
             return $('input[name=label]').val("New general entry");
           })
@@ -341,7 +388,7 @@ describe('Encryptr', function() {
       });
       it("should be able to enter a text value", function() {
         return browser
-          .waitForConditionInBrowser("document.querySelectorAll('input[name=text]')[0].disabled === false", 100000)
+          .waitFor(wd.asserters.jsCondition("document.querySelectorAll('input[name=text]')[0].disabled === false"), waitTimeout)
           .then(function() {
             return $('input[name=text]').val("New text value");
           })
@@ -351,30 +398,30 @@ describe('Encryptr', function() {
       });
       it("should be able to save the new entry", function() {
         return browser
-          .waitForElementByCss(".save-btn", 100000)
+          .waitForElementByCss(".save-btn", waitTimeout)
           .then(function() {
             return $(".save-btn").click();
           });
       });
       it("should have saved a new general entry", function() {
         return browser
-          .waitForElementByCss("li.entry", 100000)
+          .waitForElementByCss("li.entry", waitTimeout)
           .then(function() {
             return $("li.entry");
           }).should.eventually.be.ok;
       });
       it("should have the entered label", function() {
         return browser
-          .waitForElementByCss("li.entry a > div:first-child", 100000)
+          .waitForElementByCss("li.entry a > div:first-child", waitTimeout)
           .then(function() {
             return $("li.entry a > div:first-child").text();
           }).should.eventually.equal("New general entry");
       });
       it("should be a general entry", function() {
         return browser
-          .waitForElementByCss("li.entry", 100000)
+          .waitForElementByCss("li.entry", waitTimeout)
           .then(function() {
-            return browser.waitForElementByCss("li.entry .small", 100000);
+            return browser.waitForElementByCss("li.entry .small", waitTimeout);
           })
           .then(function() {
             return $("li.entry .small").text();
@@ -382,20 +429,20 @@ describe('Encryptr', function() {
       });
     });
 // View a general entry
-    describe("view a general entry", function() {
+    describe("View a general entry", function() {
       it("should be able to click on an entry and view it", function() {
         return browser
-          .waitForElementByCss("li.entry:first-child", 100000)
+          .waitForElementByCss("li.entry:first-child", waitTimeout)
           .then(function() {
             return $("li.entry a:first-child").click();
           })
           .then(function() {
-            return browser.waitForElementByCss("ul li strong", 100000); // improve this
+            return browser.waitForElementByCss("ul li strong", waitTimeout); // improve this
           }).should.eventually.be.ok;
       });
       it("should have a label with the correct text", function() {
         return browser
-          .waitForElementByCss("ul li strong")
+          .waitForElementByCss("ul li strong", waitTimeout)
           .then(function() {
             return $("ul li strong").text();
           }).should.eventually.equal("New general entry");
@@ -409,49 +456,159 @@ describe('Encryptr', function() {
       });
     });
 // Back out of viewing an entry
-    describe("back out of viewing an entry", function() {
+    describe("Back out of viewing an entry", function() {
       it("should be able to click on the back button and go back", function() {
         return browser
-          .waitForElementByCss(".back-btn:not(.hidden)", 100000)
+          .waitForElementByCss(".back-btn:not(.hidden)", waitTimeout)
           .then(function() {
-            return browser.waitForElementByCss(".back-btn:not(.hidden) .fa-arrow-left", 100000);
+            return browser.waitForElementByCss(".back-btn:not(.hidden)", waitTimeout);
           })
           .then(function() {
             return $(".back-btn").click();
           })
           .then(function() {
-            return browser.waitForConditionInBrowser("document.querySelectorAll('.nav .title')[0].innerText === 'Encryptr'", 100000);
+            return browser
+              .waitFor(wd.asserters.jsCondition("document.querySelectorAll('.nav .title')[0].innerText === 'Encryptr'"), waitTimeout);
           }).should.eventually.be.ok;
       });
     });
-// Edit a general entry
 // Back out of editing an entry
+    describe("Back out of editing an entry", function() {
+      // ...
+    });
+// Edit a general entry
+    describe("Edit a general entry", function() {
+      // ...
+    });
 // Delete a general entry
+    describe("Delete a general entry", function() {
+      it("should navigate to the entry", function() {
+        return browser
+          .waitForElementByCss("li.entry:first-child", waitTimeout)
+          .then(function() {
+            return $("li.entry a:first-child").click();
+          })
+          .then(function() {
+            return browser.waitForElementByCss("ul li strong", waitTimeout); // improve this
+          }).should.eventually.be.ok;
+      });
+      it("should have a delete button", function() {
+        return browser
+          .waitForElementByCss(".delete-btn", wd.asserters.isDisplayed, waitTimeout)
+          .then(function() {
+            return $(".delete-btn:not(.hidden)");
+          }).should.eventually.be.ok;
+      });
+      it("should ask for confirmation when delete button clicked", function() {
+        return browser
+          .waitForElementByCss(".delete-btn", wd.asserters.isDisplayed, waitTimeout)
+          .then(function() {
+            return $(".delete-btn").click();
+          })
+          .then(function() {
+            return browser.waitForElementByCss(".modal:not(.dismissed)", waitTimeout);
+          })
+          .then(function() {
+            return browser.waitForElementByCss(".modal:not(.dismissed) .dialog .title", waitTimeout);
+          })
+          .then(function() {
+            return $(".modal:not(.dismissed) .dialog .title").text();
+          }).should.eventually.equal("Confirm delete");
+      });
+      it("should not delete the entry if confirmation cancelled", function() {
+        return browser
+          .waitForElementByCss(".modal:not(.dismissed)", waitTimeout)
+          .then(function() {
+            return browser
+              .waitForElementByCss(".modal:not(.dismissed) .dialog-cancel-btn", waitTimeout);
+          })
+          .then(function() {
+            return $(".modal:not(.dismissed) .dialog-cancel-btn").click();
+          })
+          .then(function() {
+            return browser.waitForElementByCss("ul li strong", waitTimeout);
+          }).should.eventually.be.ok;
+      });
+      it("should delete the entry if confirmation accepted", function() {
+        return browser
+          .waitForElementByCss(".delete-btn", wd.asserters.isDisplayed, waitTimeout)
+          .then(function() {
+            return $(".delete-btn").click();
+          })
+          .then(function() {
+            return browser.waitForElementByCss(".modal:not(.dismissed)", waitTimeout);
+          })
+          .then(function() {
+            return browser.waitForElementByCss(".modal:not(.dismissed) .dialog-accept-btn", waitTimeout);
+          })
+          .then(function() {
+            return $(".modal:not(.dismissed) .dialog-accept-btn").click();
+          })
+          .then(function() {
+            return browser
+              .waitFor(wd.asserters.jsCondition("document.querySelectorAll('.emptyEntries')[0].style.display === 'block'"), waitTimeout);
+          }).should.eventually.be.ok;
+      });
+    });
 // Add a password entry
+    describe("Add a password entry", function() {
+      // ...
+    });
 // View a password entry
+    describe("View a password entry", function() {
+      // ...
+    });
 // Copy a password to the clipboard
+    describe("Copy a password to the clipboard", function() {
+      // ...
+    });
 // Edit a password entry
+    describe("Edit a password entry", function() {
+      // ...
+    });
 // Delete a password entry
+    describe("Delete a password entry", function() {
+      // ...
+    });
 // Add a credit card entry
+    describe("Add a credit card entry", function() {
+      // ...
+    });
 // View a credit card entry
+    describe("View a credit card entry", function() {
+      // ...
+    });
 // Edit a credit card entry
+    describe("Edit a credit card entry", function() {
+      // ...
+    });
 // Delete a credit card entry
+    describe("Delete a credit card entry", function() {
+      // ...
+    });
 // Log back out
-    describe("log out", function() {
+    describe("Log out", function() {
+      it("should have a menu button", function() {
+        return browser
+          .waitForElementByCss(".menu-btn:not(.hidden)", waitTimeout)
+          .then(function() {
+            return $(".menu-btn");
+          }).should.eventually.be.ok;
+      });
       it("should be able to log out", function() {
         return browser
-          .waitForElementByCss(".menu-btn", 100000)
+          .waitForElementByCss(".menu-btn:not(.hidden)", waitTimeout)
           .then(function() {
             return $(".menu-btn").click();
           })
           .then(function() {
-            return browser.waitForElementByCss(".menu-logout", 100000);
+            return browser.waitForElementByCss(".menu-logout", waitTimeout);
           })
           .then(function() {
             return $(".menu-logout").click();
           })
           .then(function() {
-            return browser.waitForElementByCss(".login:not(.dismissed)", 100000);
+            return browser.waitForElementByCss(".login:not(.dismissed)", waitTimeout);
           })
           .then(function() {
             return $(".loginButton").text();
