@@ -47,19 +47,19 @@
       }
     },
     show: function(options, callback) {
+      var _this = this;
       var title = options.title || "Confirm";
       var subtitle = options.subtitle || "Are you sure?";
       this.$(".title").html(title);
       this.$(".subtitle").html(subtitle);
       if (this.$el.hasClass("dismissed")) {
+        $(document).on("dialogCancel", callback, this);
+        $(document).on("dialogAccept", callback, this);
         this.$el.removeClass("dismissed");
-        this.$("input").removeAttr("disabled");
         this.$(".dialog").animate({
           "-webkit-transform":"translate3d(0,0,0)",
           "opacity":"1"
         }, 100, "linear");
-        $(document).on("dialogCancel", callback, this);
-        $(document).on("dialogAccept", callback, this);
       }
     },
     toggle: function() {
