@@ -32,18 +32,21 @@ var Encryptr = (function (window, console, undefined) {
         // Should we monitor AJAX requests to help decide if we have a connection.
         interceptRequests: true,
 
-        // Should we automatically retest periodically when the connection is down (set to false to disable).
+        // Should we automatically retest periodically when the connection is
+        // down (set to false to disable).
         reconnect: {
           // How many seconds should we wait before rechecking.
           initialDelay: 3
         },
 
-        // Should we store and attempt to remake requests which fail while the connection is down.
+        // Should we store and attempt to remake requests which fail while the
+        // connection is down.
         requests: true,
 
-        // Should we show a snake game while the connection is down to keep the user entertained?
-        // It's not included in the normal build, you should bring in js/snake.js in addition to
-        // offline.min.js.
+        // Should we show a snake game while the connection is down to keep
+        // the user entertained?
+        // It's not included in the normal build, you should bring in
+        // js/snake.js in addition to offline.min.js.
         game: false,
 
         // What the xhr checks
@@ -76,8 +79,10 @@ var Encryptr = (function (window, console, undefined) {
   };
 
   Encryptr.prototype.onDeviceReady = function(event) {
-    if (window.device && window.device.platform === "iOS" && parseFloat(window.device.version) >= 7.0) {
-      window.document.querySelectorAll(".app")[0].style.top = "20px"; // status bar hax
+    if (window.device && window.device.platform === "iOS" &&
+        parseFloat(window.device.version) >= 7.0) {
+      // status bar hax
+      window.document.querySelectorAll(".app")[0].style.top = "20px";
     }
     if (window.StatusBar && $.os.ios) {
       window.StatusBar.styleLightContent();
@@ -93,15 +98,18 @@ var Encryptr = (function (window, console, undefined) {
         direction: "right"
       });
     }
-    window.document.addEventListener("backbutton", Encryptr.prototype.onBackButton, false);
-    window.document.addEventListener("menubutton", Encryptr.prototype.onMenuButton, false);
+    window.document.addEventListener("backbutton",
+                                     Encryptr.prototype.onBackButton, false);
+    window.document.addEventListener("menubutton",
+                                     Encryptr.prototype.onMenuButton, false);
 
     // Platform specific clipboard plugin / code
     if ($.os.ios || $.os.android) {
       Encryptr.prototype.copyToClipboard = window.cordova.plugins.clipboard.copy;
     } else if ($.os.bb10) {
       Encryptr.prototype.copyToClipboard = window.community.clipboard.setText;
-    } else if ($.os.nodeWebkit && window.require ) { // How to *actually* detect node-webkit ?
+    // How to *actually* detect node-webkit ?
+    } else if ($.os.nodeWebkit && window.require ) { 
       var gui = window.require('nw.gui');
       window.clipboard = gui.Clipboard.get();
       Encryptr.prototype.copyToClipboard = function(text) {
@@ -156,7 +164,8 @@ var Encryptr = (function (window, console, undefined) {
   };
 
   Encryptr.prototype.randomString = function(length) {
-    var charset = "!@#$%^*()_+{}:?|,[];./~ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    var charset = "!@#$%^*()_+{}:?|,[];./~ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
+      "abcdefghijklmnopqrstuvwxyz0123456789";
     var i;
     var result = "";
     if(window.crypto && window.crypto.getRandomValues) {
