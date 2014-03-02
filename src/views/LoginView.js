@@ -110,7 +110,10 @@
           complete: function() {
             if (window.app.settings && window.app.settings.username) {
               $("#username").val(window.app.settings.username);
-              $("#passphrase").focus();
+              // $("#passphrase").focus();
+              var el = $("#passphrase").get(0);
+              el.focus();
+              if (el.setSelectionRange) el.setSelectionRange(0, 0);
             }
           }
         });
