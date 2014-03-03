@@ -506,24 +506,24 @@ describe('Encryptr', function() {
             return $(".delete-btn").click();
           })
           .then(function() {
-            return browser.waitForElementByCss(".modal:not(.dismissed)", waitTimeout);
+            return browser.waitForElementByCss(".dialogConfirm:not(.dismissed)", waitTimeout);
           })
           .then(function() {
-            return browser.waitForElementByCss(".modal:not(.dismissed) .dialog .title", waitTimeout);
+            return browser.waitForElementByCss(".dialogConfirm:not(.dismissed) .dialog .title", waitTimeout);
           })
           .then(function() {
-            return $(".modal:not(.dismissed) .dialog .title").text();
+            return $(".dialogConfirm:not(.dismissed) .dialog .title").text();
           }).should.eventually.equal("Confirm delete");
       });
       it("should not delete the entry if confirmation cancelled", function() {
         return browser
-          .waitForElementByCss(".modal:not(.dismissed)", waitTimeout)
+          .waitForElementByCss(".dialogConfirm:not(.dismissed)", waitTimeout)
           .then(function() {
             return browser
-              .waitForElementByCss(".modal:not(.dismissed) .dialog-cancel-btn", waitTimeout);
+              .waitForElementByCss(".dialogConfirm:not(.dismissed) .dialog-cancel-btn", waitTimeout);
           })
           .then(function() {
-            return $(".modal:not(.dismissed) .dialog-cancel-btn").click();
+            return $(".dialogConfirm:not(.dismissed) .dialog-cancel-btn").click();
           })
           .then(function() {
             return browser.waitForElementByCss("ul li strong", waitTimeout);
@@ -536,13 +536,13 @@ describe('Encryptr', function() {
             return $(".delete-btn").click();
           })
           .then(function() {
-            return browser.waitForElementByCss(".modal:not(.dismissed)", waitTimeout);
+            return browser.waitForElementByCss(".dialogConfirm:not(.dismissed)", waitTimeout);
           })
           .then(function() {
-            return browser.waitForElementByCss(".modal:not(.dismissed) .dialog-accept-btn", waitTimeout);
+            return browser.waitForElementByCss(".dialogConfirm:not(.dismissed) .dialog-accept-btn", waitTimeout);
           })
           .then(function() {
-            return $(".modal:not(.dismissed) .dialog-accept-btn").click();
+            return $(".dialogConfirm:not(.dismissed) .dialog-accept-btn").click();
           })
           .then(function() {
             return browser
