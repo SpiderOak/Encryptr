@@ -75,6 +75,13 @@ var Encryptr = (function (window, console, undefined) {
       $this.removeClass("active");
     });
 
+    this.dialogConfirmView = new Encryptr.prototype.DialogConfirmView().render();
+    this.dialogConfirmView.dismiss();
+    $("#main").append(this.dialogConfirmView.el);
+    this.dialogAlertView = new Encryptr.prototype.DialogAlertView().render();
+    this.dialogAlertView.dismiss();
+    $("#main").append(this.dialogAlertView.el);
+
     window.FastClick.attach(document.body);
   };
 
@@ -109,7 +116,7 @@ var Encryptr = (function (window, console, undefined) {
     } else if ($.os.bb10) {
       Encryptr.prototype.copyToClipboard = window.community.clipboard.setText;
     // How to *actually* detect node-webkit ?
-    } else if ($.os.nodeWebkit && window.require ) { 
+    } else if ($.os.nodeWebkit && window.require ) {
       var gui = window.require('nw.gui');
       window.clipboard = gui.Clipboard.get();
       Encryptr.prototype.copyToClipboard = function(text) {
@@ -144,6 +151,14 @@ var Encryptr = (function (window, console, undefined) {
   };
 
   Encryptr.prototype.onBackButton = function(event) {
+    if ($(".dialogAlert").is(":visible")) {
+      window.app.dialogAlertView.dismiss();
+      return;
+    }
+    if ($(".dialogConfirm").is(":visible")) {
+      window.app.dialogConfirmView.dismiss();
+      return;
+    }
     if ($(".menu").is(":visible")) {
       window.app.mainView.menuView.dismiss();
       return;

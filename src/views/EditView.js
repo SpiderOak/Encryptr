@@ -74,10 +74,10 @@
         },
         error: function(err) {
           $(".blocker").hide();
-          navigator.notification.alert(
-            err,
-            function() {},
-            "Error");
+          window.app.dialogAlertView.show({
+            title: "Error",
+            subtitle: err
+          }, function() {});
         }
       });
     },

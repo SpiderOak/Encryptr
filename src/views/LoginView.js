@@ -55,10 +55,10 @@
 
       window.crypton.authorize(username, passphrase, function(err, session) {
         if (err) {
-          navigator.notification.alert(
-            "Username or Passphrase is incorrect",
-            function() {},
-            "Authentication error");
+          window.app.dialogAlertView.show({
+            title: "Authentication error",
+            subtitle: "Username or Passphrase is incorrect"
+          }, function(){});
           $(".blocker").hide();
           return;
         }

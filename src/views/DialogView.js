@@ -6,8 +6,8 @@
     _         = window._,
     $         = window.Zepto;
 
-  var DialogView = Backbone.View.extend({
-    className: "modal",
+  var DialogConfirmView = Backbone.View.extend({
+    className: "dialogConfirm",
     events: {
       "click .dialog-cancel-btn": "dialogCancelButton_clickHandler",
       "click .dialog-accept-btn": "dialogAcceptButton_clickHandler"
@@ -21,7 +21,7 @@
         "dialogAcceptButton_clickHandler");
     },
     render: function() {
-      this.$el.html(window.tmpl["dialogView"]({}));
+      this.$el.html(window.tmpl["dialogConfirmView"]({}));
       this.dismiss();
       return this;
     },
@@ -74,6 +74,70 @@
     }
   });
 
-  Encryptr.prototype.DialogView = DialogView;
+  Encryptr.prototype.DialogConfirmView = DialogConfirmView;
+
+  var DialogAlertView = Backbone.View.extend({
+    className: "dialogAlert",
+    events: {
+      "click .dialog-cancel-btn": "dialogCancelButton_clickHandler",
+      "click .dialog-accept-btn": "dialogAcceptButton_clickHandler"
+    },
+    initialize: function() {
+      _.bindAll(this,
+        "show",
+        "toggle",
+        "close",
+        "dialogAcceptButton_clickHandler");
+    },
+    render: function() {
+      this.$el.html(window.tmpl["dialogAlertView"]({}));
+      this.dismiss();
+      return this;
+    },
+    dialogAcceptButton_clickHandler: function(event) {
+      $(document).trigger("dialogAccept");
+      this.dismiss();
+    },
+    dismiss: function() {
+      if (!this.$el.hasClass("dismissed")) {
+        var _this = this;
+        this.$(".dialog").animate({
+          "-webkit-transform":"translate3d(0,-100%,0)",
+          "opacity":"0"
+        }, 100, "linear", function() {
+          _this.$el.addClass("dismissed");
+        });
+        $(document).off("dialogCancel", null, null);
+        $(document).off("dialogAccept", null, null);
+      }
+    },
+    show: function(options, callback) {
+      var _this = this;
+      var title = options.title || "Confirm";
+      var subtitle = options.subtitle || "Are you sure?";
+      this.$(".title").html(title);
+      this.$(".subtitle").html(subtitle);
+      if (this.$el.hasClass("dismissed")) {
+        if (callback) $(document).on("dialogAccept", callback, this);
+        this.$el.removeClass("dismissed");
+        this.$(".dialog").animate({
+          "-webkit-transform":"translate3d(0,0,0)",
+          "opacity":"1"
+        }, 100, "linear");
+      }
+    },
+    toggle: function() {
+      if (this.$el.hasClass("dismissed")) {
+        this.show();
+      } else {
+        this.dismiss();
+      }
+    },
+    close: function() {
+      this.remove();
+    }
+  });
+
+  Encryptr.prototype.DialogAlertView = DialogAlertView;
 
 })(this, this.console, this.Encryptr);

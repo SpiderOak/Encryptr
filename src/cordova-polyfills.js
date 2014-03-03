@@ -12,6 +12,7 @@ if (! window.cordova) {
     navigator.notification = {};
   }
 
+  /** NO LONGER NEEDED
   if (! navigator.notification.alert) {
     navigator.notification.alert =
         function (message, alertCallback, title, buttonName) {
@@ -32,6 +33,7 @@ if (! window.cordova) {
           }
         };
   }
+  */
 
   // Simulate onDeviceReady
   window.setTimeout(function(){

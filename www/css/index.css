@@ -94,18 +94,22 @@ h1 {
   left: 0;
   top: 0;
 }
-.modal {
+.dialogAlert,
+.dialogConfirm {
   position: absolute;
-  top: 44px;
+  top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
 }
-.modal.dismissed {
+.dialogAlert.dismissed,
+.dialogConfirm.dismissed {
   display: none;
 }
-.modal .dialog {
+.dialogAlert .dialog,
+.dialogConfirm .dialog {
   position: absolute;
   top: 0;
   left: 0;
@@ -115,18 +119,25 @@ h1 {
   color: #ffffff;
   padding: 10px;
 }
-.modal .dialog .title {
+.dialogAlert .dialog .title,
+.dialogConfirm .dialog .title {
   text-align: center;
   font-weight: bold;
   padding: 10px;
 }
-.modal .dialog .subtitle {
+.dialogAlert .dialog .subtitle,
+.dialogConfirm .dialog .subtitle {
   text-align: center;
   padding: 10px;
 }
-.modal .dialog .buttons {
+.dialogConfirm .dialog .buttons {
   position: relative;
   width: 300px;
+  margin: 0 auto;
+}
+.dialogAlert .dialog .buttons {
+  position: relative;
+  width: 200px;
   margin: 0 auto;
 }
 .dialog .buttons .dialog-cancel-btn {
@@ -139,6 +150,11 @@ h1 {
   position: absolute;
   left: 0;
   margin-right: 0;
+}
+.dialogAlert .dialog .buttons .dialog-accept-btn {
+  width: 50px;
+  margin: 10px auto 0;
+  position: relative;
 }
 .menu,
 .addMenu {

@@ -63,7 +63,7 @@
     },
     deleteButton_clickHandler: function(event) {
       var _this = this;
-      window.app.mainView.dialogView.show({
+      window.app.dialogConfirmView.show({
         title: "Confirm delete",
         subtitle: "Delete this entry?"
       }, function(event) {
