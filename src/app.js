@@ -96,14 +96,10 @@ var Encryptr = (function (window, console, undefined) {
     // Backstack effects
     Encryptr.prototype.noEffect = new window.BackStack.NoEffect();
     Encryptr.prototype.fadeEffect = new window.BackStack.FadeEffect();
-    Encryptr.prototype.defaultEffect = new window.BackStack.NoEffect();
-    Encryptr.prototype.defaultPopEffect = new window.BackStack.NoEffect();
-    if (window.device && window.device.platform === "iOS") {
-      Encryptr.prototype.defaultEffect = new Encryptr.prototype.FastSlideEffect();
-      Encryptr.prototype.defaultPopEffect = new Encryptr.prototype.FastSlideEffect({
-        direction: "right"
-      });
-    }
+    Encryptr.prototype.defaultEffect = new Encryptr.prototype.FastSlideEffect();
+    Encryptr.prototype.defaultPopEffect = new Encryptr.prototype.FastSlideEffect({
+      direction: "right"
+    });
     window.document.addEventListener("backbutton",
                                      Encryptr.prototype.onBackButton, false);
     window.document.addEventListener("menubutton",
