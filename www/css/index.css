@@ -159,8 +159,8 @@ h1 {
 .menu,
 .addMenu {
   position: absolute;
-  top: 44px;
-  left: 0;
+  top: 49px;
+  left: 5px;
   min-width: 150px;
   background-color: #333333;
   color: #ffffff;
@@ -182,9 +182,24 @@ h1 {
   background-color: #999999;
   color: #ffffff;
 }
+.menu:before,
+.addMenu:before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 11px;
+  border-bottom: 6px solid #333;
+  border-left: 6px solid transparent;
+  content: '';
+  border-right: 6px solid transparent;
+}
+.addMenu:before {
+  left: auto;
+  right: 10px;
+}
 .addMenu {
   left: auto;
-  right: 0;
+  right: 5px;
 }
 a.btn {
   color: inherit;

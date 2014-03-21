@@ -50,16 +50,11 @@
       event.stopPropagation();
       event.stopImmediatePropagation();
       this.backButtonDisplay(false);
-      // console.log("back");
-      // console.log(Date.now());
       if (window.app.navigator.viewsStack.length > 1) {
         window.app.navigator.popView(window.app.defaultPopEffect);
       }
     },
     addButton_clickHandler: function(event) {
-      if (!this.menuView.$el.hasClass("dismissed")) {
-        return;
-      }
       event.preventDefault();
       this.addMenuView.toggle();
     },
