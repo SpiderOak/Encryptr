@@ -529,7 +529,7 @@ ul .spinner > div.sep {
   opacity: 0;
   border-radius: 5px;
   border: 1px solid #fff;
-  z-index: 10002;
+  z-index: -1;
   -webkit-transition: opacity 0.5s ease-out;
   transition: opacity 0.5s ease-out;
 }
