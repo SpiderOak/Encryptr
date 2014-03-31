@@ -7,26 +7,24 @@
     $           = window.Zepto;
 
   var EntriesCollection = Backbone.Collection.extend({
-    initialize: function() {
-      this.container = "entries"; // default
+    initialize: function(models, options) {
+      this.container = options && options.container || "entries"; // default
       this.model = Encryptr.prototype.EntryModel; // default
     },
     fetch: function (options) {
       var _this = this;
-      var container = options && options.container || this.container;
-      window.app.session.load(container, function(err, entries) {
+      window.app.session.load(this.container, function(err, container) {
         if (options && options.error && err) options.error(err);
         _this.set(
-          _.map(entries.keys, function(entry, key) {
-            return new _this.model(entry);
+          _.map(container.keys, function(value, key) {
+            return new _this.model(value);
           })
         );
         if (options && options.success) options.success(_this);
       });
     },
     sync: function() {
-      // ...
-      console.log("@TODO: EntriesCollection.sync");
+      // @TODO: EntriesCollection.sync
     }
   });
 
