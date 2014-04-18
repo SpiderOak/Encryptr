@@ -32,8 +32,8 @@
       this.menuView.dismiss();
       this.addMenuView = new Encryptr.prototype.AddMenuView().render();
       this.addMenuView.dismiss();
-      this.$el.append(this.menuView.el);
-      this.$el.append(this.addMenuView.el);
+      if (!$(".menu").length) this.$el.append(this.menuView.el);
+      if (!$(".addMenu").length) this.$el.append(this.addMenuView.el);
     },
     render: function() {
       this.$(".nav").html(
