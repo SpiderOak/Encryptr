@@ -132,17 +132,24 @@ var Encryptr = (function (window, console, undefined) {
   };
 
   Encryptr.prototype.onResume = function(event) {
-    // Throw up the login screen
-    window.app.loginView.show();
-    window.setTimeout(function() {
-      window.app.session = undefined;
-      window.app.navigator.popAll(window.app.noEffect);
-      window.app.mainView.menuView.close();
-    },100);
+    // @TODO - this should probably just hide everything unless a set number 
+    //    of minutes have elapsed
+    // Logging out seems a bit overkill
+    // For now, put a 1 minute timeout on it...
+    var timeoutInMinutes =
+      Math.floor(((Date.now() - window.app.lastPaused) / 1000) / 60);
+    if (timeoutInMinutes >= 1) {
+      window.app.loginView.show();
+      window.setTimeout(function() {
+        window.app.session = undefined;
+        window.app.navigator.popAll(window.app.noEffect);
+        window.app.mainView.menuView.close();
+      },100);
+    }
   };
 
   Encryptr.prototype.onPause = function(event) {
-    // ...
+    window.app.lastPaused = Date.now();
   };
 
   Encryptr.prototype.onBackButton = function(event) {
@@ -185,7 +192,7 @@ var Encryptr = (function (window, console, undefined) {
           result += charset[values[i] % charset.length];
       }
     }
-    return result; // If you can't say something nice, don's say anything at all
+    return result; // If you can't say something nice, don't say anything at all
   };
 
   return Encryptr;
