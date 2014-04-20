@@ -95,8 +95,8 @@ var Encryptr = (function (window, console, undefined) {
     // Backstack effects
     Encryptr.prototype.noEffect = new window.BackStack.NoEffect();
     Encryptr.prototype.fadeEffect = new window.BackStack.FadeEffect();
-    Encryptr.prototype.defaultEffect = new Encryptr.prototype.FastSlideEffect();
-    Encryptr.prototype.defaultPopEffect = new Encryptr.prototype.FastSlideEffect({
+    Encryptr.prototype.defaultEffect = new Encryptr.prototype.PopFadeEffect();
+    Encryptr.prototype.defaultPopEffect = new Encryptr.prototype.PopFadeEffect({
       direction: "right"
     });
     window.document.addEventListener("backbutton",
