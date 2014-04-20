@@ -85,10 +85,9 @@ var Encryptr = (function (window, console, undefined) {
   };
 
   Encryptr.prototype.onDeviceReady = function(event) {
-    if (window.device && window.device.platform === "iOS" &&
-        parseFloat(window.device.version) >= 7.0) {
-      // status bar hax
-      window.document.querySelectorAll(".app")[0].style.top = "20px";
+    // Useragent sniffin. Ew.
+    if (navigator.userAgent.match(/(iPad|iPhone);.*CPU.*OS 7_\d/i)) {
+      $(".app").css({"top":"20px"});
     }
     if (window.StatusBar && $.os.ios) {
       window.StatusBar.styleLightContent();

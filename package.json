@@ -6,8 +6,8 @@
   "scripts": {
     "test": "grunt test",
     "postinstall": "./node_modules/.bin/bower install",
-    "pluginstall": "cordova plugins add org.apache.cordova.device org.apache.cordova.dialogs com.verso.cordova.clipboard com.blackberry.community.clipboard org.apache.cordova.statusbar",
-    "plugremove": "cordova plugins remove org.apache.cordova.device org.apache.cordova.dialogs com.verso.cordova.clipboard com.blackberry.community.clipboard org.apache.cordova.statusbar"
+    "pluginstall": "cordova plugins add com.verso.cordova.clipboard com.blackberry.community.clipboard org.apache.cordova.statusbar",
+    "plugremove": "cordova plugins remove com.verso.cordova.clipboard com.blackberry.community.clipboard org.apache.cordova.statusbar"
   },
   "author": "tommy-carlos williams (devgeeks)",
   "keywords": [
