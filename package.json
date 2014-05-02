@@ -1,6 +1,6 @@
 {
   "name": "Encryptr",
-  "version": "0.1.0",
+  "version": "1.0.0-beta.2",
   "repository": "https://github.com/devgeeks/Encryptr.git",
   "main": "www/js/Encryptr.js",
   "scripts": {
