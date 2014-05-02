@@ -4525,7 +4525,6 @@ work.decryptRecord = function (options, callback) {
 (function () {
 
 self.isomerize = function (obj, dependencies) {
-  return;
   // if we don't have access to web workers,
   // just run everything in the main thread
   if (!window.Worker) {
