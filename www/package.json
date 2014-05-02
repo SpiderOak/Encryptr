@@ -1,0 +1,22 @@
+{
+  "name": "Encryptr",
+  "version": "1.0.0-beta.2",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "window": {
+    "title": "Encryptr",
+    "toolbar": false,
+    "frame": true,
+    "width": 640,
+    "height": 480,
+    "min_width": 800,
+    "min_height": 480,
+    "max_width": 800,
+    "max_height": 960
+  }
+}
