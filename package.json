@@ -44,6 +44,7 @@
     "mocha-as-promised": "^2.0.0",
     "colors": "^0.6.2",
     "wd": "^0.2.10",
-    "wd-query": "^0.2.0"
+    "wd-query": "^0.2.0",
+    "grunt-node-webkit-builder": "^0.1.21"
   }
 }

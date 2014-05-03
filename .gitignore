@@ -9,3 +9,4 @@ components/**/*
 !components/.gitignore
 www/tests/Encryptr-tests.js
 www/js/Encryptr-templates.js
+desktopbuilds/*

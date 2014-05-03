@@ -104,6 +104,10 @@ var Encryptr = (function (window, console, undefined) {
     window.document.addEventListener("menubutton",
                                      Encryptr.prototype.onMenuButton, false);
 
+    if (!$.os.nodeWebkit) {
+      // overflow: auto !important; -webkit-overflow-scrolling: touch;
+      $(".subviews").css({"overflow":"auto !important", "-webkit-overflow-scrolling":"touch"});
+    }
     // Platform specific clipboard plugin / code
     if ($.os.ios || $.os.android) {
       Encryptr.prototype.copyToClipboard = window.cordova.plugins.clipboard.copy;

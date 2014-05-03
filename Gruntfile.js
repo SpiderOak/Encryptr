@@ -154,6 +154,17 @@ module.exports = function(grunt) {
         }
       }
     },
+    nodewebkit: {
+      options: {
+        build_dir: './desktopbuilds',
+        mac: true,
+        mac_icns: './resources/icon-encryptr.icns',
+        win: true,
+        linux32: true,
+        linux64: false
+      },
+      src: ['./www/**/*'] // Your node-webkit app
+    },
     jshint: {
       files: ['Gruntfile.js', 'src/*.js', 'src/**/*.js'],
       options: {
@@ -199,6 +210,7 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-node-webkit-builder');
 
 
   // Custom tasks

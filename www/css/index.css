@@ -7,7 +7,7 @@ body {
   -webkit-text-size-adjust: none;
   -webkit-user-select: none;
   user-select: none;
-  font-family: "Source Sans Pro";
+  font-family: "Source Sans Pro", sans-serif;
   background-color: #333333;
   font-size: 100%;
   font-weight: 300;
@@ -226,7 +226,9 @@ a.btn {
   bottom: -1px;
 }
 .subviews > div {
-  overflow: auto !important ;
+  overflow: auto !important;
+  margin: 0;
+  padding: 0;
 }
 .hidden {
   display: none;
