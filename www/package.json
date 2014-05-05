@@ -10,6 +10,7 @@
   "license": "GPLv3",
   "window": {
     "title": "Encryptr",
+    "icon": "img/icon-encryptr.png",
     "toolbar": false,
     "frame": true,
     "width": 640,
