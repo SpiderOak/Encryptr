@@ -15,6 +15,7 @@
       var _this = this;
       window.app.session.load(this.container, function(err, container) {
         if (options && options.error && err) options.error(err);
+        if (err) return;
         _this.set(
           _.map(container.keys, function(value, key) {
             return new _this.model(value);

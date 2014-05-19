@@ -62,7 +62,21 @@
             _this.addAll();
           }
         }, error: function(err) {
-          console.log(err); // @TODO: Handle this error
+          window.app.session.create(_this.collection.container, function(err, container) {
+            if (err) {
+              // OK. This is a bit more serious...
+              console.log(err);
+              window.app.dialogAlertView.show({
+                title: "Critical Error",
+                subtitle: err
+              }, function() {
+                console.log("could not even recreate the container...");
+              });
+              return;
+            }
+            // the container should exist now...
+            _this.viewActivate(event);
+          });
         }
       });
     },
