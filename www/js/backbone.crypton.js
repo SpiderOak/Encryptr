@@ -83,10 +83,35 @@
         });
         break;
       case "update":
-        // ...
+        session.getContainer(model.id, function(err, container) {
+          if (err) {
+            console.error(err);
+            // "No new records" in this case seems to mean it was created not loaded
+            if (err != "No new records") return errorHandler(err, options);
+          }
+          var modelData = model.toJSON();
+          modelData.id = model.id;
+          container.keys = modelData;
+          container.save(function(err) {
+            if (err) {
+              console.error(err);
+              return errorHandler(err, options);
+            }
+            return successHandler(modelData);
+          });
+        });
         break;
       case "delete":
-        // ...
+        session.deleteContainer(model.id, function(err) {
+          if (err) {
+            console.error(err);
+            return errorHandler(err, options);
+          }
+          if (model.isNew()) {
+            return successHandler(false);
+          }
+          return successHandler(true);
+        });
         break;
     }
   };
