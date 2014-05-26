@@ -72,6 +72,7 @@
             passphrase: passphrase,
             session: session
           });
+          Backbone.Session = session;
           window.app.session.create("entries", function(err, entries){
             if (err) {
               window.app.dialogAlertView.show({

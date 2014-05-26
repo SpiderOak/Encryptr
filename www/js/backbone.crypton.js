@@ -23,7 +23,7 @@
 
   Backbone.sync = function(method, model, options) {
     var _this = this;
-    var session = window.app.accountModel.get("session");
+    var session = Backbone.Session;
     var errorHandler = function (err, options) {
       debug("ERROR: " + err);
       return options.error && options.error(err);

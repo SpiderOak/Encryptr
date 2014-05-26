@@ -70,6 +70,7 @@
           passphrase: passphrase,
           session: session
         });
+        Backbone.Session = session;
         window.app.mainView = new window.app.MainView().render();
         var entriesCollection = new window.app.EntriesCollection();
         window.app.navigator.pushView(
