@@ -85,7 +85,6 @@
               container.save(function(err) {
                 // @TODO - handle error
                 if (err) console.error(err);
-                model.collection.fetch();
                 window.app.navigator.popView(window.app.defaultPopEffect);
                 $(".blocker").hide();
               });
