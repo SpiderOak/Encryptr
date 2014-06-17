@@ -68,7 +68,13 @@
         items: items
       });
       this.model.save(null, {
-        success: function() {
+        success: function(model) {
+          // @TODO:
+          // ONLY IF
+          //  the label or type (or model id?) changes,
+          //    - update index container
+          //    - save index container
+          //    - do a fetch on the parent collection
           window.app.navigator.popView(window.app.defaultPopEffect);
           $(".blocker").hide();
         },

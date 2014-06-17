@@ -57,6 +57,7 @@
     viewActivate: function(event) {
       var _this = this;
       this.collection.fetch({
+        container: "_encryptrIndex",
         success: function(entries) {
           if (entries.length === 0) {
             _this.addAll();

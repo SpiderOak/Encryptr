@@ -45,6 +45,8 @@
         clearTimeout( timer );
       });
 
+      // this.model.fetch();
+
       return this;
     },
     copyable_longTapHandler: function(event) {
@@ -70,17 +72,27 @@
         console.log(event);
         if (event.type === "dialogAccept") {
           _this.model.destroy();
+          // @TODO:
+          //   - update index container
+          //   - save index container
+          //   - do a fetch on the parent collection
           window.app.navigator.popView(window.app.defaultPopEffect);
         }
       });
     },
     viewActivate: function(event) {
       var _this = this;
+      _this.model.fetch({success: function() {
+        // @TODO - dismiss a loading div...
+      }, error: function(err) {
+        // error out and return to the entries screen
+        console.log(err);
+      }});
       window.app.mainView.backButtonDisplay(true);
       $(".nav .btn.right").addClass("hidden");
       $(".nav .edit-btn.right").removeClass("hidden");
       $(".nav .delete-btn").removeClass("hidden");
-      window.app.mainView.setTitle(this.model.get("label"));
+      window.app.mainView.setTitle(_this.model.get("label"));
     },
     viewDeactivate: function(event) {
       window.app.mainView.backButtonDisplay(false);

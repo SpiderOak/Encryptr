@@ -8,17 +8,25 @@
 
   var EntriesCollection = Backbone.Collection.extend({
     initialize: function(models, options) {
-      this.container = options && options.container || "entries"; // default
+      this.container = options && options.container || "_encryptrIndex"; // default
       this.model = Encryptr.prototype.EntryModel; // default
     },
     fetch: function (options) {
       var _this = this;
       window.app.session.load(this.container, function(err, container) {
+        if (err && err == "No new records") {
+          err = undefined;
+          console.log(err);
+        }
         if (options && options.error && err) options.error(err);
         if (err) return;
         _this.set(
           _.map(container.keys, function(value, key) {
-            return new _this.model(value);
+            return new _this.model({
+              id: key,
+              label: value.label,
+              type: value.type
+            });
           })
         );
         if (options && options.success) options.success(_this);
