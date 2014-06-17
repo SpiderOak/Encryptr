@@ -14,10 +14,10 @@
     fetch: function (options) {
       var _this = this;
       window.app.session.load(this.container, function(err, container) {
-        if (err && err == "No new records") {
-          err = undefined;
-          console.log(err);
-        }
+        //if (err && err == "No new records") {
+          //err = undefined;
+          //console.log(err);
+        //}
         if (options && options.error && err) options.error(err);
         if (err) return;
         _this.set(
