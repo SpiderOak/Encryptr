@@ -57,7 +57,7 @@
         if (err) {
           window.app.dialogAlertView.show({
             title: "Authentication error",
-            subtitle: "Username or Passphrase is incorrect"
+            subtitle: err
           }, function(){});
           $(".blocker").hide();
           return;
