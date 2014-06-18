@@ -193,6 +193,9 @@ h1 {
   content: '';
   border-right: 6px solid transparent;
 }
+.menu .fa {
+  margin-right: 5px;
+}
 .addMenu:before {
   left: auto;
   right: 10px;

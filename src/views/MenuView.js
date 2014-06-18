@@ -10,10 +10,11 @@
     className: "menu",
     events: {
       "click .menu-settings": "settings_clickHandler",
+      "click .menu-migrate-beta2": "importBeta2_clickHandler",
       "click .menu-logout": "logout_clickHandler"
     },
     initialize: function() {
-      _.bindAll(this, "settings_clickHandler", "logout_clickHandler");
+      _.bindAll(this, "settings_clickHandler", "logout_clickHandler", "importBeta2_clickHandler");
     },
     render: function() {
       this.$el.html(window.tmpl["menuView"]({}));
@@ -40,6 +41,64 @@
       window.setTimeout(function() {
         window.app.loginView.enable();
       },350);
+    },
+    importBeta2_clickHandler: function(event) {
+      event.preventDefault();
+      var _this = this;
+      this.dismiss();
+      $(".blocker").show();
+      window.app.session.load("_encryptrIndex", function(err, indexContainer) {
+        window.app.session.load("entries", function(err, container) {
+          if (err) {
+            $(".blocker").hide();
+            window.app.dialogAlertView.show({
+              title: "Import error",
+              subtitle: err
+            }, function(){});
+            return err;
+          }
+          var x = {};
+          _.each(container.keys, function(value, key) {
+            var ts = Date.now();
+            value.id = undefined;
+            x["model-"+ts] = new window.app.EntryModel(value);
+            x["model-"+ts].save(null, { success: function(model){
+              indexContainer.keys[model.id] = {
+                id: model.id,
+              label: value.label,
+              type: value.type
+              };
+              if (x.length == container.keys.length) {
+                indexContainer.save(function(err){});
+                if (err) {
+                  $(".blocker").hide();
+                  window.app.dialogAlertView.show({
+                    title: "Import error",
+                    subtitle: err
+                  }, function(){});
+                } else {
+                  window.app.session.deleteContainer("entries", function(err) {
+                    window.app.dialogAlertView.show({
+                      title: "Warning",
+                      subtitle: "Logging out to complete the import"
+                    }, function(){
+                      _this.logout_clickHandler(event);
+                    });
+                  });
+                }
+                window.app.navigator.activeView.collection.fetch({
+                  success: function() {
+                    $(".blocker").hide();
+                  }, error: function() {
+                    $(".blocker").hide();
+                  }
+                });
+              }
+            }});
+          });
+        });
+      });
+
     },
     dismiss: function() {
       if (!this.$el.hasClass("dismissed")) {
