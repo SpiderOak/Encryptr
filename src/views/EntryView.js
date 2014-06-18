@@ -80,18 +80,18 @@
           window.app.session.load("_encryptrIndex", function(err, container) {
             if (err) {
               window.app.dialogAlertView.show({
-                title: "Error",         
-                subtitle: err                  
-              }, function(){});                
+                title: "Error",
+                subtitle: err
+              }, function(){});
               return;
             }
             delete container.keys[oldId];
             container.save(function(err) {
               if (err) {
                 window.app.dialogAlertView.show({
-                  title: "Error",         
-                  subtitle: err                  
-                }, function(){});                
+                  title: "Error",
+                  subtitle: err
+                }, function(){});
               }
               parentCollection.fetch();
               window.app.navigator.popView(window.app.defaultPopEffect);
