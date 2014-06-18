@@ -161,7 +161,7 @@ module.exports = function(grunt) {
         mac_icns: './resources/icon-encryptr.icns',
         win: true,
         linux32: true,
-        linux64: false
+        linux64: true
       },
       src: ['./www/**/*'] // Your node-webkit app
     },
