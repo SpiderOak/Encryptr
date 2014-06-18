@@ -10,6 +10,7 @@
     <content src="index.html" />
     <access origin="https://crypton.io" subdomains="true" />
     <access origin="wss://crypton.io" subdomains="true" />
+    <access origin="https://*.crypton.io" />
     <preference name="orientation" value="default" />
     <preference name="target-device" value="universal" />
     <preference name="fullscreen" value="false" />
