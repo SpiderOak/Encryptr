@@ -173,6 +173,7 @@ var Encryptr = (function (window, console, undefined) {
       return;
     }
     if ($(".back-btn").is(":visible")) {
+      $(".back-btn").addClass("hidden");
       window.app.navigator.popView(window.app.defaultPopEffect);
       return;
     }
