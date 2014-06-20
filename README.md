@@ -17,12 +17,14 @@ It is currently working on iOS, Android, and the Desktop – thanks to [node-web
 
 ## Requirements
 
+- Node and npm - [http://nodejs.org/](http://nodejs.org/)
+	- Node package manager for the Cordova CLI and Grunt
 - Cordova CLI - [https://github.com/apache/cordova-cli/](https://github.com/apache/cordova-cli/)
 	- Cordova / PhoneGap command line interface
+  - `npm install -g cordova`
 - Grunt - [http://gruntjs.com/](http://gruntjs.com/)
 	- Build tool for minimising, running and tests
-- Node and npm - [http://nodejs.org/](http://nodejs.org/)
-	- Node package manager for Grunt Add-ons
+  - `npm install -g grunt-cli`
 - PhantomJS - [http://phantomjs.org/](http://phantomjs.org/)
 	- Headless webkit for running tests
 
@@ -53,8 +55,8 @@ Building and testing the project is normally done via the Grunt tasks below.
 We use `grunt` commands to do most of the project operations, like:
 
 * running the app:
-** ios: `grunt debug:ios`
-** Android: `grunt debug:android`
+  * ios: `grunt debug:ios`
+  * Android: `grunt debug:android`
 
 * testing: `grunt test`
 * linting the sources: `grunt jshint`
@@ -65,4 +67,4 @@ See the steps taken for `grunt test` and `grunt debug:XXX` for the various opera
 
 
 ### License
-- GPLv3 – [https://github.com/devgeeks/Encryptr/blob/master/LICENSE](https://github.com/devgeeks/Encryptr/blob/master/LICENSE)
+- GPLv3 - [https://github.com/devgeeks/Encryptr/blob/master/LICENSE](https://github.com/devgeeks/Encryptr/blob/master/LICENSE)
