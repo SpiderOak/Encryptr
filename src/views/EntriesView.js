@@ -63,7 +63,7 @@
             _this.addAll();
           }
         }, error: function(err) {
-          window.app.session.create(_this.collection.container, function(err, container) {
+          window.app.session.create("_encryptrIndex", function(err, container) {
             if (err) {
               // OK. This is a bit more serious...
               console.log(err);
