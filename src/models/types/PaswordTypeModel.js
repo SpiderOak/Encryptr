@@ -18,6 +18,7 @@
   };
 
   PasswordType.prototype.displayName = "Password";
+  PasswordType.prototype.icon = "fa-key";
 
   Encryptr.prototype.types = Encryptr.prototype.types || {};
   Encryptr.prototype.types.PasswordType = PasswordType;

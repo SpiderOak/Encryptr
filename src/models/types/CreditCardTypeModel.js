@@ -18,6 +18,7 @@
   };
 
   CreditCardType.prototype.displayName = "Credit Card";
+  CreditCardType.prototype.icon = "fa-credit-card";
 
   Encryptr.prototype.types = Encryptr.prototype.types || {};
   Encryptr.prototype.types.CreditCardType = CreditCardType;

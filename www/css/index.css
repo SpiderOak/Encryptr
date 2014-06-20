@@ -193,8 +193,9 @@ h1 {
   content: '';
   border-right: 6px solid transparent;
 }
-.menu .fa {
-  margin-right: 5px;
+.menu .fa, 
+.addMenu .fa {
+  width: 25px;
 }
 .addMenu:before {
   left: auto;
