@@ -16,14 +16,14 @@
   function S4(){
     return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
   }
-  
+
   function guid() {
     return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
   }
 
   Backbone.sync = function(method, model, options) {
     var _this = this;
-    var session = window.app.accountModel.get("session");
+    var session = Backbone.Session;
     var errorHandler = function (err, options) {
       debug("ERROR: " + err);
       return options.error && options.error(err);
@@ -36,12 +36,7 @@
       debug("ERROR: No available session");
       return options.error && options.error("No available session");
     }
-    var container = model.container || options.container;
-    if (!container) {
-      debug("ERROR: No container specified");
-      return options.error && options.error("No container specified");
-    }
-    
+
     debug(method);
     switch (method) {
       case "read":
@@ -53,74 +48,78 @@
           // Should we be calling model.collection.sync?
           return;
         }
-        session.load(container, function(err, entries) {
-          if (err) return errorHandler(err, options);
-          entries.get(model[model.idAttribute], function(err, entry) {
-            return successHandler(entry);
-          });
+        session.load(model.id, function(err, container) {
+          if (err) {
+            console.error(err);
+            return errorHandler(err, options);
+          }
+          return successHandler(container.keys);
         });
         break;
       case "create":
-        session.load(container, function(err, entries) {
-          if (err) return errorHandler(err, options);
-          var modelId = guid();
-          entries.add(modelId, function(err) {
-            if (err) return errorHandler(err, options);
-            entries.get(modelId, function(err, entry) {
-              if (err) return errorHandler(err, options);
-              var modelData = model.toJSON();
-              modelData[model.idAttribute] = modelData[model.idAttribute] || modelId;
-              for(var data in modelData) {
-                if (modelData.hasOwnProperty(data)) {
-                  entry[data] = modelData[data];
-                }
+        var modelId = guid();
+        session.create(modelId, function(err) {
+          if (err) {
+            console.error(err);
+            return errorHandler(err, options); // throw an error if it exists, etc
+          }
+          session.load(modelId, function(err, container) {
+            if (err) {
+              console.error(err);
+              return errorHandler(err, options); // throw an error if it exists, etc
+            }
+            var modelData = model.toJSON();
+            modelData.id = modelId;
+            container.keys = _.extend(container.keys, modelData);
+            container.save(function(err) {
+              if (err) {
+                console.error(err);
+                return errorHandler(err, options);
               }
-              
-              entries.save(function(err) {
-                if (err) return errorHandler(err, options);
-                model[model.idAttribute] = modelId;
-                return successHandler(entry);
-              });
+              model[model.idAttribute] = modelId;
+              return successHandler(modelData);
             });
           });
         });
         break;
       case "update":
-        session.load(container, function(err, entries) {
-          if (err) return errorHandler(err, options);
-          entries.get(model[model.idAttribute], function(err, entry) {
-            if (err) {
-              if (err === "Key does not exist") {
-                Backbone.sync("create", model, options);
-                return;
+        session.load(model.id, function(err, container) {
+          function finishLoadingContainer(model, container, success, error) {
+            var modelData = model.toJSON();
+            modelData.id = model.id;
+            container.keys = modelData;
+            container.save(function(err) {
+              if (err) {
+                console.error(err);
+                return errorHandler(err, options);
               }
+              return successHandler(modelData);
+            });
+          }
+          if (err) {
+            console.error(err);
+            // "No new records" in this case seems to mean it was created not loaded
+            if (err == "No new records") {
+              return session.create(model.id, function(err) {
+                finishLoadingContainer(model, container);
+              });
+            } else {
               return errorHandler(err, options);
             }
-
-            for (var attribute in model.attributes) {
-              if (attribute === model.idAttribute) continue;
-              if (model.attributes.hasOwnProperty(attribute)) {
-                entry[attribute] = model.attributes[attribute];
-              }
-            }
-            entries.save(function(err) {
-              if (err) return errorHandler(err, options);
-              return successHandler(entry);
-            });
-          });
+          }
+          return finishLoadingContainer(model, container);
         });
         break;
       case "delete":
-        session.load(container, function(err, entries) {
-          if (err) return errorHandler(err, options);
-          delete entries.keys[model[model.idAttribute]];
+        session.deleteContainer(model.id, function(err) {
+          if (err) {
+            console.error(err);
+            return errorHandler(err, options);
+          }
           if (model.isNew()) {
             return successHandler(false);
           }
-          entries.save(function(err) {
-            if (err) return errorHandler(err, options);
-            return successHandler(true);
-          });
+          return successHandler(true);
         });
         break;
     }

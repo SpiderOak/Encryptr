@@ -13,7 +13,10 @@
       session: undefined
     },
     initialize: function() {
-      // ...
+      this.on("change", this.updateBackboneSession, this);
+    },
+    updateBackboneSession: function(model,options) {
+      Backbone.Session = this.get("session");
     }
   });
 

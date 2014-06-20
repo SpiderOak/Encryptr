@@ -8,7 +8,7 @@
 
   var EntriesCollection = Backbone.Collection.extend({
     initialize: function(models, options) {
-      this.container = options && options.container || "entries"; // default
+      this.container = options && options.container || "_encryptrIndex"; // default
       this.model = Encryptr.prototype.EntryModel; // default
     },
     fetch: function (options) {
@@ -18,7 +18,11 @@
         if (err) return;
         _this.set(
           _.map(container.keys, function(value, key) {
-            return new _this.model(value);
+            return new _this.model({
+              id: key,
+              label: value.label,
+              type: value.type
+            });
           })
         );
         if (options && options.success) options.success(_this);

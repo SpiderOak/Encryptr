@@ -72,7 +72,8 @@
             passphrase: passphrase,
             session: session
           });
-          window.app.session.create("entries", function(err, entries){
+          Backbone.Session = session;
+          window.app.session.create("_encryptrIndex", function(err, entries){
             if (err) {
               window.app.dialogAlertView.show({
                 title: "Error",

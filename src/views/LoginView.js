@@ -70,15 +70,33 @@
           passphrase: passphrase,
           session: session
         });
+        Backbone.Session = session;
         window.app.mainView = new window.app.MainView().render();
-        var entriesCollection = new window.app.EntriesCollection();
-        window.app.navigator.pushView(
-          window.app.EntriesView,
-          { collection: entriesCollection },
-          window.app.noEffect
-        );
-        _this.dismiss();
-        $(".blocker").hide();
+        var finishUp = function(callback) {
+          var entriesCollection = new window.app.EntriesCollection();
+          window.app.navigator.pushView(
+            window.app.EntriesView,
+            { collection: entriesCollection },
+            window.app.noEffect
+          );
+          callback();
+        };
+        window.app.session.load("_encryptrIndex", function(err, indexContainer) {
+          if (err) {
+            window.app.session.create("_encryptrIndex", function(err) {
+              if (err) console.log(err);
+              finishUp(function() {
+                _this.dismiss();
+                $(".blocker").hide();
+              });
+            });
+          } else {
+            finishUp(function() {
+              _this.dismiss();
+              $(".blocker").hide();
+            });
+          }
+        });
       });
     },
     loginButton_clickHandler: function(event) {

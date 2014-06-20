@@ -55,7 +55,7 @@
       _this.$('input[name="label"]').css("border","none");
       $("input").blur();
       $(".blocker").show();
-      var items = this.model.get("items");
+      var items = _this.model.get("items");
       _.each(_this.$("ul.editable input"), function(input) {
         _.each(items, function(item) {
           if (item.id === input.name) {
@@ -63,14 +63,52 @@
           }
         });
       });
-      this.model.set({
+      _this.model.set({
         "label": this.$("input[name=label]").val(),
         items: items
       });
-      this.model.save(null, {
-        success: function() {
-          window.app.navigator.popView(window.app.defaultPopEffect);
-          $(".blocker").hide();
+      var indexNeedsUpdate = false;
+      if (_this.model.changed.id || _this.model.changed.label || _this.model.changed.type) {
+        indexNeedsUpdate = true;
+      }
+      _this.model.save(null, {
+        success: function(model) {
+          if (indexNeedsUpdate) {
+            window.app.session.load("_encryptrIndex", function(err, container) {
+              if (err) {
+                window.app.dialogAlertView.show({
+                  title: "Error",
+                  subtitle: err
+                }, function() {
+                  window.app.navigator.popView(window.app.defaultPopEffect);
+                  $(".blocker").hide();
+                });
+                return;
+              }
+              container.keys[model.id] = {
+                id: model.id,
+                label: model.get("label"),
+                type: model.get("type")
+              };
+              container.save(function(err) {
+                if (err) {
+                  window.app.dialogAlertView.show({
+                    title: "Error",
+                    subtitle: err
+                  }, function() {
+                    window.app.navigator.popView(window.app.defaultPopEffect);
+                    $(".blocker").hide();
+                  });
+                  return;
+                }
+                window.app.navigator.popView(window.app.defaultPopEffect);
+                $(".blocker").hide();
+              });
+            });
+          } else {
+            window.app.navigator.popView(window.app.defaultPopEffect);
+            $(".blocker").hide();
+          }
         },
         error: function(err) {
           $(".blocker").hide();

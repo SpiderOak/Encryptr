@@ -31,6 +31,9 @@
           this.model.toJSON()
         )
       );
+      if (this.model.get("items")) {
+        _this.$(".entriesViewLoading").removeClass("loadingEntries");
+      }
       window.app.mainView.on("deleteentry", this.deleteButton_clickHandler, this);
       window.app.mainView.once("editentry", this.editButton_clickHandler, this);
 
@@ -44,6 +47,8 @@
       this.$(".copyable").on("mouseup", function(event) {
         clearTimeout( timer );
       });
+
+      // this.model.fetch();
 
       return this;
     },
@@ -69,18 +74,45 @@
       }, function(event) {
         console.log(event);
         if (event.type === "dialogAccept") {
+          var oldId = _this.model.id;
+          var parentCollection = _this.model.collection;
           _this.model.destroy();
-          window.app.navigator.popView(window.app.defaultPopEffect);
+          window.app.session.load("_encryptrIndex", function(err, container) {
+            if (err) {
+              window.app.dialogAlertView.show({
+                title: "Error",
+                subtitle: err
+              }, function(){});
+              return;
+            }
+            delete container.keys[oldId];
+            container.save(function(err) {
+              if (err) {
+                window.app.dialogAlertView.show({
+                  title: "Error",
+                  subtitle: err
+                }, function(){});
+              }
+              parentCollection.fetch();
+              window.app.navigator.popView(window.app.defaultPopEffect);
+            });
+          });
         }
       });
     },
     viewActivate: function(event) {
       var _this = this;
+      _this.model.fetch({success: function() {
+        _this.$(".entriesViewLoading").removeClass("loadingEntries");
+      }, error: function(err) {
+        // error out and return to the entries screen
+        console.log(err);
+      }});
       window.app.mainView.backButtonDisplay(true);
       $(".nav .btn.right").addClass("hidden");
       $(".nav .edit-btn.right").removeClass("hidden");
       $(".nav .delete-btn").removeClass("hidden");
-      window.app.mainView.setTitle(this.model.get("label"));
+      window.app.mainView.setTitle(_this.model.get("label"));
     },
     viewDeactivate: function(event) {
       window.app.mainView.backButtonDisplay(false);
