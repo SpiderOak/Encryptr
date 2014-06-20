@@ -43,7 +43,7 @@
     "chai-as-promised": "^4.1.1",
     "mocha-as-promised": "^2.0.0",
     "colors": "^0.6.2",
-    "wd": "^0.2.10",
+    "wd": "^0.3.1",
     "wd-query": "^0.2.0",
     "grunt-node-webkit-builder": "^0.1.21"
   }

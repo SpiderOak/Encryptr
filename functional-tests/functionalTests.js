@@ -27,7 +27,7 @@ describe('Encryptr', function() {
   var newpassphrase = "shhh" + Date.now().toString();
 
   if (process.env.APPIUM === "android") {
-    appURL = projectRoot + "/platforms/android/bin/Encryptr-debug.apk";
+    appURL = projectRoot + "/platforms/android/ant-build/Encryptr-debug.apk";
   }
   else {
     appURL = projectRoot + "/platforms/ios/build/emulator/Encryptr.app";
@@ -43,16 +43,25 @@ describe('Encryptr', function() {
         'app-activity' : (process.env.APPIUM === "android") ? '.Encryptr' : undefined,
         name: "Encryptr",
         platform:'Mac 10.9',
+        platformName: (process.env.APPIUM === "android") ? "Android" : "iOS",
+        deviceName: (process.env.APPIUM === "android") ? 'Android VM' : 'iPhone Simulator',
         app: appURL,
         version: '',
         browserName: '',
         implicitWaitMs: 500
       })
+      .contexts()
+      .then(function(contexts) {
+        console.log(contexts);
+        return browser;
+      })
+      .context((process.env.APPIUM === "android") ? 'WEBVIEW_org.devgeeks.encryptr' : 'WEBVIEW_1');
       // .setAsyncScriptTimeout(30000)
-      .windowHandles()
-      .then(function(handles) {
-        return (process.env.APPIUM === "android") ? browser.window(handles[1]) : browser.window(handles[0]);
-      });
+      //.windowHandles()
+      //.then(function(handles) {
+        //console.log(handles);
+        //return (process.env.APPIUM === "android") ? browser.window(handles[1]) : browser.window(handles[0]);
+      //});
   });
 
   after(function() {
@@ -443,6 +452,7 @@ describe('Encryptr', function() {
       it("should have a label with the correct text", function() {
         return browser
           .waitForElementByCss("ul li strong", waitTimeout)
+          .sleep(1000)
           .then(function() {
             return $("ul li strong").text();
           }).should.eventually.equal("New general entry");
@@ -582,6 +592,10 @@ describe('Encryptr', function() {
           })
           .then(function() {
             return $(".dialogConfirm:not(.dismissed) .dialog-accept-btn").click();
+          })
+          .then(function() {
+            return browser
+              .waitFor(wd.asserters.jsCondition("document.querySelectorAll('.emptyEntries')[0]"), waitTimeout);
           })
           .then(function() {
             return browser
