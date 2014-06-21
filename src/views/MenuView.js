@@ -10,6 +10,7 @@
     className: "menu",
     events: {
       "click .menu-settings": "settings_clickHandler",
+      "click .menu-about": "about_clickHandler",
       "click .menu-migrate-beta2": "importBeta2_clickHandler",
       "click .menu-logout": "logout_clickHandler"
     },
@@ -98,7 +99,13 @@
           });
         });
       });
-
+    },
+    about_clickHandler: function(event) {
+      this.dismiss();
+      window.app.dialogAlertView.show({
+        title: "About Encryptr",
+        subtitle: "Placeholder for version info and URLs... what if it's a bit long-winded?"
+      }, function() {});
     },
     dismiss: function() {
       if (!this.$el.hasClass("dismissed")) {
