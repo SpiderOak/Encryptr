@@ -15,9 +15,7 @@
     "frame": true,
     "width": 640,
     "height": 480,
-    "min_width": 800,
-    "min_height": 480,
-    "max_width": 800,
-    "max_height": 960
+    "min_width": 320,
+    "min_height": 480
   }
 }
