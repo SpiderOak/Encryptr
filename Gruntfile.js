@@ -14,7 +14,8 @@ module.exports = function(grunt) {
     },
     concat: {
       options: {
-        banner:  '<%= meta.banner %>' + '// GENERATED FILE - DO NOT EDIT\n'
+        banner:  '<%= meta.banner %>' + '// GENERATED FILE - DO NOT EDIT\n\n' +
+          'window.app = { version: "<%= pkg.version %>" };\n\n'
       },
       dist: {
         src: ['src/**/*.js'],

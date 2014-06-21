@@ -104,7 +104,9 @@
       this.dismiss();
       window.app.dialogAlertView.show({
         title: "About Encryptr",
-        subtitle: "Placeholder for version info and URLs... what if it's a bit long-winded?"
+        subtitle: "Version: " + window.app.version + "<br><br>" +
+          "encryptr.crypton.io <br><br>" +
+          "crypton.io"
       }, function() {});
     },
     dismiss: function() {
