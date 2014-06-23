@@ -80,6 +80,14 @@
         );
         _this.dismiss();
         $(".blocker").hide();
+        window.setTimeout(function(){
+          window.app.session.load("entries", function(err, container) {
+            if (err && err == "No new records") {
+              // remove the import option
+              $(".menu-migrate-beta2").parent().hide();
+            }
+          });
+        }, 10);
       });
     },
     loginButton_clickHandler: function(event) {
