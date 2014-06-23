@@ -106,7 +106,10 @@ var Encryptr = (function (window, console, undefined) {
 
     if (!$.os.nodeWebkit) {
       // overflow: auto !important; -webkit-overflow-scrolling: touch;
-      $(".subviews").css({"overflow":"auto !important", "-webkit-overflow-scrolling":"touch"});
+      $(".subviews").css({
+        "overflow":"auto !important",
+        "-webkit-overflow-scrolling":"touch"
+      });
     }
     // Platform specific clipboard plugin / code
     if ($.os.ios || $.os.android) {
@@ -135,7 +138,7 @@ var Encryptr = (function (window, console, undefined) {
   };
 
   Encryptr.prototype.onResume = function(event) {
-    // @TODO - this should probably just hide everything unless a set number 
+    // @TODO - this should probably just hide everything unless a set number
     //    of minutes have elapsed
     // Logging out seems a bit overkill
     // For now, put a 1 minute timeout on it...

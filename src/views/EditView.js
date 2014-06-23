@@ -11,7 +11,8 @@
       "submit form": "form_submitHandler"
     },
     initialize: function() {
-      _.bindAll(this, "render", "addAll", "addOne", "form_submitHandler", "viewActivate", "viewDeactivate");
+      _.bindAll(this, "render", "addAll", "addOne", "form_submitHandler",
+        "viewActivate", "viewDeactivate");
       this.on("viewActivate",this.viewActivate);
       this.on("viewDeactivate",this.viewDeactivate);
       this.model.bind("all", this.addAll, this);
@@ -40,7 +41,8 @@
       var view = new Encryptr.prototype.EditListItemView({
         model: itemModel
       });
-      this.$("ul.editable").append("<li class='sep'>" + itemModel.get("key") + "</li>");
+      this.$("ul.editable").append("<li class='sep'>" + itemModel.get("key") +
+          "</li>");
       this.$("ul.editable").append(view.render().el);
       this.subViews.push(view);
     },
@@ -68,7 +70,8 @@
         items: items
       });
       var indexNeedsUpdate = false;
-      if (_this.model.changed.id || _this.model.changed.label || _this.model.changed.type) {
+      if (_this.model.changed.id || _this.model.changed.label ||
+              _this.model.changed.type) {
         indexNeedsUpdate = true;
       }
       _this.model.save(null, {

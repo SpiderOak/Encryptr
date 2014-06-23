@@ -12,7 +12,8 @@
       // ...
     },
     initialize: function() {
-      _.bindAll(this, "render", "addAll", "addOne", "viewActivate", "viewDeactivate");
+      _.bindAll(this, "render", "addAll", "addOne", "viewActivate",
+        "viewDeactivate");
       this.collection.bind("reset", this.addAll, this);
       this.collection.bind("add", this.addOne, this);
       this.collection.bind("remove", this.addAll, this);
@@ -113,7 +114,8 @@
     },
     a_clickHandler: function(event) {
       var _this = this;
-      if (!$(".menu").hasClass("dismissed") || !$(".addMenu").hasClass("dismissed")) {
+      if (!$(".menu").hasClass("dismissed") ||
+            !$(".addMenu").hasClass("dismissed")) {
         return;
       }
       window.app.navigator.pushView(window.app.EntryView, {
