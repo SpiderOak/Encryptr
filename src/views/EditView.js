@@ -127,6 +127,7 @@
       window.app.mainView.setTitle(this.model.get("displayName"));
       window.setTimeout(function() {
         _this.$("input").removeAttr("disabled");
+        _this.$("input").first().focus();
       }, 100);
     },
     viewDeactivate: function(event) {
