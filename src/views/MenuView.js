@@ -104,8 +104,9 @@
       this.dismiss();
       window.app.dialogAlertView.show({
         title: "About Encryptr",
-        subtitle: "Version: " + window.app.version + "<br><br>" +
+        subtitle: "Encryptr " + window.app.version + "<br>" +
           "encryptr.crypton.io <br><br>" +
+          "Crypton " + window.crypton.version + "<br>" +
           "crypton.io"
       }, function() {});
     },
