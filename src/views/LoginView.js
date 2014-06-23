@@ -80,6 +80,14 @@
         );
         _this.dismiss();
         $(".blocker").hide();
+        window.setTimeout(function(){
+          window.app.session.load("entries", function(err, container) {
+            if (err && err == "No new records") {
+              // remove the import option
+              $(".menu-migrate-beta2").parent().hide();
+            }
+          });
+        }, 10);
       });
     },
     loginButton_clickHandler: function(event) {
@@ -94,9 +102,13 @@
       var _this = this;
       if (!_this.$el.hasClass("dismissed")) {
         // this.$("input").attr("disabled", true);
-        _this.$el.animate({"-webkit-transform":"translate3d(0,100%,0)"}, 100, "ease-in-out", function() {
-          _this.$el.addClass("dismissed");
-        });
+        _this.$el.animate({
+          "-webkit-transform":"translate3d(0,100%,0)"},
+          100,
+          "ease-in-out",
+          function() {
+            _this.$el.addClass("dismissed");
+          });
         // Clear username and password values
         _this.$("input").val("");
       }

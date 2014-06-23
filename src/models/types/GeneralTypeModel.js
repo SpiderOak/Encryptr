@@ -14,6 +14,7 @@
   };
 
   GeneralType.prototype.displayName = "General";
+  GeneralType.prototype.icon = "fa-lock";
 
   Encryptr.prototype.types = Encryptr.prototype.types || {};
   Encryptr.prototype.types.GeneralType = GeneralType;

@@ -10,11 +10,13 @@
     className: "menu",
     events: {
       "click .menu-settings": "settings_clickHandler",
+      "click .menu-about": "about_clickHandler",
       "click .menu-migrate-beta2": "importBeta2_clickHandler",
       "click .menu-logout": "logout_clickHandler"
     },
     initialize: function() {
-      _.bindAll(this, "settings_clickHandler", "logout_clickHandler", "importBeta2_clickHandler");
+      _.bindAll(this, "settings_clickHandler", "logout_clickHandler",
+        "importBeta2_clickHandler");
     },
     render: function() {
       this.$el.html(window.tmpl["menuView"]({}));
@@ -29,7 +31,8 @@
       this.dismiss();
       if (window.app.settings && window.app.settings.username) {
         delete window.app.settings.username;
-        window.localStorage.setItem("settings", JSON.stringify(window.app.settings));
+        window.localStorage.setItem("settings",
+            JSON.stringify(window.app.settings));
       }
       // Throw up the login screen
       window.app.loginView.show();
@@ -98,7 +101,14 @@
           });
         });
       });
-
+    },
+    about_clickHandler: function(event) {
+      this.dismiss();
+      window.app.dialogAlertView.show({
+        title: "About Encryptr",
+        subtitle: "Encryptr " + window.app.version + "<br>" +
+          "(Crypton " + window.crypton.version + ")"
+      }, function() {});
     },
     dismiss: function() {
       if (!this.$el.hasClass("dismissed")) {

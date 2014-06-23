@@ -110,9 +110,12 @@
       var _this = this;
       if (!_this.$el.hasClass("dismissed")) {
         _this.$("input").attr("disabled", true);
-        _this.$el.animate({"-webkit-transform":"translate3d(0,100%,0)"}, 100, "ease-in-out", function() {
-          _this.$el.addClass("dismissed");
-        });
+        _this.$el.animate({"-webkit-transform": "translate3d(0,100%,0)"},
+          100,
+          "ease-in-out",
+          function() {
+            _this.$el.addClass("dismissed");
+          });
         // Clear username and password values
         this.$("input").val("");
       }
@@ -122,7 +125,11 @@
       if (_this.$el.hasClass("dismissed")) {
         _this.$("input").removeAttr("disabled");
         _this.$el.removeClass("dismissed");
-        _this.$el.animate({"-webkit-transform":"translate3d(0,0,0)"}, 250, "ease-in-out");
+        _this.$el.animate(
+          {"-webkit-transform":"translate3d(0,0,0)"},
+          250,
+          "ease-in-out"
+        );
       }
     }
   });

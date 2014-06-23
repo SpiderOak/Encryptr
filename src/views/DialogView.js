@@ -9,6 +9,7 @@
   var DialogConfirmView = Backbone.View.extend({
     className: "dialogConfirm",
     events: {
+      "click": "cancel_clickHandler",
       "click .dialog-cancel-btn": "dialogCancelButton_clickHandler",
       "click .dialog-accept-btn": "dialogAcceptButton_clickHandler"
     },
@@ -17,6 +18,7 @@
         "show",
         "toggle",
         "close",
+        "cancel_clickHandler",
         "dialogCancelButton_clickHandler",
         "dialogAcceptButton_clickHandler");
     },
@@ -24,6 +26,10 @@
       this.$el.html(window.tmpl["dialogConfirmView"]({}));
       this.dismiss();
       return this;
+    },
+    cancel_clickHandler: function(event) {
+      if (!$(event.target).hasClass("dialogConfirm")) return;
+      this.dismiss();
     },
     dialogCancelButton_clickHandler: function(event) {
       $(document).trigger("dialogCancel");
@@ -79,6 +85,7 @@
   var DialogAlertView = Backbone.View.extend({
     className: "dialogAlert",
     events: {
+      "click": "cancel_clickHandler",
       "click .dialog-cancel-btn": "dialogCancelButton_clickHandler",
       "click .dialog-accept-btn": "dialogAcceptButton_clickHandler"
     },
@@ -87,12 +94,17 @@
         "show",
         "toggle",
         "close",
+        "cancel_clickHandler",
         "dialogAcceptButton_clickHandler");
     },
     render: function() {
       this.$el.html(window.tmpl["dialogAlertView"]({}));
       this.dismiss();
       return this;
+    },
+    cancel_clickHandler: function(event) {
+      if (!$(event.target).hasClass("dialogAlert")) return;
+      this.dismiss();
     },
     dialogAcceptButton_clickHandler: function(event) {
       $(document).trigger("dialogAccept");

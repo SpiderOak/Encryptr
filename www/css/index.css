@@ -114,7 +114,7 @@ h1 {
   top: 0;
   left: 0;
   right: 0;
-  height: 150px;
+  min-height: 150px;
   background-color: #333333;
   color: #ffffff;
   padding: 10px;
@@ -193,8 +193,9 @@ h1 {
   content: '';
   border-right: 6px solid transparent;
 }
-.menu .fa {
-  margin-right: 5px;
+.menu .fa, 
+.addMenu .fa {
+  width: 25px;
 }
 .addMenu:before {
   left: auto;

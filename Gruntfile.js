@@ -14,7 +14,8 @@ module.exports = function(grunt) {
     },
     concat: {
       options: {
-        banner:  '<%= meta.banner %>' + '// GENERATED FILE - DO NOT EDIT\n'
+        banner:  '<%= meta.banner %>' + '// GENERATED FILE - DO NOT EDIT\n\n' +
+          'window.app = { version: "<%= pkg.version %>" };\n\n'
       },
       dist: {
         src: ['src/**/*.js'],
@@ -161,7 +162,8 @@ module.exports = function(grunt) {
         mac_icns: './resources/icon-encryptr.icns',
         win: true,
         linux32: true,
-        linux64: true
+        linux64: true,
+        credits: './www/credits.html'
       },
       src: ['./www/**/*'] // Your node-webkit app
     },

@@ -1,6 +1,6 @@
 {
   "name": "Encryptr",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.4",
   "repository": "https://github.com/devgeeks/Encryptr.git",
   "main": "www/js/Encryptr.js",
   "scripts": {
@@ -19,13 +19,15 @@
       "url": "http://www.gnu.org/licenses/gpl.html"
     }
   ],
-  "dependencies": {},
+  "dependencies": {
+    "grunt-contrib-concat": "^0.4.0"
+  },
   "devDependencies": {
     "bower": "0.9.x",
     "grunt-cli": "0.1.x",
     "grunt-contrib-jshint": "~0.4.3",
     "grunt": "0.4.x",
-    "grunt-contrib-concat": "~0.2.0",
+    "grunt-contrib-concat": "~0.4.0",
     "grunt-contrib-uglify": "~0.2.0",
     "grunt-contrib-watch": "~0.3.1",
     "grunt-shell": "0.2.x",
