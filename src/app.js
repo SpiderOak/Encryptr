@@ -16,6 +16,14 @@ var Encryptr = (function (window, console, undefined) {
     window.document.addEventListener("pause", this.onPause, false);
     window.document.addEventListener("offline", this.setOffline, false);
     window.document.addEventListener("online", this.setOnline, false);
+    document.addEventListener('dragover', function(e){
+      e.preventDefault();
+      e.stopPropagation();
+    },  false);
+    document.addEventListener('drop', function(e){
+      e.preventDefault();
+      e.stopPropagation();
+    }, false);
 
     var settings = window.localStorage.getItem("settings") || "{}";
     window.app.settings = JSON.parse(settings);
