@@ -160,6 +160,7 @@ module.exports = function(grunt) {
         build_dir: './desktopbuilds',
         mac: true,
         mac_icns: './resources/icon-encryptr.icns',
+        mac_bundle_id: 'org.devgeeks.encryptr',
         win: true,
         linux32: true,
         linux64: true,
