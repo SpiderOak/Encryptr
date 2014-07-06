@@ -284,6 +284,9 @@ select {
   outline: 0 none;
 }
 input[type="text"],
+input[type="url"],
+input[type="number"],
+input[type="email"],
 input[type="password"] {
   -webkit-box-sizing: border-box;
   position: relative;
@@ -437,6 +440,7 @@ ul li ::-webkit-input-placeholder {
 }
 ul li.sep {
   font-size: 90%;
+  letter-spacing: 0.07em;
   padding: 5px 10px;
   background-color: white;
   border: none;
