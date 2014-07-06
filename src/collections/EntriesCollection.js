@@ -11,12 +11,15 @@
       this.container = options && options.container || "_encryptrIndex"; // default
       this.model = Encryptr.prototype.EntryModel; // default
     },
+    comparator: function(a,b) {
+      return a.get('label').localeCompare(b.get('label'));
+    },
     fetch: function (options) {
       var _this = this;
       window.app.session.load(this.container, function(err, container) {
         if (options && options.error && err) options.error(err);
         if (err) return;
-        _this.set(
+        _this.reset(
           _.map(container.keys, function(value, key) {
             return new _this.model({
               id: key,
