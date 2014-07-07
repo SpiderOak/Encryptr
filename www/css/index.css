@@ -75,7 +75,7 @@ h1 {
 .nav .btn.disabled {
   color: #cccccc;
 }
-.nav .btn:active {
+.nav .btn.active {
   color: #ffffff;
   text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
 }
@@ -176,9 +176,7 @@ h1 {
   color: #ffffff;
 }
 .menu ul li a.active,
-.addMenu ul li a.active,
-.menu ul li a:active,
-.addMenu ul li a:active {
+.addMenu ul li a.active {
   background-color: #999999;
   color: #ffffff;
 }
@@ -332,8 +330,7 @@ div.login-input {
 a {
   color: inherit;
 }
-a.active,
-a:active {
+a.active {
   color: #999999;
 }
 a.button.primary {
@@ -341,14 +338,12 @@ a.button.primary {
   border-color: rgba(255, 255, 255, 0.8);
   color: #ffffff;
 }
-a.button.primary.active,
-a.button.primary:active {
+a.button.primary.active {
   color: #ffffff;
   background-color: rgba(0, 0, 0, 0.4);
   border: 1px solid rgba(255, 255, 255, 0.8);
 }
-a.button.active,
-a.button:active {
+a.button.active {
   background-color: rgba(0, 0, 0, 0.4);
   box-shadow: none;
   outline: 0;
@@ -428,8 +423,7 @@ ul li a {
   margin: -15px;
   color: #000000;
 }
-ul li a.active,
-ul li a:active {
+ul li a.active {
   background-image: none;
   background-color: #dddddd;
   color: black;

@@ -80,6 +80,10 @@ var Encryptr = (function (window, console, undefined) {
       var $this = $(this);
       $this.removeClass("active");
     });
+    $(document).on("touchcancel", "a", function(event) {
+      var $this = $(this);
+      $this.removeClass("active");
+    });
     $(document).on("touchmove", "a", function(event) {
       var $this = $(this);
       $this.removeClass("active");
@@ -187,8 +191,23 @@ var Encryptr = (function (window, console, undefined) {
       return;
     }
     if ($(".back-btn").is(":visible")) {
-      $(".back-btn").addClass("hidden");
-      window.app.navigator.popView(window.app.defaultPopEffect);
+      if (window.app.navigator.activeView.confirmBackNav) {
+        window.app.dialogConfirmView.show(window.app.navigator.activeView.confirmBackNav,
+            function(event) {
+              if (event.type === "dialogAccept") {
+                if (window.app.navigator.viewsStack.length > 1) {
+                  window.app.mainView.backButtonDisplay(false);
+                  window.app.navigator.popView(window.app.defaultPopEffect);
+                }
+                window.app.navigator.activeView.confirmBackNav.callback();
+              }
+            });
+      } else {
+        if (window.app.navigator.viewsStack.length > 1) {
+          window.app.mainView.backButtonDisplay(false);
+          window.app.navigator.popView(window.app.defaultPopEffect);
+        }
+      }
       return;
     }
     navigator.app.exitApp();
