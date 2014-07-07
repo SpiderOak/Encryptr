@@ -49,9 +49,23 @@
       event.preventDefault();
       event.stopPropagation();
       event.stopImmediatePropagation();
-      this.backButtonDisplay(false);
-      if (window.app.navigator.viewsStack.length > 1) {
-        window.app.navigator.popView(window.app.defaultPopEffect);
+      var _this = this;
+      if (window.app.navigator.activeView.confirmBackNav) {
+        window.app.dialogConfirmView.show(window.app.navigator.activeView.confirmBackNav,
+            function(event) {
+              if (event.type === "dialogAccept") {
+                _this.backButtonDisplay(false);
+                if (window.app.navigator.viewsStack.length > 1) {
+                  window.app.navigator.popView(window.app.defaultPopEffect);
+                }
+                window.app.navigator.activeView.confirmBackNav.callback();
+              }
+            });
+      } else {
+        _this.backButtonDisplay(false);
+        if (window.app.navigator.viewsStack.length > 1) {
+          window.app.navigator.popView(window.app.defaultPopEffect);
+        }
       }
     },
     addButton_clickHandler: function(event) {

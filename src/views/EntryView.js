@@ -83,31 +83,44 @@
         title: "Confirm delete",
         subtitle: "Delete this entry?"
       }, function(event) {
-        console.log(event);
         if (event.type === "dialogAccept") {
+          $(".blocker").show();
           var oldId = _this.model.id;
           var parentCollection = _this.model.collection;
-          _this.model.destroy();
-          window.app.session.load("_encryptrIndex", function(err, container) {
-            if (err) {
-              window.app.dialogAlertView.show({
-                title: "Error",
-                subtitle: err
-              }, function(){});
-              return;
-            }
-            delete container.keys[oldId];
-            container.save(function(err) {
+          _this.model.destroy({success: function(model, response) {
+            window.app.session.load("_encryptrIndex", function(err, container) {
               if (err) {
+                $(".blocker").hide();
                 window.app.dialogAlertView.show({
                   title: "Error",
                   subtitle: err
                 }, function(){});
+                return;
               }
-              parentCollection.fetch();
-              window.app.navigator.popView(window.app.defaultPopEffect);
+              delete container.keys[oldId];
+              container.save(function(err) {
+                if (err) {
+                  $(".blocker").hide();
+                  window.app.dialogAlertView.show({
+                    title: "Error",
+                    subtitle: err
+                  }, function(){});
+                }
+                $(".blocker").hide();
+                window.app.navigator.popView(window.app.defaultPopEffect);
+                window.setTimeout(function(){
+                  window.app.toastView.show("Entry deleted");
+                }, 100);
+                parentCollection.fetch();
+              });
             });
-          });
+          }, error: function(err) {
+            window.app.dialogAlertView.show({
+              title: "Error",
+              subtitle: err
+            }, function(){});
+            console.error(arguments);
+          }});
         }
       });
     },

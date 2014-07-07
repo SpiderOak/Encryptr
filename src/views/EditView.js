@@ -16,6 +16,13 @@
       this.on("viewActivate",this.viewActivate);
       this.on("viewDeactivate",this.viewDeactivate);
       this.model.bind("all", this.addAll, this);
+      this.confirmBackNav = {
+        title: "Confirm navigation",
+        subtitle: "Discard any changes?",
+        callback: function() {
+          window.app.toastView.show("Changes discarded.");
+        }
+      };
       this.subViews = [];
       if (!window.app.toastView) {
         window.app.toastView = new window.app.ToastView();
@@ -105,11 +112,13 @@
                   return;
                 }
                 window.app.navigator.popView(window.app.defaultPopEffect);
+                window.app.toastView.show("Entry saved");
                 $(".blocker").hide();
               });
             });
           } else {
             window.app.navigator.popView(window.app.defaultPopEffect);
+            window.app.toastView.show("Entry unchanged");
             $(".blocker").hide();
           }
         },
