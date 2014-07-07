@@ -11,15 +11,17 @@
       "longTap .copyable": "copyable_longTapHandler"
     },
     initialize: function() {
-      this.model.bind("change", this.render, this);
       _.bindAll(this,
           "render",
           "editButton_clickHandler",
           "deleteButton_clickHandler",
           "viewActivate",
           "viewDeactivate");
+      this.model.on("change", this.addAll, this);
       this.on("viewActivate",this.viewActivate);
       this.on("viewDeactivate",this.viewDeactivate);
+      window.app.mainView.on("deleteentry", this.deleteButton_clickHandler, this);
+      window.app.mainView.once("editentry", this.editButton_clickHandler, this);
       if (!window.app.toastView) {
         window.app.toastView = new window.app.ToastView();
       }
@@ -34,8 +36,6 @@
       if (this.model.get("items")) {
         _this.$(".entriesViewLoading").removeClass("loadingEntries");
       }
-      window.app.mainView.on("deleteentry", this.deleteButton_clickHandler, this);
-      window.app.mainView.once("editentry", this.editButton_clickHandler, this);
 
       // Desktop polyfill for longTap
       var timer = null;
@@ -51,6 +51,17 @@
       // this.model.fetch();
 
       return this;
+    },
+    addAll: function() {
+      var _this = this;
+      this.$el.html(
+        window.tmpl["entryView"](
+          this.model.toJSON()
+        )
+      );
+      if (this.model.get("items")) {
+        _this.$(".entriesViewLoading").removeClass("loadingEntries");
+      }
     },
     copyable_longTapHandler: function(event) {
       event.preventDefault();

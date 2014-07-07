@@ -12,7 +12,7 @@
       { id: "username", key: "Username", value: "", placeholder: "Username" },
       { id: "password", key: "Password",
         value: Encryptr.prototype.randomString(12), placeholder: "Password" },
-      { id: "url", key: "Site URL", value: "",
+      { id: "url", type: "url", key: "Site URL", value: "",
         placeholder: "http://www.example.com" }
     ];
   };
