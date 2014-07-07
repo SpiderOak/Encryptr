@@ -37,17 +37,6 @@
         _this.$(".entriesViewLoading").removeClass("loadingEntries");
       }
 
-      // Desktop polyfill for longTap
-      var timer = null;
-      this.$(".copyable").on("mousedown", function(event) {
-        timer = setTimeout( function() {
-          _this.copyable_longTapHandler(event);
-        }, 750 );
-      });
-      this.$(".copyable").on("mouseup", function(event) {
-        clearTimeout( timer );
-      });
-
       // this.model.fetch();
 
       return this;
@@ -62,6 +51,16 @@
       if (this.model.get("items")) {
         _this.$(".entriesViewLoading").removeClass("loadingEntries");
       }
+      // Desktop polyfill for longTap
+      var timer = null;
+      this.$(".copyable").on("mousedown", function(event) {
+        timer = setTimeout( function() {
+          _this.copyable_longTapHandler(event);
+        }, 750 );
+      });
+      this.$(".copyable").on("mouseup", function(event) {
+        clearTimeout( timer );
+      });
     },
     copyable_longTapHandler: function(event) {
       event.preventDefault();
