@@ -7,6 +7,6 @@ www/components/**/*
 components/**/*
 !www/components/.gitignore
 !components/.gitignore
-www/tests/Encryptr-tests.js
+www/js/Encryptr-tests.js
 www/js/Encryptr-templates.js
 desktopbuilds/*
