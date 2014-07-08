@@ -55,7 +55,7 @@ module.exports = function(grunt) {
         src: [
           'tests/**/*.js'
         ],
-        dest: 'www/tests/<%= pkg.name %>-tests.js'
+        dest: 'www/js/<%= pkg.name %>-tests.js'
       }
     },
     copy: {
@@ -124,7 +124,7 @@ module.exports = function(grunt) {
       // Some different reporters...
       mochaspec: {
         command:
-          './node_modules/.bin/mocha-phantomjs www/tests/index.html',
+          './node_modules/.bin/mocha-phantomjs www/tests.html',
         options: {
           failOnError: true,
           stdout: true
@@ -132,7 +132,7 @@ module.exports = function(grunt) {
       },
       mochamin: {
         command:
-          './node_modules/.bin/mocha-phantomjs -R min www/tests/index.html',
+          './node_modules/.bin/mocha-phantomjs -R min www/tests.html',
         options: {
           failOnError: true,
           stdout: true
@@ -140,7 +140,7 @@ module.exports = function(grunt) {
       },
       mochadot: {
         command:
-          './node_modules/.bin/mocha-phantomjs -R dot www/tests/index.html',
+          './node_modules/.bin/mocha-phantomjs -R dot www/tests.html',
         options: {
           failOnError: true,
           stdout: true
@@ -148,7 +148,7 @@ module.exports = function(grunt) {
       },
       mochatap: {
         command:
-          './node_modules/.bin/mocha-phantomjs -R tap www/tests/index.html',
+          './node_modules/.bin/mocha-phantomjs -R tap www/tests.html',
         options: {
           failOnError: true,
           stdout: true
