@@ -1,0 +1,11 @@
+{
+  "title": "Encryptr",
+  "app": "../desktopbuilds/releases/Encryptr/mac/Encryptr.app",
+  "icon": "icon-encryptr.icns",
+  "background": "Encryptr-bg.png",
+  "icons": {
+    "size": 80,
+    "app": [192, 344],
+    "alias": [448, 344]
+  }
+}
