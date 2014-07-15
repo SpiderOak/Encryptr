@@ -25,23 +25,20 @@
     },
     logout_clickHandler: function(event) {
       event.preventDefault();
-      window.app.loginView.disable();
       this.dismiss();
-      if (window.app.settings && window.app.settings.username) {
-        delete window.app.settings.username;
-        window.localStorage.setItem("settings",
-            JSON.stringify(window.app.settings));
-      }
-      // Throw up the login screen
-      window.app.loginView.show();
-      window.setTimeout(function() {
-        delete window.app.session;
-        window.app.navigator.popAll(window.app.noEffect);
-        window.app.mainView.close();
-      },100);
-      window.setTimeout(function() {
-        window.app.loginView.enable();
-      },350);
+      window.app.accountModel.logout(function() {
+        window.app.accountModel = new window.app.AccountModel();
+        window.app.loginView.disable();
+        // Throw up the login screen
+        window.app.loginView.show();
+        window.setTimeout(function() {
+          window.app.navigator.popAll(window.app.noEffect);
+          window.app.mainView.close();
+        },100);
+        window.setTimeout(function() {
+          window.app.loginView.enable();
+        },350);
+      });
     },
     about_clickHandler: function(event) {
       this.dismiss();

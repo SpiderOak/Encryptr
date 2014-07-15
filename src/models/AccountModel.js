@@ -17,6 +17,22 @@
     },
     updateBackboneSession: function(model,options) {
       Backbone.Session = this.get("session");
+    },
+    logout: function(callback) {
+      if (window.app.settings && window.app.settings.username) {
+        delete window.app.settings.username;
+        window.localStorage.setItem("settings",
+            JSON.stringify(window.app.settings));
+        this.set("username", "");
+        this.set("passphrase", "");
+        this.set("session", undefined);
+      }
+      $(document).trigger('logout');
+      window.setTimeout(function() {
+        delete window.app.session;
+        delete Backbone.session;
+      }, 100);
+      if (callback) callback();
     }
   });
 

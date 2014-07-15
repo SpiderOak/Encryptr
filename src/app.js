@@ -160,12 +160,18 @@ var Encryptr = (function (window, console, undefined) {
     var timeoutInMinutes =
       Math.floor(((Date.now() - window.app.lastPaused) / 1000) / 60);
     if (timeoutInMinutes >= 1) {
-      window.app.loginView.show();
-      window.setTimeout(function() {
-        window.app.session = undefined;
-        window.app.navigator.popAll(window.app.noEffect);
-        window.app.mainView.menuView.close();
-      },100);
+      window.app.accountModel.logout(function() {
+        window.app.loginView.disable();
+        // Throw up the login screen
+        window.app.loginView.show();
+        window.setTimeout(function() {
+          window.app.navigator.popAll(window.app.noEffect);
+          window.app.mainView.close();
+        },100);
+        window.setTimeout(function() {
+          window.app.loginView.enable();
+        },350);
+      });
     }
   };
 
