@@ -19,14 +19,11 @@
       Backbone.Session = this.get("session");
     },
     logout: function(callback) {
-      if (window.app.settings && window.app.settings.username) {
-        delete window.app.settings.username;
-        window.localStorage.setItem("settings",
-            JSON.stringify(window.app.settings));
-        this.set("username", "");
-        this.set("passphrase", "");
-        this.set("session", undefined);
-      }
+      window.localStorage.setItem("settings",
+          JSON.stringify({}));
+      this.set("username", "");
+      this.set("passphrase", "");
+      this.set("session", undefined);
       $(document).trigger('logout');
       window.setTimeout(function() {
         delete window.app.session;

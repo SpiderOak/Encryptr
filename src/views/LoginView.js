@@ -80,6 +80,35 @@
         );
         _this.dismiss();
         $(".blocker").hide();
+        window.app.loginBegan = Date.now();
+        window.app.logoutInterval = window.setInterval(function() {
+          var timeoutInMinutes =
+            Math.floor(((Date.now() - window.app.loginBegan) / 1000) / 60);
+          // log out after 2 hours, if not mid-edit
+          if (timeoutInMinutes >= 120 &&
+              !(window.app.navigator.activeView instanceof Encryptr.prototype.EditView) &&
+              !($(".blocker").is(":visible"))
+          ) {
+            delete window.app.loginBegan;
+            window.clearInterval(window.app.logoutInterval);
+            window.app.accountModel.logout(function() {
+              window.app.loginView.disable();
+              // Throw up the login screen
+              window.app.loginView.show();
+              window.setTimeout(function() {
+                window.app.navigator.popAll(window.app.noEffect);
+                window.app.mainView.close();
+              },100);
+              window.setTimeout(function() {
+                window.app.loginView.enable();
+              },350);
+              window.app.dialogAlertView.show({
+                title: "Session timeout",
+                subtitle: "You have been logged out"
+              }, function() {});
+            });
+          }
+        }, 60000); // check once per minute
         window.setTimeout(function(){
           window.app.session.load("entries", function(err, container) {
             if (err && err == "No new records") {
