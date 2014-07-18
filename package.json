@@ -6,7 +6,7 @@
   "scripts": {
     "test": "grunt test",
     "postinstall": "./node_modules/.bin/bower install",
-    "pluginstall": "cordova plugins add com.verso.cordova.clipboard com.blackberry.community.clipboard org.apache.cordova.statusbar https://github.com/devgeeks/PrivacyScreenPlugin.git",
+    "pluginstall": "cordova plugins add com.verso.cordova.clipboard com.blackberry.community.clipboard org.apache.cordova.statusbar org.devgeeks.privacyscreen",
     "plugremove": "cordova plugins remove com.verso.cordova.clipboard com.blackberry.community.clipboard org.apache.cordova.statusbar org.devgeeks.privacyscreen"
   },
   "author": "tommy-carlos williams (devgeeks)",
