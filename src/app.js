@@ -153,13 +153,11 @@ var Encryptr = (function (window, console, undefined) {
   };
 
   Encryptr.prototype.onResume = function(event) {
-    // @TODO - this should probably just hide everything unless a set number
-    //    of minutes have elapsed
     // Logging out seems a bit overkill
-    // For now, put a 1 minute timeout on it...
+    // For now, put a 2 hour timeout on it...
     var timeoutInMinutes =
       Math.floor(((Date.now() - window.app.lastPaused) / 1000) / 60);
-    if (timeoutInMinutes >= 1) {
+    if (timeoutInMinutes >= 120) {
       window.app.accountModel.logout(function() {
         window.app.loginView.disable();
         // Throw up the login screen
