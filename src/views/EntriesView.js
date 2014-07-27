@@ -58,7 +58,8 @@
     viewActivate: function(event) {
       var _this = this;
       var username = window.app.accountModel.get("username");
-      var hash = window.sjcl.hash.sha256.hash(username);
+      var hashArray = window.sjcl.hash.sha256.hash(username);
+      var hash = window.sjcl.codec.hex.fromBits(hashArray);
       var sessionIndex = window.sessionStorage.getItem("encryptr-" + hash + "-index");
       if (sessionIndex) {
         this.collection.set(JSON.parse(sessionIndex));
