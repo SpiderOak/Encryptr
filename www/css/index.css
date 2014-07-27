@@ -316,9 +316,50 @@ input[type="password"] {
   border-bottom-right-radius: 5px;
   border-bottom: none;
 }
+#newpassphrase {
+  -webkit-text-security: disc;
+  -moz-text-security: disc;
+  text-security: disc;
+}
+#newpassphrase.passphrase-shown {
+  -webkit-text-security: none;
+  -moz-text-security: none;
+  text-security: none;
+}
 div.login-input {
   -webkit-box-sizing: border-box;
   padding: 0 20px;
+}
+.login-input.checkbox-container {
+  height: 30px;
+  margin: 5px 0 0 0;
+  text-align: right;
+  line-height: 30px;
+}
+.login-input label {
+}
+.login-input input[type=checkbox] {
+  visibility: hidden;
+  margin: 0 10px 0 10px;
+}
+.login-input input[type=checkbox]:checked:after {
+  position: relative;
+  top: -3px;
+  color: #fff;
+  font-family: FontAwesome;
+  content: '\f058';
+  visibility: visible;
+  font-size: 25px;
+}
+.login-input input[type=checkbox]:after {
+  position: relative;
+  top: -3px;
+  color: #fff;
+  font-family: FontAwesome;
+  /*content: '\f10c';*/
+  content: '\f111';
+  visibility: visible;
+  font-size: 25px;
 }
 .signupLink,
 .backToLoginLink {
