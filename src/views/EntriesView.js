@@ -58,7 +58,8 @@
     viewActivate: function(event) {
       var _this = this;
       var username = window.app.accountModel.get("username");
-      var sessionIndex = window.sessionStorage.getItem("encryptr-"+username+"-index");
+      var hash = window.sjcl.hash.sha256.hash(username);
+      var sessionIndex = window.sessionStorage.getItem("encryptr-" + hash + "-index");
       if (sessionIndex) {
         this.collection.set(JSON.parse(sessionIndex));
         // @TODO - replace dismissed "decrypting entries" with "updating"
@@ -70,7 +71,7 @@
             _this.addAll();
             return;
           }
-          window.sessionStorage.setItem("encryptr-"+username+"-index",
+          window.sessionStorage.setItem("encryptr-" + hash + "-index",
               JSON.stringify(entries.toJSON()));
         }, error: function(err) {
           window.app.session.create("_encryptrIndex", function(err, container) {
