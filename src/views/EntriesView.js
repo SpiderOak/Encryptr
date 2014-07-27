@@ -57,12 +57,23 @@
     },
     viewActivate: function(event) {
       var _this = this;
+      var username = window.app.accountModel.get("username");
+      var hashArray = window.sjcl.hash.sha256.hash(username);
+      var hash = window.sjcl.codec.hex.fromBits(hashArray);
+      var sessionIndex = window.sessionStorage.getItem("encryptr-" + hash + "-index");
+      if (sessionIndex) {
+        this.collection.set(JSON.parse(sessionIndex));
+        // @TODO - replace dismissed "decrypting entries" with "updating"
+      }
       this.collection.fetch({
         container: "_encryptrIndex",
         success: function(entries) {
           if (entries.length === 0) {
             _this.addAll();
+            return;
           }
+          window.sessionStorage.setItem("encryptr-" + hash + "-index",
+              JSON.stringify(entries.toJSON()));
         }, error: function(err) {
           window.app.session.create("_encryptrIndex", function(err, container) {
             if (err) {

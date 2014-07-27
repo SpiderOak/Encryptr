@@ -26,6 +26,7 @@
     logout_clickHandler: function(event) {
       event.preventDefault();
       this.dismiss();
+      window.sessionStorage.clear();
       window.app.accountModel.logout(function() {
         window.app.accountModel = new window.app.AccountModel();
         window.app.loginView.disable();
