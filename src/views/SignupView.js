@@ -11,7 +11,8 @@
     events: {
       "submit form": "form_submitHandler",
       "click .signupButton": "signupButton_clickHandler",
-      "click a.backToLogin": "backToLogin_clickHandler"
+      "click a.backToLogin": "backToLogin_clickHandler",
+      "change #show-passphrase": "showPassphrase_changeHandler"
     },
     initialize: function() {
       _.bindAll(this,
@@ -19,13 +20,17 @@
           "input_blurHandler",
           "form_submitHandler",
           "signupButton_clickHandler",
-          "backToLogin_clickHandler");
+          "backToLogin_clickHandler",
+          "showPassphrase_changeHandler");
       $(document).on("focus", ".signup input", this.input_focusHandler);
       $(document).on("blur", ".signup input", this.input_blurHandler);
     },
     render: function() {
       this.$el.html(window.tmpl["signupView"]({}));
       $(".app").append(this.el);
+      if ($.os.nodeWebkit) this.$("input[type=checkbox]").css({
+        "height": "15px"
+      });
       return this;
     },
     input_focusHandler: function(event) {
@@ -33,6 +38,9 @@
     },
     input_blurHandler: function(event) {
       $(event.target).closest("div.login-input").removeClass("focused");
+    },
+    showPassphrase_changeHandler: function(event) {
+      this.$("#newpassphrase").toggleClass("passphrase-shown");
     },
     form_submitHandler: function(event) {
       var _this = this;

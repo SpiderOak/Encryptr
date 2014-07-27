@@ -12,11 +12,20 @@
       <input id="newpassphrase" type="text" name="newpassphrase"
                  placeholder="Choose a Passphrase"
                  autocomplete="off" autocorrect="off" autocapitalize="off"
-                 tabindex="2" />
+                 tabindex="2" class="passphrase-shown" />
+    </div>
+    <div class="login-input checkbox-container">
+      <label for="show-passphrase"> Show passphrase
+        <input type="checkbox" id="show-passphrase" checked="checked" 
+                  class="show-passphrase" />
+      </label>
     </div>
     <a class="button signupButton primary" tabindex="-1">Register</a>
-    <div class="middle backToLoginLink"><a class="backToLogin">Back to login &raquo;</a></div>
+    <div class="middle backToLoginLink">
+      <a class="backToLogin">Back to login &raquo;</a>
+    </div>
     <input type="submit" style="visibility:hidden" tabindex="-1"/>
   </form>
 </div>
-<div style="width:150px; margin:-10px auto; opacity:0.4;"><img style="width: 150px" src="img/zk.png" /></div>
+<div style="width:150px; margin:-10px auto; opacity:0.4;">
+  <img style="width: 150px" src="img/zk.png" /></div>
