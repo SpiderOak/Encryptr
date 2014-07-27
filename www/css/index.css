@@ -356,7 +356,8 @@ div.login-input {
   top: -3px;
   color: #fff;
   font-family: FontAwesome;
-  content: '\f10c';
+  /*content: '\f10c';*/
+  content: '\f111';
   visibility: visible;
   font-size: 25px;
 }
