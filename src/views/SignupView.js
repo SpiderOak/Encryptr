@@ -40,7 +40,9 @@
       $(event.target).closest("div.login-input").removeClass("focused");
     },
     showPassphrase_changeHandler: function(event) {
-      this.$("#newpassphrase").toggleClass("passphrase-shown");
+      var $newpassphrase = this.$("#newpassphrase");
+      var newType = (($newpassphrase.attr("type") === "password") ? "text" : "password");
+      $newpassphrase.attr("type", newType);
     },
     form_submitHandler: function(event) {
       var _this = this;
