@@ -81,6 +81,7 @@
         _this.dismiss();
         $(".blocker").hide();
         window.app.loginBegan = Date.now();
+        window.app.checkVersion(true);
         window.app.logoutInterval = window.setInterval(function() {
           var timeoutInMinutes =
             Math.floor(((Date.now() - window.app.loginBegan) / 1000) / 60);
@@ -105,7 +106,9 @@
               window.app.dialogAlertView.show({
                 title: "Session timeout",
                 subtitle: "You have been logged out"
-              }, function() {});
+              }, function() {
+                window.app.checkVersion();
+              });
             });
           }
         }, 60000); // check once per minute
