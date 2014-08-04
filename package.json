@@ -6,8 +6,8 @@
   "scripts": {
     "test": "grunt test",
     "postinstall": "./node_modules/.bin/bower install",
-    "pluginstall": "cordova plugins add com.verso.cordova.clipboard com.blackberry.community.clipboard org.apache.cordova.statusbar org.devgeeks.privacyscreen",
-    "plugremove": "cordova plugins remove com.verso.cordova.clipboard com.blackberry.community.clipboard org.apache.cordova.statusbar org.devgeeks.privacyscreen"
+    "pluginstall": "cordova plugins add com.verso.cordova.clipboard com.blackberry.community.clipboard org.apache.cordova.statusbar org.apache.cordova.inappbrowser org.devgeeks.privacyscreen",
+    "plugremove": "cordova plugins remove com.verso.cordova.clipboard com.blackberry.community.clipboard org.apache.cordova.statusbar org.apache.cordova.inappbrowser org.devgeeks.privacyscreen"
   },
   "author": "tommy-carlos williams (devgeeks)",
   "keywords": [
@@ -20,7 +20,7 @@
     }
   ],
   "dependencies": {
-    "grunt-contrib-concat": "^0.4.0"
+    "semver": "^3.0.1"
   },
   "devDependencies": {
     "bower": "0.9.x",

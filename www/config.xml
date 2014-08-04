@@ -9,6 +9,7 @@
     </author>
     <content src="index.html" />
     <access origin="https://*.crypton.io" />
+    <access origin="https://encryptr.org" />
     <access origin="wss://*.crypton.io" />
     <preference name="orientation" value="default" />
     <preference name="target-device" value="universal" />

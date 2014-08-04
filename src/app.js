@@ -119,6 +119,8 @@ var Encryptr = (function (window, console, undefined) {
     window.document.addEventListener("menubutton",
                                      Encryptr.prototype.onMenuButton, false);
 
+    window.app.checkVersion();
+
     if (!$.os.nodeWebkit) {
       // overflow: auto !important; -webkit-overflow-scrolling: touch;
       $(".subviews").css({
@@ -169,6 +171,7 @@ var Encryptr = (function (window, console, undefined) {
         window.setTimeout(function() {
           window.app.loginView.enable();
         },350);
+        window.setTimeout(window.app.checkVersion,1000);
       });
     }
   };
@@ -219,6 +222,32 @@ var Encryptr = (function (window, console, undefined) {
 
   Encryptr.prototype.onMenuButton = function(event) {
     // ...
+  };
+
+  Encryptr.prototype.checkVersion = function(ignoreOptional) {
+    var buster = Date.now();
+    $.getJSON("https://encryptr.org/_latestVersion.json?v=" + buster, function(versionData) {
+      var latestVersion = window.semver.gte(window.app.version, versionData.tag_name);
+      if (!latestVersion) {
+        if (ignoreOptional && versionData.priority === "optional") {
+          return;
+        }
+        window.app.dialogConfirmView.show({
+          title: "New version available",
+          subtitle: "The new " + versionData.tag_name + " release is " +
+              versionData.priority + ". Would you like to download it now?"
+        },
+        function(event) {
+          if (event.type === "dialogAccept") {
+            if ($.os.nodeWebkit) {
+              window.require('nw.gui').Shell.openExternal(versionData.url);
+              return false;
+            }
+            window.open(versionData.url, "_system");
+          }
+        });
+      }
+    });
   };
 
   Encryptr.prototype.randomString = function(length) {
