@@ -40,13 +40,12 @@
     debug(method);
     switch (method) {
       case "read":
-        if (model.isNew && model.isNew()) {
-          return successHandler(model.toJSON());
-        }
         if (!model.isNew) {
           debug("Collection: This should not happen.");
           // Should we be calling model.collection.sync?
           return;
+        } else if (model.isNew()) {
+          return successHandler(model.toJSON());
         }
         session.load(model.id, function(err, container) {
           if (err) {
