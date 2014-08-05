@@ -61,7 +61,8 @@
             <ComponentRef Id="StartMenuShortcuts" />
         </Feature>
         <UI />
-        <UIRef Id="WixUI_Minimal" />
+	    <Property Id="WIXUI_INSTALLDIR" Value="ENCRYPTR" />
+	    <UIRef Id="WixUI_InstallDir" />
         <Icon Id="DesktopIcon.exe" SourceFile="C:\Users\tommy\Desktop\Encryptr\icon-encryptr.ico" />
         <Icon Id="StartMenuIcon.exe" SourceFile="C:\Users\tommy\Desktop\Encryptr\icon-encryptr.ico" />
         <WixVariable Id="WixUILicenseRtf" Value="C:\Users\tommy\Desktop\Encryptr\GPLv3.rtf" />
