@@ -27,6 +27,18 @@
       if (!window.app.toastView) {
         window.app.toastView = new window.app.ToastView();
       }
+      // Check for notes, legacy (<= 1.0.1) entries won't have them...
+      var hasNotes = !!_.find(this.model.get('items'), function(item) {
+        return item.type === 'textarea';
+      });
+      // If they are missing, add them.. then if the user saves, that entry
+      //    will have them after that
+      if (!hasNotes) {
+        var items = this.model.get('items');
+        items.push({ id: "notes", key: "Notes", value: "", placeholder: "Notes",
+          type: "textarea" });
+        this.model.set('items', items);
+      }
     },
     render: function() {
       var _this = this;
