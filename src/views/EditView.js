@@ -118,7 +118,7 @@
             });
           } else {
             window.app.navigator.popView(window.app.defaultPopEffect);
-            window.app.toastView.show("Entry unchanged");
+            window.app.toastView.show("Entry saved");
             $(".blocker").hide();
           }
         },
