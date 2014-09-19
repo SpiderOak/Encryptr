@@ -191,7 +191,7 @@ h1 {
   content: '';
   border-right: 6px solid transparent;
 }
-.menu .fa, 
+.menu .fa,
 .addMenu .fa {
   width: 25px;
 }
@@ -285,7 +285,8 @@ input[type="text"],
 input[type="url"],
 input[type="number"],
 input[type="email"],
-input[type="password"] {
+input[type="password"],
+textarea {
   -webkit-box-sizing: border-box;
   position: relative;
   padding: 10px;
@@ -468,6 +469,11 @@ ul li a.active {
   background-image: none;
   background-color: #dddddd;
   color: black;
+}
+ul li a.wrap {
+  text-overflow: initial;
+  white-space: normal;
+  overflow: auto;
 }
 ul li ::-webkit-input-placeholder {
   color: #8293a1;

@@ -13,7 +13,8 @@
       { id: "password", key: "Password",
         value: Encryptr.prototype.randomString(12), placeholder: "Password" },
       { id: "url", type: "url", key: "Site URL", value: "",
-        placeholder: "http://www.example.com" }
+        placeholder: "http://www.example.com" },
+      { id: "notes", key: "Notes", value: "", placeholder: "Notes", type: "textarea" }
     ];
   };
 

@@ -9,7 +9,8 @@
   var GeneralType = function() {
     this.type = "General";
     this.items = [
-      { id: "text", key: "Text", value: "", placeholder: "Text here" }
+      { id: "text", key: "Text", value: "", placeholder: "Text here" },
+      { id: "notes", key: "Notes", value: "", placeholder: "Notes", type: "textarea" }
     ];
   };
 

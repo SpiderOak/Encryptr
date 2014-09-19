@@ -62,10 +62,10 @@
         return;
       }
       _this.$('input[name="label"]').css("border","none");
-      $("input").blur();
+      $("input, textarea").blur();
       $(".blocker").show();
       var items = _this.model.get("items");
-      _.each(_this.$("ul.editable input"), function(input) {
+      _.each(_this.$("ul.editable input, ul.editable textarea"), function(input) {
         _.each(items, function(item) {
           if (item.id === input.name) {
             item.value = input.value;
