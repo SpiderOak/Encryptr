@@ -60,10 +60,16 @@
       var username = window.app.accountModel.get("username");
       var hashArray = window.sjcl.hash.sha256.hash(username);
       var hash = window.sjcl.codec.hex.fromBits(hashArray);
-      var sessionIndex = window.sessionStorage.getItem("encryptr-" + hash + "-index");
-      if (sessionIndex) {
-        this.collection.set(JSON.parse(sessionIndex));
+      // @TODO - Replace with sjcl.encrypt()'d local cache
+      var encryptedIndexJSON = window.localStorage.getItem("encryptr-" + hash + "-index");
+      if (encryptedIndexJSON && window.app.accountModel.get("passphrase")) {
+        var decryptedIndexJson =
+          window.sjcl.decrypt(window.app.accountModel.get("passphrase"),
+                              encryptedIndexJSON, window.crypton.cipherOptions);
+        this.collection.set(JSON.parse(decryptedIndexJson));
         // @TODO - replace dismissed "decrypting entries" with "updating"
+        this.$(".entriesViewLoading").text("Syncing entries...");
+        this.$(".entriesViewLoading").addClass("loadingEntries");
       }
       this.collection.fetch({
         container: "_encryptrIndex",
@@ -72,8 +78,15 @@
             _this.addAll();
             return;
           }
-          window.sessionStorage.setItem("encryptr-" + hash + "-index",
-              JSON.stringify(entries.toJSON()));
+          var indexJSON = JSON.stringify(entries.toJSON());
+          if (window.app.accountModel.get("passphrase")) {
+            var encryptedIndexJSON = window.sjcl.encrypt(
+              window.app.accountModel.get("passphrase"), indexJSON,
+              window.crypton.cipherOptions
+            );
+            window.localStorage.setItem("encryptr-" + hash + "-index",
+              encryptedIndexJSON);
+          }
         }, error: function(err) {
           window.app.session.create("_encryptrIndex", function(err, container) {
             if (err) {
