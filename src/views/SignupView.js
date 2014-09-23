@@ -94,7 +94,7 @@
             }
             // Set up MainView
             window.app.mainView = new window.app.MainView().render();
-            // Push a ListView 
+            // Push a ListView
             window.app.navigator.pushView(
               window.app.EntriesView,
               { collection: new window.app.EntriesCollection() },
@@ -120,7 +120,7 @@
       var _this = this;
       if (!_this.$el.hasClass("dismissed")) {
         _this.$("input").attr("disabled", true);
-        _this.$el.animate({"-webkit-transform": "translate3d(0,100%,0)"},
+        _this.$el.animate({"translate3d": "0,100%,0"},
           100,
           "ease-in-out",
           function() {
@@ -136,7 +136,7 @@
         _this.$("input").removeAttr("disabled");
         _this.$el.removeClass("dismissed");
         _this.$el.animate(
-          {"-webkit-transform":"translate3d(0,0,0)"},
+          {"translate3d":"0,0,0"},
           250,
           "ease-in-out"
         );
