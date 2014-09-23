@@ -66,7 +66,7 @@
           window.sjcl.decrypt(window.app.accountModel.get("passphrase"),
                               encryptedIndexJSON, window.crypton.cipherOptions);
         this.collection.set(JSON.parse(decryptedIndexJson));
-        this.$(".entriesViewLoading").text("Syncing entries...");
+        this.$(".entriesViewLoading").text("syncing entries...");
         this.$(".entriesViewLoading").addClass("loadingEntries");
       }
       this.collection.fetch({
