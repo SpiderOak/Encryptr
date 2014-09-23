@@ -60,14 +60,12 @@
       var username = window.app.accountModel.get("username");
       var hashArray = window.sjcl.hash.sha256.hash(username);
       var hash = window.sjcl.codec.hex.fromBits(hashArray);
-      // @TODO - Replace with sjcl.encrypt()'d local cache
       var encryptedIndexJSON = window.localStorage.getItem("encryptr-" + hash + "-index");
       if (encryptedIndexJSON && window.app.accountModel.get("passphrase")) {
         var decryptedIndexJson =
           window.sjcl.decrypt(window.app.accountModel.get("passphrase"),
                               encryptedIndexJSON, window.crypton.cipherOptions);
         this.collection.set(JSON.parse(decryptedIndexJson));
-        // @TODO - replace dismissed "decrypting entries" with "updating"
         this.$(".entriesViewLoading").text("Syncing entries...");
         this.$(".entriesViewLoading").addClass("loadingEntries");
       }
