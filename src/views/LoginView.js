@@ -135,7 +135,7 @@
       if (!_this.$el.hasClass("dismissed")) {
         // this.$("input").attr("disabled", true);
         _this.$el.animate({
-          "-webkit-transform":"translate3d(0,100%,0)"},
+          "translate3d":"0,100%,0"},
           100,
           "ease-in-out",
           function() {
@@ -149,7 +149,7 @@
       var _this = this;
       if (_this.$el.hasClass("dismissed")) {
         _this.$el.removeClass("dismissed");
-        _this.$el.animate({"-webkit-transform":"translate3d(0,0,0)"}, {
+        _this.$el.animate({"translate3d":"0,0,0"}, {
           duration: 250,
           easing: "ease-in-out",
           complete: function() {

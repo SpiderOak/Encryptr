@@ -66,6 +66,7 @@ h1 {
 }
 .nav .btn {
   -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
   line-height: 44px;
   height: 44px;
@@ -211,6 +212,8 @@ a.btn {
   font-size: 150%;
 }
 .subviews {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
   position: absolute;
   background-color: #f6f6f6;
@@ -273,6 +276,8 @@ textarea,
 select {
   position: relative;
   -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   border: none;
   padding: 0;
   margin: 0;
@@ -288,6 +293,8 @@ input[type="email"],
 input[type="password"],
 textarea {
   -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   position: relative;
   padding: 10px;
   margin: 0;
@@ -329,6 +336,8 @@ textarea {
 }
 div.login-input {
   -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   padding: 0 20px;
 }
 .login-input.checkbox-container {
@@ -566,6 +575,7 @@ ul .spinner > div.sep {
 }
 .toast {
   -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
   box-sizing: border-box;
   display: inline-block;
   text-align: center;

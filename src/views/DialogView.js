@@ -43,7 +43,7 @@
       if (!this.$el.hasClass("dismissed")) {
         var _this = this;
         this.$(".dialog").animate({
-          "-webkit-transform":"translate3d(0,-100%,0)",
+          "translate3d":"0,-100%,0",
           "opacity":"0"
         }, 100, "linear", function() {
           _this.$el.addClass("dismissed");
@@ -63,7 +63,7 @@
         $(document).on("dialogAccept", callback, this);
         this.$el.removeClass("dismissed");
         this.$(".dialog").animate({
-          "-webkit-transform":"translate3d(0,0,0)",
+          "translate3d":"0,0,0",
           "opacity":"1"
         }, 100, "linear");
       }
@@ -114,7 +114,7 @@
       if (!this.$el.hasClass("dismissed")) {
         var _this = this;
         this.$(".dialog").animate({
-          "-webkit-transform":"translate3d(0,-100%,0)",
+          "translate3d":"0,-100%,0",
           "opacity":"0"
         }, 100, "linear", function() {
           _this.$el.addClass("dismissed");
@@ -133,7 +133,7 @@
         if (callback) $(document).on("dialogAccept", callback, this);
         this.$el.removeClass("dismissed");
         this.$(".dialog").animate({
-          "-webkit-transform":"translate3d(0,0,0)",
+          "translate3d":"0,0,0",
           "opacity":"1"
         }, 100, "linear");
       }
