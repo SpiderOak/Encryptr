@@ -1,6 +1,6 @@
 {
   "name": "Encryptr",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "repository": "https://github.com/devgeeks/Encryptr.git",
   "main": "www/js/Encryptr.js",
   "scripts": {
@@ -40,7 +40,7 @@
     "chai-jquery": "~1.1.2",
     "mocha-phantomjs": "^3.3.2",
     "grunt-contrib-copy": "~0.5.0",
-    "cordova": "~3.3.1-0.4.2",
+    "cordova": "3.6.3-0.2.13",
     "grunt-mocha-test": "~0.9.0",
     "chai-as-promised": "^4.1.1",
     "mocha-as-promised": "^2.0.0",
