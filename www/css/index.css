@@ -481,8 +481,13 @@ ul li a.active {
 }
 ul li a.wrap {
   text-overflow: initial;
-  white-space: normal;
+  white-space: pre-wrap;
   overflow: auto;
+}
+ul li pre {
+  margin: 0;
+  padding: 0;
+  font-family: "Source Sans Pro", sans-serif;
 }
 ul li ::-webkit-input-placeholder {
   color: #8293a1;
