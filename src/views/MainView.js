@@ -62,7 +62,8 @@
               }
             });
       } else {
-        _this.backButtonDisplay(false);
+        //_this.backButtonDisplay(false);
+        this.$(".back-btn").addClass("hidden");
         if (window.app.navigator.viewsStack.length > 1) {
           window.app.navigator.popView(window.app.defaultPopEffect);
         }

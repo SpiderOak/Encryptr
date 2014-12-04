@@ -21,6 +21,9 @@
       return this;
     },
     settings_clickHandler: function(event) {
+      event.preventDefault();
+      window.app.navigator.pushView(window.app.SettingsView, {},
+        window.app.defaultEffect);
       this.dismiss();
     },
     logout_clickHandler: function(event) {
