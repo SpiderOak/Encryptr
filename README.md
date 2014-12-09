@@ -17,6 +17,14 @@ It is currently working on iOS, Android, and the Desktop – thanks to [node-web
 
 ![screenshot](http://f.cl.ly/items/2n1r3V1D0L3k3p1q2T2O/encryptr-screenshot.png)
 
+#### Bitcoin donations accepted
+
+<div>
+  <a href="bitcoin:1M6sUtHuYo9eF1GUdPJfy374K3CqyPw3sV">
+  <img src="http://i.imgur.com/GWj62ch.png" ></a>
+  <p>1M6sUtHuYo9eF1GUdPJfy374K3CqyPw3sV</p>
+</div>
+
 ## Requirements
 
 - Node and npm - [http://nodejs.org/](http://nodejs.org/)
