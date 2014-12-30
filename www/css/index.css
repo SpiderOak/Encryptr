@@ -305,6 +305,9 @@ textarea {
   border-radius: 0;
   box-shadow: none;
 }
+input.error {
+  border: 1px solid red;
+}
 #username,
 #newusername,
 #passphrase,

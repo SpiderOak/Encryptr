@@ -59,6 +59,7 @@
       var _this = this;
       window.app.mainView.backButtonDisplay(false);
       window.app.mainView.setTitle("Encryptr");
+      $(".nav .add-btn.right").removeClass("hidden");
       var username = window.app.accountModel.get("username");
       var hashArray = window.sjcl.hash.sha256.hash(username);
       var hash = window.sjcl.codec.hex.fromBits(hashArray);

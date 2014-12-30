@@ -49,10 +49,12 @@
   var PassphraseSettingsView = Backbone.View.extend({
     destructionPolicy: "never",
     events: {
-      // ...
+      "change #show-new-passphrase": "showPassphrase_changeHandler",
+      "submit form": "form_submitHandler"
     },
     initialize: function () {
-      _.bindAll(this, "render");
+      _.bindAll(this, "render", "form_submitHandler", "viewActivate",
+        "viewDeactivate", "showPassphrase_changeHandler");
       this.on("viewActivate",this.viewActivate);
       this.on("viewDeactivate",this.viewDeactivate);
       this.confirmBackNav = {
@@ -68,7 +70,118 @@
     },
     render: function () {
       this.$el.html(window.tmpl["passphraseSettingsView"]({}));
+      window.app.mainView.on("saveentry", this.form_submitHandler, this);
       return this;
+    },
+    showPassphrase_changeHandler: function(event) {
+      var $newpassphrases = this.$('input[name^="passphrase-new"]');
+      $newpassphrases.each(function() {
+        var $this = $(this);
+        var newType = (($this.attr("type") === "password") ? "text" : "password");
+        $this.attr("type", newType);
+      });
+    },
+    form_submitHandler: function(event) {
+      var _this = this;
+      if (event) event.preventDefault();
+
+      var $passphraseCurrent = _this.$('input[name="passphrase-current"]');
+      var $passphraseNew1 = _this.$('input[name="passphrase-new1"]');
+      var $passphraseNew2 = _this.$('input[name="passphrase-new2"]');
+      var passphraseCurrent = $passphraseCurrent.val();
+      var passphraseNew = $passphraseNew1.val();
+      var passphraseNewConfirm = $passphraseNew2.val();
+
+      _this.$('input[type="text"], input[type="password"]').removeClass("error");
+      if (!$passphraseCurrent.val() || !$passphraseNew1.val() ||
+          !$passphraseNew2.val()) {
+        window.app.toastView.show("All fields required");
+        _this.$('input[type="text"], input[type="password"]').each(function() {
+          if (!$(this).val()) {
+            $(this).addClass("error");
+          }
+        });
+        return;
+      }
+
+      if (passphraseCurrent !== window.app.accountModel.get("passphrase")) {
+        window.app.toastView.show("Passphrase incorrect");
+        _this.$('input[name="passphrase-current"]').addClass("error");
+        return;
+      }
+
+      if (passphraseNew !== passphraseNewConfirm) {
+        window.app.toastView.show("New passphrases do not match");
+        _this.$('input[name^="passphrase-new"]').addClass("error");
+        return;
+      }
+
+      $("input, textarea").blur();
+      $(".blocker").show();
+
+      // 1. change passphrase using app.session.account.changePassphrase()
+      window.app.session.account.changePassphrase(passphraseCurrent,
+          passphraseNew, function changePassphraseCallback(err, success) {
+        if (err) {
+          // I assume the password remains unchanged in this case
+          window.app.dialogAlertView.show({
+            title: "Error",
+            subtitle: err
+          }, function() {
+            $(".blocker").hide();
+          });
+          return;
+        }
+
+        // 2. update the window.app.accountModel
+        //  (gotta keep the new passphrase somewhere...)
+        window.app.accountModel.set("passphrase", passphraseNew);
+
+        // 3. remove and re-add/re-encrypt the localStorage cache using the
+        //    new passphrase
+        var username = window.app.accountModel.get("username");
+        var hashArray = window.sjcl.hash.sha256.hash(username);
+        var hash = window.sjcl.codec.hex.fromBits(hashArray);
+        var indexJSON = JSON.stringify(window.app.entriesCollection.toJSON());
+        if (window.app.accountModel.get("passphrase")) {
+          var encryptedIndexJSON = window.sjcl.encrypt(
+            window.app.accountModel.get("passphrase"), indexJSON,
+            window.crypton.cipherOptions
+          );
+          window.localStorage.setItem("encryptr-" + hash + "-index",
+            encryptedIndexJSON);
+        }
+        // 4. reauth with the new passphrase to update sessions etc
+        window.crypton.authorize(window.app.accountModel.get("username"),
+            window.app.accountModel.get("passphrase"), function(err, session) {
+          if (err) {
+            // FREAK OUT!!!
+            // Not too badly though... at this point the password is changed
+            // We just haven't been able to renew the session
+            // LOG OUT!!!! (for safety)
+            window.app.dialogAlertView.show({
+              title: "Error",
+              subtitle: err
+            }, function() {
+              $(".blocker").hide();
+            });
+            console.log(new Error(err).stack);
+            return false;
+          }
+
+          window.app.session = session;
+          window.app.accountModel = new window.app.AccountModel({
+            username: session.account.username,
+            passphrase: session.account.passphrase,
+            session: session
+          });
+          Backbone.Session = session;
+
+          window.app.navigator.popView(window.app.defaultPopEffect);
+          $(".blocker").hide();
+          window.app.toastView.show("Master passphrase changed");
+        });
+      });
     },
     viewActivate: function(event) {
       window.app.mainView.backButtonDisplay(true);
@@ -78,7 +191,7 @@
       window.app.mainView.setTitle("Passphrase");
     },
     viewDeactivate: function(event) {
-      // ...
+      window.app.mainView.off("saveentry", this.form_submitHandler, this);
     },
     close: function() {
       this.remove();
