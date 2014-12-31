@@ -158,7 +158,9 @@
             // FREAK OUT!!!
             // Not too badly though... at this point the password is changed
             // We just haven't been able to renew the session
-            // LOG OUT!!!! (for safety)
+            // LOG OUT!!!! (for safety, ya know...)
+            $(document).trigger("logout");
+            window.app.toastView.show("Error renewing session.<br/>Logging out");
             window.app.dialogAlertView.show({
               title: "Error",
               subtitle: err

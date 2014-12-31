@@ -39,6 +39,9 @@
       this.$(".nav").html(
         window.tmpl["navView"]({})
       );
+      if (!window.app.toastView) {
+        window.app.toastView = new window.app.ToastView();
+      }
       return this;
     },
     menuButton_clickHandler: function(event) {
