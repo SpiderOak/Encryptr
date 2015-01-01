@@ -152,6 +152,7 @@
             encryptedIndexJSON);
         }
         // 4. reauth with the new passphrase to update sessions etc
+        window.app.toastView.show("Logging in with new passphrase");
         window.crypton.authorize(window.app.accountModel.get("username"),
             window.app.accountModel.get("passphrase"), function(err, session) {
           if (err) {
@@ -183,6 +184,8 @@
           $(".blocker").hide();
           window.app.toastView.show("Master passphrase changed");
         });
+      }, function() {
+        window.app.toastView.show("Starting passphrase keygen");
       });
     },
     viewActivate: function(event) {

@@ -65,12 +65,17 @@
       var hash = window.sjcl.codec.hex.fromBits(hashArray);
       var encryptedIndexJSON = window.localStorage.getItem("encryptr-" + hash + "-index");
       if (encryptedIndexJSON && window.app.accountModel.get("passphrase")) {
-        var decryptedIndexJson =
-          window.sjcl.decrypt(window.app.accountModel.get("passphrase"),
-                              encryptedIndexJSON, window.crypton.cipherOptions);
-        this.collection.set(JSON.parse(decryptedIndexJson));
-        this.$(".entriesViewLoading").text("syncing entries...");
-        this.$(".entriesViewLoading").addClass("loadingEntries");
+        try {
+          var decryptedIndexJson =
+            window.sjcl.decrypt(window.app.accountModel.get("passphrase"),
+                                encryptedIndexJSON, window.crypton.cipherOptions);
+          this.collection.set(JSON.parse(decryptedIndexJson));
+          this.$(".entriesViewLoading").text("syncing entries...");
+          this.$(".entriesViewLoading").addClass("loadingEntries");
+        } catch (ex) {
+          window.app.toastView.show("Local cache invalid<br/>Loading from server");
+          console.log(ex);
+        }
       }
       this.collection.fetch({
         container: "_encryptrIndex",
