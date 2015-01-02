@@ -137,7 +137,7 @@
         }
 
         // 2. update the window.app.accountModel passphrase
-        window.app.toastView.show("Success", 1000);
+        window.app.toastView.show("Success");
         window.app.accountModel.set("passphrase", passphraseNew);
 
         // 3. remove and re-add/re-encrypt the localStorage cache using the
