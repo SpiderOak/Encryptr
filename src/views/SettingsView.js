@@ -85,6 +85,7 @@
       var _this = this;
       if (event) event.preventDefault();
 
+      // Form validation
       var $passphraseCurrent = _this.$('input[name="passphrase-current"]');
       var $passphraseNew1 = _this.$('input[name="passphrase-new1"]');
       var $passphraseNew2 = _this.$('input[name="passphrase-new2"]');
@@ -115,15 +116,17 @@
         _this.$('input[name^="passphrase-new"]').addClass("error");
         return;
       }
+      // End form validation
 
-      $("input, textarea").blur();
+      $("input").blur();
       $(".blocker").show();
 
       // 1. change passphrase using app.session.account.changePassphrase()
       window.app.session.account.changePassphrase(passphraseCurrent,
           passphraseNew, function changePassphraseCallback(err, success) {
         if (err) {
-          // I assume the password remains unchanged in this case
+          // Password remains unchanged in this case
+          window.app.toastView.show("Passphrase unchanged");
           window.app.dialogAlertView.show({
             title: "Error",
             subtitle: err
@@ -133,8 +136,8 @@
           return;
         }
 
-        // 2. update the window.app.accountModel
-        //  (gotta keep the new passphrase somewhere...)
+        // 2. update the window.app.accountModel passphrase
+        window.app.toastView.show("Success", 1000);
         window.app.accountModel.set("passphrase", passphraseNew);
 
         // 3. remove and re-add/re-encrypt the localStorage cache using the
@@ -142,6 +145,7 @@
         var username = window.app.accountModel.get("username");
         var hashArray = window.sjcl.hash.sha256.hash(username);
         var hash = window.sjcl.codec.hex.fromBits(hashArray);
+        window.localStorage.removeItem("encryptr-" + hash + "-index");
         var indexJSON = JSON.stringify(window.app.entriesCollection.toJSON());
         if (window.app.accountModel.get("passphrase")) {
           var encryptedIndexJSON = window.sjcl.encrypt(
@@ -151,17 +155,18 @@
           window.localStorage.setItem("encryptr-" + hash + "-index",
             encryptedIndexJSON);
         }
+
         // 4. reauth with the new passphrase to update sessions etc
         window.app.toastView.show("Logging in with new passphrase");
         window.crypton.authorize(window.app.accountModel.get("username"),
             window.app.accountModel.get("passphrase"), function(err, session) {
           if (err) {
-            // FREAK OUT!!!
-            // Not too badly though... at this point the password is changed
+            // At this point the password is successfully changed
             // We just haven't been able to renew the session
             // LOG OUT!!!! (for safety, ya know...)
             $(document).trigger("logout");
-            window.app.toastView.show("Error renewing session.<br/>Logging out");
+            window.app.toastView.show("Error renewing session.<br/>" +
+              "Log in with your new passphrase", 3000);
             window.app.dialogAlertView.show({
               title: "Error",
               subtitle: err
@@ -182,10 +187,10 @@
 
           window.app.navigator.popView(window.app.defaultPopEffect);
           $(".blocker").hide();
-          window.app.toastView.show("Master passphrase changed");
+          window.app.toastView.show("Passphrase changed", 1000);
         });
       }, function() {
-        window.app.toastView.show("Starting passphrase keygen");
+        window.app.toastView.show("Starting passphrase keygen", 1000);
       });
     },
     viewActivate: function(event) {
