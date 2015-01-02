@@ -187,10 +187,10 @@
 
           window.app.navigator.popView(window.app.defaultPopEffect);
           $(".blocker").hide();
-          window.app.toastView.show("Passphrase changed", 1000);
+          window.app.toastView.show("Passphrase changed");
         });
       }, function() {
-        window.app.toastView.show("Starting passphrase keygen", 1000);
+        window.app.toastView.show("Starting passphrase keygen");
       });
     },
     viewActivate: function(event) {
