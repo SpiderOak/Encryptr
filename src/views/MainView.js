@@ -39,6 +39,9 @@
       this.$(".nav").html(
         window.tmpl["navView"]({})
       );
+      if (!window.app.toastView) {
+        window.app.toastView = new window.app.ToastView();
+      }
       return this;
     },
     menuButton_clickHandler: function(event) {
@@ -62,7 +65,8 @@
               }
             });
       } else {
-        _this.backButtonDisplay(false);
+        //_this.backButtonDisplay(false);
+        this.$(".back-btn").addClass("hidden");
         if (window.app.navigator.viewsStack.length > 1) {
           window.app.navigator.popView(window.app.defaultPopEffect);
         }

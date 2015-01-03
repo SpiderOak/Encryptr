@@ -70,10 +70,10 @@
       if (event) event.preventDefault();
       if (_this.$('input[name="label"]').val() === "") {
         window.app.toastView.show("The label is required.");
-        _this.$('input[name="label"]').css("border","1px solid red");
+        _this.$('input[name="label"]').addClass("error");
         return;
       }
-      _this.$('input[name="label"]').css("border","none");
+      _this.$('input[name="label"]').removeClass("error");
       $("input, textarea").blur();
       $(".blocker").show();
       var items = _this.model.get("items");

@@ -305,6 +305,9 @@ textarea {
   border-radius: 0;
   box-shadow: none;
 }
+input.error {
+  border: 1px solid red;
+}
 #username,
 #newusername,
 #passphrase,
@@ -334,42 +337,56 @@ textarea {
   -moz-text-security: none;
   text-security: none;
 }
-div.login-input {
+div.login-input,
+div.settings-input {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   padding: 0 20px;
 }
-.login-input.checkbox-container {
+.login-input.checkbox-container,
+.settings-input.checkbox-container {
   height: 30px;
   margin: 5px 0 0 0;
   text-align: right;
   line-height: 30px;
 }
+.settings-input.checkbox-container {
+  color: #333;
+}
 .login-input label {
 }
-.login-input input[type=checkbox] {
+.login-input input[type=checkbox],
+.settings-input input[type=checkbox] {
   visibility: hidden;
   margin: 0 10px 0 10px;
 }
-.login-input input[type=checkbox]:checked:after {
+.login-input input[type=checkbox]:checked:after,
+.settings-input input[type=checkbox]:checked:after {
   position: relative;
-  top: -3px;
+  top: -5px;
   color: #fff;
   font-family: FontAwesome;
   content: '\f058';
   visibility: visible;
   font-size: 25px;
 }
-.login-input input[type=checkbox]:after {
+.settings-input input[type=checkbox]:checked:after {
+  color: #333;
+}
+.login-input input[type=checkbox]:after,
+.settings-input input[type=checkbox]:after {
   position: relative;
-  top: -3px;
+  top: -5px;
   color: #fff;
   font-family: FontAwesome;
   /*content: '\f10c';*/
   content: '\f111';
   visibility: visible;
   font-size: 25px;
+}
+.settings-input input[type=checkbox]:after {
+  color: #333;
 }
 .signupLink,
 .backToLoginLink {

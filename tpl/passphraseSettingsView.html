@@ -1,0 +1,19 @@
+<form action="#">
+	<ul class="flat">
+		<li class="sep">Enter your current passphrase</li>
+    <li class="input"><input type="password" name="passphrase-current" 
+      placeholder="Current passphrase" /></li>
+		<li class="sep">Then enter the new passphrase twice (be sure!)</li>
+    <li class="input"><input type="text" name="passphrase-new1" 
+      placeholder="New passphrase" /></li>
+    <li class="input"><input type="text" name="passphrase-new2" 
+      placeholder="Confirm new passphrase" /></li>
+  </ul>
+  <div class="settings-input checkbox-container">
+    <label for="show-passphrase"> Show new passphrase
+      <input type="checkbox" id="show-new-passphrase" checked="checked" 
+                class="show-passphrase" />
+    </label>
+  </div>
+	<input type="submit" style="visibility:hidden" tabindex="0"/>
+</form>

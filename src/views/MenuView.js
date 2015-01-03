@@ -18,9 +18,14 @@
     },
     render: function() {
       this.$el.html(window.tmpl["menuView"]({}));
+      // In case any other views need to log out
+      $(document).on("logout", this.logout_clickHandler);
       return this;
     },
     settings_clickHandler: function(event) {
+      event.preventDefault();
+      window.app.navigator.pushView(window.app.SettingsView, {},
+        window.app.defaultEffect);
       this.dismiss();
     },
     logout_clickHandler: function(event) {
@@ -33,7 +38,9 @@
         // Throw up the login screen
         window.app.loginView.show();
         window.setTimeout(function() {
-          window.app.navigator.popAll(window.app.noEffect);
+          if (window.app.navigator.viewsStack.length > 0) {
+            window.app.navigator.popAll(window.app.noEffect);
+          }
           window.app.mainView.close();
         },100);
         window.setTimeout(function() {
@@ -81,6 +88,7 @@
       }
     },
     close: function() {
+      $(document).off("logout", this.logout_clickHandler);
       this.remove();
     }
   });

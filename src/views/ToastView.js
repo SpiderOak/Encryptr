@@ -17,14 +17,14 @@
     render: function() {
       return this;
     },
-    show: function(message) {
+    show: function(message, timeout) {
       var _this = this;
       this.$el.html(message || "done");
       this.$el.css({"z-index": "10002"});
       this.$el.css({"opacity": 0.7});
       window.setTimeout(function() {
         _this.hide();
-      }, 1000);
+      }, timeout || 1000);
     },
     hide: function() {
       var _this = this;

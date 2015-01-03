@@ -24,7 +24,6 @@
       this.set("username", "");
       this.set("passphrase", "");
       this.set("session", undefined);
-      $(document).trigger('logout');
       window.setTimeout(function() {
         delete window.app.session;
         delete Backbone.session;
