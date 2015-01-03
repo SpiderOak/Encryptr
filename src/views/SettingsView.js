@@ -119,78 +119,92 @@
       // End form validation
 
       $("input").blur();
-      $(".blocker").show();
 
-      // 1. change passphrase using app.session.account.changePassphrase()
-      window.app.session.account.changePassphrase(passphraseCurrent,
-          passphraseNew, function changePassphraseCallback(err, success) {
-        if (err) {
-          // Password remains unchanged in this case
+      // Pop up a dialog to warn about how serious this is
+      window.app.dialogConfirmView.show({
+        title: "Make sure you remember your new passphrase.",
+        subtitle: "Are you sure you want to change it?",
+        callback: function() {
           window.app.toastView.show("Passphrase unchanged");
-          window.app.dialogAlertView.show({
-            title: "Error",
-            subtitle: err
-          }, function() {
-            $(".blocker").hide();
-          });
+        }
+      }, function(event) {
+        if (event.type !== "dialogAccept") {
           return;
-        }
+        } else {
+          $(".blocker").show();
 
-        // 2. update the window.app.accountModel passphrase
-        window.app.toastView.show("Success");
-        window.app.accountModel.set("passphrase", passphraseNew);
+          // 1. change passphrase using app.session.account.changePassphrase()
+          window.app.session.account.changePassphrase(passphraseCurrent,
+              passphraseNew, function changePassphraseCallback(err, success) {
+            if (err) {
+              // Password remains unchanged in this case
+              window.app.toastView.show("Passphrase unchanged");
+              window.app.dialogAlertView.show({
+                title: "Error",
+                subtitle: err
+              }, function() {
+                $(".blocker").hide();
+              });
+              return;
+            }
 
-        // 3. remove and re-add/re-encrypt the localStorage cache using the
-        //    new passphrase
-        var username = window.app.accountModel.get("username");
-        var hashArray = window.sjcl.hash.sha256.hash(username);
-        var hash = window.sjcl.codec.hex.fromBits(hashArray);
-        window.localStorage.removeItem("encryptr-" + hash + "-index");
-        var indexJSON = JSON.stringify(window.app.entriesCollection.toJSON());
-        if (window.app.accountModel.get("passphrase")) {
-          var encryptedIndexJSON = window.sjcl.encrypt(
-            window.app.accountModel.get("passphrase"), indexJSON,
-            window.crypton.cipherOptions
-          );
-          window.localStorage.setItem("encryptr-" + hash + "-index",
-            encryptedIndexJSON);
-        }
+            // 2. update the window.app.accountModel passphrase
+            window.app.toastView.show("Success");
+            window.app.accountModel.set("passphrase", passphraseNew);
 
-        // 4. reauth with the new passphrase to update sessions etc
-        window.app.toastView.show("Logging in with new passphrase");
-        window.crypton.authorize(window.app.accountModel.get("username"),
-            window.app.accountModel.get("passphrase"), function(err, session) {
-          if (err) {
-            // At this point the password is successfully changed
-            // We just haven't been able to renew the session
-            // LOG OUT!!!! (for safety, ya know...)
-            $(document).trigger("logout");
-            window.app.toastView.show("Error renewing session.<br/>" +
-              "Log in with your new passphrase", 3000);
-            window.app.dialogAlertView.show({
-              title: "Error",
-              subtitle: err
-            }, function() {
+            // 3. remove and re-add/re-encrypt the localStorage cache using the
+            //    new passphrase
+            var username = window.app.accountModel.get("username");
+            var hashArray = window.sjcl.hash.sha256.hash(username);
+            var hash = window.sjcl.codec.hex.fromBits(hashArray);
+            window.localStorage.removeItem("encryptr-" + hash + "-index");
+            var indexJSON = JSON.stringify(window.app.entriesCollection.toJSON());
+            if (window.app.accountModel.get("passphrase")) {
+              var encryptedIndexJSON = window.sjcl.encrypt(
+                window.app.accountModel.get("passphrase"), indexJSON,
+                window.crypton.cipherOptions
+              );
+              window.localStorage.setItem("encryptr-" + hash + "-index",
+                encryptedIndexJSON);
+            }
+
+            // 4. reauth with the new passphrase to update sessions etc
+            window.app.toastView.show("Logging in with new passphrase");
+            window.crypton.authorize(window.app.accountModel.get("username"),
+                window.app.accountModel.get("passphrase"), function(err, session) {
+              if (err) {
+                // At this point the password is successfully changed
+                // We just haven't been able to renew the session
+                // LOG OUT!!!! (for safety, ya know...)
+                $(document).trigger("logout");
+                window.app.toastView.show("Error renewing session.<br/>" +
+                  "Log in with your new passphrase", 3000);
+                window.app.dialogAlertView.show({
+                  title: "Error",
+                  subtitle: err
+                }, function() {
+                  $(".blocker").hide();
+                });
+                console.log(new Error(err).stack);
+                return false;
+              }
+
+              window.app.session = session;
+              window.app.accountModel = new window.app.AccountModel({
+                username: session.account.username,
+                passphrase: session.account.passphrase,
+                session: session
+              });
+              Backbone.Session = session;
+
+              window.app.navigator.popView(window.app.defaultPopEffect);
               $(".blocker").hide();
+              window.app.toastView.show("Passphrase changed", 3000);
             });
-            console.log(new Error(err).stack);
-            return false;
-          }
-
-          window.app.session = session;
-          window.app.accountModel = new window.app.AccountModel({
-            username: session.account.username,
-            passphrase: session.account.passphrase,
-            session: session
+          }, function() {
+            window.app.toastView.show("Starting passphrase keygen");
           });
-          Backbone.Session = session;
-
-          window.app.navigator.popView(window.app.defaultPopEffect);
-          $(".blocker").hide();
-          window.app.toastView.show("Passphrase changed", 3000);
-        });
-      }, function() {
-        window.app.toastView.show("Starting passphrase keygen");
+        }
       });
     },
     viewActivate: function(event) {
