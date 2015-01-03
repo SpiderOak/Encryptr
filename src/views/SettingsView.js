@@ -187,7 +187,7 @@
 
           window.app.navigator.popView(window.app.defaultPopEffect);
           $(".blocker").hide();
-          window.app.toastView.show("Passphrase changed");
+          window.app.toastView.show("Passphrase changed", 3000);
         });
       }, function() {
         window.app.toastView.show("Starting passphrase keygen");
