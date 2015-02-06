@@ -42,13 +42,6 @@ module.exports = function(grunt) {
         ],
         dest: 'www/components/zepto/zepto.js'
       },
-      offlinejs: {
-        src: [
-          'components/offline-js/js/*.js',
-          '!components/offline-js/js/snake.js'
-        ],
-        dest: 'www/components/offline-js/index.js'
-      },
       tests: {
         options: {
           banner: '<%= meta.banner %>'
@@ -69,6 +62,7 @@ module.exports = function(grunt) {
           {expand: true, flatten: true, src: ['components/underscore/underscore*.js'], dest: 'www/components/underscore/'},
           {expand: true, flatten: true, src: ['components/backstack/backstack*.js'], dest: 'www/components/backstack/'},
           {expand: true, flatten: true, src: ['components/backbone/backbone*.js'], dest: 'www/components/backbone/'},
+          {expand: true, flatten: true, src: ['components/offline-js/offline.min.js'], dest: 'www/components/offline-js/'},
           {expand: true, flatten: true, src: ['components/offline-js/themes/offline-theme-default.css'], dest: 'www/components/offline-js/themes/'},
           {expand: true, flatten: true, src: ['components/fastclick/lib/fastclick.js'], dest: 'www/components/fastclick/'}
         ]
@@ -95,12 +89,6 @@ module.exports = function(grunt) {
           'www/components/zepto/zepto.js'
         ],
         dest: 'www/components/zepto/zepto.min.js'
-      },
-      offlinejs: {
-        src: [
-          'www/components/offline-js/index.js'
-        ],
-        dest: 'www/components/offline-js/index.min.js'
       }
     },
     watch: {
