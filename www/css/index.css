@@ -512,6 +512,11 @@ ul li a.eye {
   line-height: 60px;
   color: #999999;
 }
+ul li a.eye.active {
+  background-image: none;
+  background-color: #ffffff;
+  color: black;
+}
 ul li a.obscure,
 ul li a.password {
   text-shadow: 0 0 20px #000000;
