@@ -3,11 +3,12 @@
 	<!-- <li class="sep">Type</li>
 	<li><em>{{= it.type }}</em></li> -->
 	{{ _.each(it.items, function(item) { }}
-	  {{? item.value }}<li class="sep">{{= item.key}}</li>
+    {{? item.value }}<li class="sep">{{= item.key}}</li>
     <li>{{= item.type === 'textarea' ? '<pre>' : ''}}
-      <a class="copyable {{= item.type === 'textarea' ? 'wrap' : ''}}">
-		  {{= item.value }}
+      <a class="copyable {{= item.type || item.key.toLowerCase() }}">
+        {{= item.value }}
       </a>
+      {{= item.key === 'Password' ? '<a href="#" class="eye fa fa-eye"></a>' : '' }}
     {{= item.type === 'textarea' ? '</pre>' : ''}}</li>{{? }}
 	{{ }); }}
 </ul>
