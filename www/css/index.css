@@ -454,6 +454,7 @@ ul.flat {
   box-shadow: none;
 }
 ul li {
+  position: relative;
   background-color: #ffffff;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -496,10 +497,30 @@ ul li a.active {
   background-color: #dddddd;
   color: black;
 }
-ul li a.wrap {
+ul li a.wrap,
+ul li a.textarea {
   text-overflow: initial;
   white-space: pre-wrap;
   overflow: auto;
+}
+ul li a.eye {
+  padding: 0 10px;
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  font-size: 120%;
+  line-height: 60px;
+  color: #999999;
+}
+ul li a.eye.active {
+  background-image: none;
+  background-color: #ffffff;
+  color: black;
+}
+ul li a.obscure,
+ul li a.password {
+  text-shadow: 0 0 20px #000000;
+  color: rgba(0,0,0,0);
 }
 ul li pre {
   margin: 0;

@@ -8,7 +8,8 @@
 
   var EntryView = Backbone.View.extend({
     events: {
-      "longTap .copyable": "copyable_longTapHandler"
+      "longTap .copyable": "copyable_longTapHandler",
+      "click .eye": "eye_clickHandler"
     },
     initialize: function() {
       _.bindAll(this,
@@ -68,6 +69,9 @@
       var text = $(event.target).text();
       window.app.copyToClipboard(text);
       window.app.toastView.show("Copied to clipboard");
+    },
+    eye_clickHandler: function(event) {
+      $(event.target).closest('li').find('.copyable').toggleClass('password');
     },
     editButton_clickHandler: function(event) {
       window.app.navigator.replaceView(
