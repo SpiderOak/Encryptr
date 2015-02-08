@@ -71,7 +71,10 @@
       window.app.toastView.show("Copied to clipboard");
     },
     eye_clickHandler: function(event) {
-      $(event.target).closest('li').find('.copyable').toggleClass('password');
+      var $this = $(event.target);
+      $this.toggleClass('fa-eye');
+      $this.toggleClass('fa-eye-slash');
+      $this.closest('li').find('.copyable').toggleClass('password');
     },
     editButton_clickHandler: function(event) {
       window.app.navigator.replaceView(
