@@ -136,10 +136,11 @@ var Encryptr = (function (window, console, undefined) {
       Encryptr.prototype.copyToClipboard = window.community.clipboard.setText;
     // How to *actually* detect node-webkit ?
     } else if ($.os.nodeWebkit && window.require ) {
-      var gui = window.require('nw.gui');
+      /* jshint node: true */
+      var gui = require('nw.gui');
       var win = gui.Window.get();
-      var nativeMenuBar = new gui.Menu({ type: "menubar" });
-      if (nativeMenuBar.createMacBuiltin) {
+      if (process.platform === "darwin") {
+        var nativeMenuBar = new gui.Menu({ type: "menubar" });
         nativeMenuBar.createMacBuiltin("Encryptr");
         win.menu = nativeMenuBar;
       }
@@ -162,6 +163,7 @@ var Encryptr = (function (window, console, undefined) {
       Encryptr.prototype.copyToClipboard = function(text) {
         window.clipboard.set(text, 'text');
       };
+      /* jshint node: false */
     } else {
       // Fallback to empty browser polyfill
       Encryptr.prototype.copyToClipboard = function() {};
