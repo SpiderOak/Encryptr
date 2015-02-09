@@ -157,6 +157,7 @@ module.exports = function(grunt) {
         macPlist: {
           CFBundleIdentifier: 'org.devgeeks.encryptr'
         },
+        cacheDir: './desktopbuilds/cache',
         winIco: './resources/icon-encryptr.ico',
         win: true,
         linux32: true,
