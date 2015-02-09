@@ -146,15 +146,23 @@ module.exports = function(grunt) {
       }
     },
     nodewebkit: {
+      // This has a mishmash of old and new options just for compatibility
       options: {
+        version: '0.11.5',
         build_dir: './desktopbuilds',
         mac: true,
         mac_icns: './resources/icon-encryptr.icns',
+        macIcns: './resources/icon-encryptr.icns',
         mac_bundle_id: 'org.devgeeks.encryptr',
+        macPlist: {
+          CFBundleIdentifier: 'org.devgeeks.encryptr'
+        },
+        winIco: './resources/icon-encryptr.ico',
         win: true,
         linux32: true,
         linux64: true,
-        credits: './www/credits.html'
+        credits: './www/credits.html',
+        macCredits: './www/credits.html'
       },
       src: ['./www/**/*'] // Your node-webkit app
     },

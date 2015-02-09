@@ -137,6 +137,27 @@ var Encryptr = (function (window, console, undefined) {
     // How to *actually* detect node-webkit ?
     } else if ($.os.nodeWebkit && window.require ) {
       var gui = window.require('nw.gui');
+      var win = gui.Window.get();
+      var nativeMenuBar = new gui.Menu({ type: "menubar" });
+      if (nativeMenuBar.createMacBuiltin) {
+        nativeMenuBar.createMacBuiltin("Encryptr");
+        win.menu = nativeMenuBar;
+      }
+      var option = {
+        key : "Ctrl+Alt+Shift+E",
+        active : function() {
+          win.focus();
+        },
+        failed : function(msg) {
+          // :(, fail to register the |key| or couldn't parse the |key|.
+          console.log(msg);
+        }
+      };
+      // Create a shortcut with |option|.
+      var shortcut = new gui.Shortcut(option);
+      // Register global desktop shortcut, which can work without focus.
+      gui.App.registerGlobalHotKey(shortcut);
+
       window.clipboard = gui.Clipboard.get();
       Encryptr.prototype.copyToClipboard = function(text) {
         window.clipboard.set(text, 'text');
