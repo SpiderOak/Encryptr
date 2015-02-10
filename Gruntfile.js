@@ -244,6 +244,7 @@ module.exports = function(grunt) {
     grunt.task.run('shell:mocha' + (which || 'spec'));
   });
   grunt.registerTask('desktop', 'Build for desktop', function(which) {
+    grunt.task.run('jshint', 'dot', 'copy', 'concat', 'min', 'shell:mochadot');
     if (which === 'release') {
       grunt.task.run('nodewebkit:release');
     } else {
@@ -253,7 +254,11 @@ module.exports = function(grunt) {
   grunt.registerTask('min', ['uglify']); // polyfil for uglify
   grunt.registerTask('debug','Create a debug build', function(platform) {
     grunt.task.run('jshint', 'dot', 'copy', 'concat', 'min', 'shell:mochadot');
-    grunt.task.run('shell:debug_' + platform);
+    if (platform === 'desktop') {
+      grunt.task.run('nodewebkit:debug');
+    } else {
+      grunt.task.run('shell:debug_' + platform);
+    }
   });
 
   // Default task
