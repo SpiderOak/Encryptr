@@ -136,11 +136,34 @@ var Encryptr = (function (window, console, undefined) {
       Encryptr.prototype.copyToClipboard = window.community.clipboard.setText;
     // How to *actually* detect node-webkit ?
     } else if ($.os.nodeWebkit && window.require ) {
-      var gui = window.require('nw.gui');
+      /* jshint node: true */
+      var gui = require('nw.gui');
+      var win = gui.Window.get();
+      if (process.platform === "darwin") {
+        var nativeMenuBar = new gui.Menu({ type: "menubar" });
+        nativeMenuBar.createMacBuiltin("Encryptr");
+        win.menu = nativeMenuBar;
+      }
+      var option = {
+        key : "Ctrl+Alt+Shift+E",
+        active : function() {
+          win.focus();
+        },
+        failed : function(msg) {
+          // :(, fail to register the |key| or couldn't parse the |key|.
+          console.log(msg);
+        }
+      };
+      // Create a shortcut with |option|.
+      var shortcut = new gui.Shortcut(option);
+      // Register global desktop shortcut, which can work without focus.
+      gui.App.registerGlobalHotKey(shortcut);
+
       window.clipboard = gui.Clipboard.get();
       Encryptr.prototype.copyToClipboard = function(text) {
         window.clipboard.set(text, 'text');
       };
+      /* jshint node: false */
     } else {
       // Fallback to empty browser polyfill
       Encryptr.prototype.copyToClipboard = function() {};

@@ -146,17 +146,49 @@ module.exports = function(grunt) {
       }
     },
     nodewebkit: {
-      options: {
-        build_dir: './desktopbuilds',
-        mac: true,
-        mac_icns: './resources/icon-encryptr.icns',
-        mac_bundle_id: 'org.devgeeks.encryptr',
-        win: true,
-        linux32: true,
-        linux64: true,
-        credits: './www/credits.html'
+      // This has a mishmash of old and new options just for compatibility
+      release: {
+        options: {
+          version: '0.11.5',
+          build_dir: './desktopbuilds',
+          mac: true,
+          mac_icns: './resources/icon-encryptr.icns',
+          macIcns: './resources/icon-encryptr.icns',
+          mac_bundle_id: 'org.devgeeks.encryptr',
+          macPlist: {
+            CFBundleIdentifier: 'org.devgeeks.encryptr'
+          },
+          cacheDir: './desktopbuilds/cache',
+          winIco: './resources/icon-encryptr.ico',
+          win: true,
+          linux32: true,
+          linux64: true,
+          credits: './www/credits.html',
+          macCredits: './www/credits.html'
+        },
+        src: ['./www/**/*'] // Your node-webkit app
       },
-      src: ['./www/**/*'] // Your node-webkit app
+      // Don't try and force wine icon replacement on debug builds
+      debug: {
+        options: {
+          version: '0.11.5',
+          build_dir: './desktopbuilds',
+          mac: true,
+          mac_icns: './resources/icon-encryptr.icns',
+          macIcns: './resources/icon-encryptr.icns',
+          mac_bundle_id: 'org.devgeeks.encryptr',
+          macPlist: {
+            CFBundleIdentifier: 'org.devgeeks.encryptr'
+          },
+          cacheDir: './desktopbuilds/cache',
+          win: true,
+          linux32: true,
+          linux64: true,
+          credits: './www/credits.html',
+          macCredits: './www/credits.html'
+        },
+        src: ['./www/**/*'] // Your node-webkit app
+      }
     },
     jshint: {
       files: ['Gruntfile.js', 'src/*.js', 'src/**/*.js'],
@@ -211,10 +243,22 @@ module.exports = function(grunt) {
     grunt.task.run('jshint', 'dot', 'copy', 'concat', 'min');
     grunt.task.run('shell:mocha' + (which || 'spec'));
   });
+  grunt.registerTask('desktop', 'Build for desktop', function(which) {
+    grunt.task.run('jshint', 'dot', 'copy', 'concat', 'min', 'shell:mochadot');
+    if (which === 'release') {
+      grunt.task.run('nodewebkit:release');
+    } else {
+      grunt.task.run('nodewebkit:debug');
+    }
+  });
   grunt.registerTask('min', ['uglify']); // polyfil for uglify
   grunt.registerTask('debug','Create a debug build', function(platform) {
     grunt.task.run('jshint', 'dot', 'copy', 'concat', 'min', 'shell:mochadot');
-    grunt.task.run('shell:debug_' + platform);
+    if (platform === 'desktop') {
+      grunt.task.run('nodewebkit:debug');
+    } else {
+      grunt.task.run('shell:debug_' + platform);
+    }
   });
 
   // Default task

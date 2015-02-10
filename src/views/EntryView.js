@@ -9,6 +9,7 @@
   var EntryView = Backbone.View.extend({
     events: {
       "longTap .copyable": "copyable_longTapHandler",
+      "dblclick .copyable": "copyable_doubleTapHandler",
       "click .eye": "eye_clickHandler"
     },
     initialize: function() {
@@ -16,6 +17,7 @@
           "render",
           "editButton_clickHandler",
           "deleteButton_clickHandler",
+          "copyable_doubleTapHandler",
           "viewActivate",
           "viewDeactivate");
       this.model.on("change", this.addAll, this);
@@ -69,6 +71,9 @@
       var text = $(event.target).text();
       window.app.copyToClipboard(text);
       window.app.toastView.show("Copied to clipboard");
+    },
+    copyable_doubleTapHandler: function(event) {
+      this.copyable_longTapHandler(event);
     },
     eye_clickHandler: function(event) {
       var $this = $(event.target);

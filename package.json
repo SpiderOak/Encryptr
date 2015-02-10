@@ -47,6 +47,6 @@
     "colors": "^0.6.2",
     "wd": "^0.3.1",
     "wd-query": "^0.2.0",
-    "grunt-node-webkit-builder": "https://github.com/devgeeks/grunt-node-webkit-builder/archive/master.tar.gz"
+    "grunt-node-webkit-builder": "^1.0.0"
   }
 }
