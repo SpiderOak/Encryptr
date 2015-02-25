@@ -172,6 +172,10 @@ h1 {
   background-color: #333333;
   color: #ffffff;
 }
+.menu ul li:first-child,
+.addMenu ul li:first-child {
+  border-top: none;
+}
 .menu ul li a,
 .addMenu ul li a {
   color: #ffffff;
