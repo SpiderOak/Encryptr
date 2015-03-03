@@ -13,7 +13,9 @@ I wanted something to store hard to remember passwords, important numbers, etc a
 
 Encryptr keeps it simple. It has three types of data it can store. Passwords, Credit Card numbers and general key/value pairs. It can easily be expanded to include other default entry types.
 
-It is currently working on iOS, Android, and the Desktop – thanks to [node-webkit](https://github.com/rogerwang/node-webkit) – but there are no reasons why it could not by expanded to Blackberry10 and Windows Phone 8.
+It is currently working on Android, and the Desktop – thanks to [node-webkit](https://github.com/rogerwang/node-webkit) – but there are no reasons why it could not by expanded to Blackberry10 and Windows Phone 8.
+
+iOS is coming soon, just waiting on a way to either make it work with the new WKWebview or to push some of the hard crypto to native.
 
 ![screenshot](http://f.cl.ly/items/2n1r3V1D0L3k3p1q2T2O/encryptr-screenshot.png)
 
