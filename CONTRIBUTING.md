@@ -15,7 +15,7 @@ To contribute code to Encryptr, first
 
 Next:
 
-- Fork it the repository
+- Fork the repository
 - Create a branch (git checkout -b fix-for-that-thing)
 - If possible, commit a failing test (git commit -am "adds a failing test to demonstrate that thing")
 - Commit your fix/feature (git commit -am "fixes that thing")
