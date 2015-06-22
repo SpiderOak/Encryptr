@@ -30,7 +30,7 @@ var Encryptr = (function (window, console, undefined) {
 
     // Set the hostname for the Crypton server
     // window.crypton.host = "192.168.1.12";
-    window.crypton.host = "zk.gs";
+    window.crypton.host = "localhost";
     window.crypton.port = 1025;
 
     window.Offline.options = {
