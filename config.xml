@@ -7,7 +7,7 @@
     <author email="tommy@devgeeks.org" href="http://devgeeks.org">
         Tommy-Carlos Williams (devgeeks)
     </author>
-    <content src="index.html" />
+    <content src="http://localhost:47204" />
     <access origin="https://*.crypton.io" />
     <access origin="https://encryptr.org" />
     <access origin="wss://*.crypton.io" />
@@ -19,5 +19,5 @@
     <preference name="DisallowOverscroll" value="true" />
     <preference name="AutoHideSplashScreen" value="true" />
     <preference name="BackupWebStorage" value="none" />
-    <preference name="KeyboardDisplayRequiresUserAction" value="false"/>
+    <preference name="KeyboardDisplayRequiresUserAction" value="false" />
 </widget>

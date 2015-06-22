@@ -30,7 +30,7 @@ var Encryptr = (function (window, console, undefined) {
 
     // Set the hostname for the Crypton server
     // window.crypton.host = "192.168.1.12";
-    window.crypton.host = "localhost";
+    window.crypton.host = "zk.gs";
     window.crypton.port = 1025;
 
     window.Offline.options = {
@@ -102,7 +102,7 @@ var Encryptr = (function (window, console, undefined) {
 
   Encryptr.prototype.onDeviceReady = function(event) {
     // Useragent sniffin. Ew.
-    if (navigator.userAgent.match(/(iPad|iPhone);.*CPU.*OS 7_\d/i)) {
+    if ($.os.ios && parseFloat(window.device.version) >= 7.0) {
       $(".app").css({"top":"20px"});
     }
     if (window.StatusBar && $.os.ios) {
