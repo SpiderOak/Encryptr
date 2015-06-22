@@ -7,17 +7,20 @@
     <author email="tommy@devgeeks.org" href="http://devgeeks.org">
         Tommy-Carlos Williams (devgeeks)
     </author>
-    <content src="http://localhost:47204" />
+    <content src="http://localhost:47243" />
     <access origin="https://*.crypton.io" />
     <access origin="https://encryptr.org" />
     <access origin="wss://*.crypton.io" />
-    <preference name="orientation" value="default" />
+    <preference name="Orientation" value="default" />
+    <platform name="ios">
+      <preference name="Orientation" value="all" />
+    </platform>
     <preference name="target-device" value="universal" />
     <preference name="fullscreen" value="false" />
     <preference name="keepRunning" value="true" />
-    <preference name="UIWebViewBounce" value="false" />
     <preference name="DisallowOverscroll" value="true" />
     <preference name="AutoHideSplashScreen" value="true" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="KeyboardDisplayRequiresUserAction" value="false" />
+    <preference name="AlternateContentSrc" value="http://localhost:47204" />
 </widget>
