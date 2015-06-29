@@ -257,6 +257,9 @@ a.btn {
   overflow: hidden;
   z-index: 101;
 }
+.login h1 {
+  text-align: center;
+}
 .signup {
   background: -webkit-linear-gradient(top, #333333 0%, #000000 100%);
   background: linear-gradient(to bottom, #333333 0%, #000000 100%);
