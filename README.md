@@ -9,7 +9,7 @@ It started as an example project for seeing what [Crypton](https://crypton.io) c
 
 I had tried a few password managers but hadn't loved any of them – particularly on Android. So, when I needed an idea of an app to make to try out Crypton, this seemed like an obvious choice. At its simplest, Crypton is basically a cloud based key/value store using end to end zero-knowledge encryption. None of the data stored on the server can be viewed by the server.
 
-I wanted something to store hard to remember passwords, important numbers, etc across devices. 
+I wanted something to store hard to remember passwords, important numbers, etc across devices.
 
 Encryptr keeps it simple. It has three types of data it can store. Passwords, Credit Card numbers and general key/value pairs. It can easily be expanded to include other default entry types.
 
@@ -39,6 +39,8 @@ iOS is coming soon, just waiting on a way to either make it work with the new WK
   - `npm install -g grunt-cli`
 - PhantomJS - [http://phantomjs.org/](http://phantomjs.org/)
 	- Headless webkit for running tests
+- Cordova-icon and Cordova-splash - [https://github.com/AlexDisler/cordova-icon/](https://github.com/AlexDisler/cordova-icon/) and [https://github.com/AlexDisler/cordova-splash/](https://github.com/AlexDisler/cordova-splash/)
+  - `npm install -g cordova-icon` and `npm install cordova-splash`
 
 ## Getting started
 
@@ -46,7 +48,7 @@ iOS is coming soon, just waiting on a way to either make it work with the new WK
 - cd into the project folder
 - `npm install` to install node_modules and js/css components (`npm install` will also run `bower install`).
 - `cordova platform add ios` and/or `cordova platform add android`
-- `npm run pluginstall` to install any plugins needed
+- `cordova-icon && cordova-splash`
 
 ## First test
 
