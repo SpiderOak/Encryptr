@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="org.devgeeks.encryptr" version="1.1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="org.devgeeks.encryptr" version="2.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Encryptr</name>
     <description>
       A zero-knowledge, cloud-based e-wallet / password manager powered by Crypton.
@@ -23,11 +23,12 @@
     <preference name="AutoHideSplashScreen" value="true" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="KeyboardDisplayRequiresUserAction" value="false" />
-    <preference name="AlternateContentSrc" value="http://localhost:47244" />
+    <preference name="AlternateContentSrc" value="undefined" />
     <plugin name="cordova-plugin-whitelist" spec="^1.0.0" />
     <plugin name="com.verso.cordova.clipboard" spec="^0.1.0" />
     <plugin name="cordova-labs-wkwebviewengine" spec="https://github.com/apache/cordova-plugins.git#master:wkwebview-engine" />
     <plugin name="cordova-plugin-device" spec="^1.0.1" />
     <plugin name="org.devgeeks.privacyscreen" spec="^0.0.5" />
     <engine name="ios" spec="https://github.com/apache/cordova-ios.git#4.0.x" />
+    <plugin name="cordova-plugin-statusbar" spec="^1.0.1" />
 </widget>
