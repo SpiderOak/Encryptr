@@ -45,7 +45,7 @@ describe('Encryptr', function() {
         'app-activity': (process.env.APPIUM === "android") ? '.Encryptr' : undefined,
         name: "Encryptr",
         platformName: (process.env.APPIUM === "android") ? "Android" : "iOS",
-        platformVersion: '8.3',
+        platformVersion: '8.4',
         deviceName: (process.env.APPIUM === "android") ? 'Android VM' : 'iPhone 6',
         app: appURL,
         implicitWaitMs: 500
@@ -102,6 +102,32 @@ describe('Encryptr', function() {
           })
           .then(function() {
             return browser.waitForElementByCss("input[name=newusername]", waitTimeout);
+          }).should.eventually.be.ok;
+      });
+      it("should be able to hide the passphrase", function() {
+        return browser
+          .waitForElementByCss("#show-passphrase", waitTimeout)
+          .then(function() {
+            return browser.waitForElementByCss("label[for=show-passphrase]", waitTimeout);
+          })
+          .then(function() {
+            return $("label[for=show-passphrase]").click();
+          })
+          .then(function() {
+            return wd.asserters.jsCondition("document.querySelector('#newpassphrase').type === 'password'", waitTimeout);
+          }).should.eventually.be.ok;
+      });
+      it("should be able to show the passphrase", function() {
+        return browser
+          .waitForElementByCss("#show-passphrase", waitTimeout)
+          .then(function() {
+            return browser.waitForElementByCss("label[for=show-passphrase]", waitTimeout);
+          })
+          .then(function() {
+            return $("label[for=show-passphrase]").click();
+          })
+          .then(function() {
+            return wd.asserters.jsCondition("document.querySelector('#newpassphrase').type === 'text'", waitTimeout);
           }).should.eventually.be.ok;
       });
       it("should be able to enter a new username", function() {
@@ -209,19 +235,6 @@ describe('Encryptr', function() {
             return browser.getAttribute(el, "placeholder");
           }).should.eventually.equal("Passphrase");
       });
-      //it("should be able to enter a username", function() {
-        //return browser
-          //.waitFor(wd.asserters.jsCondition("document.querySelectorAll('input[name=username]')[0].disabled === false"), waitTimeout)
-          //.then(function() {
-            //if ($('input[name=username]').val() === newusername) { // remembered username
-              //$('input[name=username]')[0].value = '';
-            //}
-            //return $('input[name=username]').val(newusername);
-          //})
-          //.then(function() {
-            //return $('input[name=username]').val();
-          //}).should.eventually.equal(newusername);
-      //});
       it("should be able to enter a passphrase", function() {
         return browser.noop()
           .then(function() {
