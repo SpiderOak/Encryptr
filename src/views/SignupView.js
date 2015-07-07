@@ -121,7 +121,7 @@
       if (!_this.$el.hasClass("dismissed")) {
         _this.$("input").attr("disabled", true);
         _this.$el.animate({"translate3d": "0,100%,0"},
-          100,
+          200,
           "ease-in-out",
           function() {
             _this.$el.addClass("dismissed");
