@@ -27,7 +27,7 @@ describe('Encryptr', function() {
   var newpassphrase = "shhh" + Date.now().toString();
 
   if (process.env.APPIUM === "android") {
-    appURL = projectRoot + "/platforms/android/ant-build/Encryptr-debug.apk";
+    appURL = projectRoot + "/platforms/android/build/outputs/apk/android-debug.apk";
   }
   else {
     appURL = projectRoot + "/platforms/ios/build/emulator/Encryptr.app";

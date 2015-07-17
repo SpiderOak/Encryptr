@@ -2629,7 +2629,6 @@ Diff.apply = function (delta, old) {
  * with a bridge API to said worker
 */
 !self.worker && window.addEventListener('load', function () {
-  return;
   var scriptEls = document.getElementsByTagName('script');
   var path;
 
