@@ -312,6 +312,33 @@ textarea {
 input.error {
   border: 1px solid red;
 }
+.entrySearch {
+  position: relative;
+}
+.entrySearch .search {
+  padding: 10px 30px;
+}
+.entrySearch .fa-search {
+  position: absolute;
+  left: 10px;
+  top: 0;
+  line-height: 42px;
+  bottom: 0;
+  color: #ccc;
+}
+.entrySearch .clearit {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  color: #999;
+  line-height: 40px;
+  width: 40px;
+  text-align: center;
+}
+.entrySearch .clearit.active {
+  color: black;
+}
 #username,
 #newusername,
 #passphrase,
@@ -432,6 +459,7 @@ button {
   background-color: inherit;
   color: rgba(255, 255, 255, 0.8);
 }
+.emptyFilteredEntries,
 .emptyEntries {
   display: none;
   position: relative;
@@ -443,6 +471,7 @@ button {
   color: #ccc;
   text-align: center;
 }
+.emptyFilteredEntries small,
 .emptyEntries small {
   font-size: 40%;
 }
