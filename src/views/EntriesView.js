@@ -9,11 +9,13 @@
   var EntriesView = Backbone.View.extend({
     destructionPolicy: "never",
     events: {
-      // ...
+      "click .clearit": "clearSearch",
+      "keyup input.search": "search",
+      "submit form.entrySearch": "noop"
     },
     initialize: function() {
-      _.bindAll(this, "render", "addAll", "addOne", "viewActivate",
-        "viewDeactivate");
+      _.bindAll(this, "render", "addAll", "addOne", "viewActivate", "search",
+        "clearSearch", "viewDeactivate");
       this.collection.bind("reset", this.addAll, this);
       this.collection.bind("add", this.addOne, this);
       this.collection.bind("remove", this.addAll, this);
@@ -22,14 +24,16 @@
 
       this.subViews = [];
       this.hasItems = false;
+      this.filterTimeout = undefined;
+      this.clearSearchOnActive = false;
     },
     render: function() {
       this.$el.html(window.tmpl["entriesView"]({}));
       return this;
     },
-    addAll: function () {
+    addAll: function (collection) {
       this.$(".entriesViewLoading").removeClass("loadingEntries");
-      if (this.collection.models.length === 0) {
+      if (collection.models.length === 0) {
         window.setTimeout(function() {
           $(".emptyEntries").show();
         }, 300);
@@ -37,7 +41,8 @@
         $(".emptyEntries").hide();
       }
       this.$(".entries").html("");
-      this.collection.each(this.addOne);
+      collection.each(this.addOne);
+      this.search(this.filterText);
     },
     addOne: function(model) {
       $(".emptyEntries").hide();
@@ -55,7 +60,43 @@
       this.$(".entries").append(view.render().el);
       this.subViews.push(view);
     },
+    noop: function(event) {
+      event.preventDefault();
+      return false;
+    },
+    search: function() {
+      var hasResults = false;
+      var filterEntries = function() {
+        var filterText = this.$("input.search").val();
+        this.filterText = filterText;
+        this.$("input.search").removeClass("error");
+        this.$(".emptyFilteredEntries").hide();
+        this.$(".entries .entry").each(function(index, entry) {
+          var $entry = $(entry);
+          $entry.show();
+          var label = $entry.find("a > div").text().toLowerCase();
+          if (label.indexOf(filterText.toLowerCase()) === -1) {
+            $entry.hide();
+          } else {
+            hasResults = true;
+          }
+        });
+      }.bind(this);
+      _.debounce(filterEntries(), 100);
+      if (!hasResults) {
+        this.$("input.search").addClass("error");
+        this.$(".emptyFilteredEntries").show();
+      }
+    },
+    clearSearch: function(event) {
+      if (event) event.preventDefault();
+      this.$("input.search").val("");
+      this.search("");
+    },
     viewActivate: function(event) {
+      if (this.filterTimeout) window.clearInterval(this.filterTimeout);
+      if (this.clearSearchOnActive) this.clearSearch();
+      this.clearSearchOnActive = false;
       var _this = this;
       window.app.mainView.backButtonDisplay(false);
       window.app.mainView.setTitle("Encryptr");
@@ -64,6 +105,9 @@
       var hashArray = window.sjcl.hash.sha256.hash(username);
       var hash = window.sjcl.codec.hex.fromBits(hashArray);
       var encryptedIndexJSON = window.localStorage.getItem("encryptr-" + hash + "-index");
+      if ($.os.nodeWebkit) {
+        _this.$("input.search").focus();
+      }
       if (encryptedIndexJSON && window.app.accountModel.get("passphrase")) {
         try {
           var decryptedIndexJson =
@@ -113,7 +157,11 @@
       });
     },
     viewDeactivate: function(event) {
-      // ...
+      var _this = this;
+      _this.filterTimeout = window.setInterval(function() {
+        _this.clearSearchOnActive = true;
+        window.clearInterval(_this.filterTimeout);
+      }, 5000);
     },
     close: function() {
       _.each(this.subViews, function(view) {
