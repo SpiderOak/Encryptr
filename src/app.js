@@ -145,9 +145,11 @@ var Encryptr = (function (window, console, undefined) {
         win.menu = nativeMenuBar;
       }
       var option = {
-        key : "Ctrl+Alt+Shift+E",
+        key : "Ctrl+F",
         active : function() {
-          win.focus();
+          if ($("input.search").length > 0) {
+            $("input.search").focus();
+          }
         },
         failed : function(msg) {
           // :(, fail to register the |key| or couldn't parse the |key|.
@@ -156,8 +158,14 @@ var Encryptr = (function (window, console, undefined) {
       };
       // Create a shortcut with |option|.
       var shortcut = new gui.Shortcut(option);
-      // Register global desktop shortcut, which can work without focus.
       gui.App.registerGlobalHotKey(shortcut);
+      // ...but turn it off when not focused
+      win.on("blur", function() {
+        gui.App.unregisterGlobalHotKey(shortcut);
+      });
+      win.on("focus", function() {
+        gui.App.registerGlobalHotKey(shortcut);
+      });
 
       window.clipboard = gui.Clipboard.get();
       Encryptr.prototype.copyToClipboard = function(text) {

@@ -9,16 +9,17 @@
   <link rel="stylesheet" type="text/css" href="css/index.css" />
   <link rel="stylesheet" type="text/css" href="css/Source_Sans_Pro/stylesheet.css" />
   <link rel="stylesheet" type="text/css" href="css/Jura_Light/stylesheet.css" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: wss: data: gap: https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *">
   <title>Encryptr</title>
   </head>
-  <body ontouchstart="">
+  <body>
   <div class="app">
     <div id="main" class="main">
       <div id="nav" class="nav"></div>
       <div id="subviews" class="subviews"></div>
     </div>
     <div id="login" class="login">
-      <img src="img/text-encryptr.png" style="width: 200px; margin: 30px auto; display: block;"/>
+      <h1 class="middle">Encryptr</h1>
       <div>
         <form name="login-form" class="login-form">
           <div class="login-input">
@@ -55,6 +56,7 @@
   <!-- Components -->
   <script type="text/javascript" src="components/underscore/underscore.js"></script>
   <script type="text/javascript" src="components/backbone/backbone.js"></script>
+  <script type="text/javascript" src="components/backbone-filtered-collection/backbone-filtered-collection.js"></script>
   <script type="text/javascript" src="components/backstack/backstack.js"></script>
   <script type="text/javascript" src="components/moment/moment.js"></script>
   <script type="text/javascript" src="components/semver/semver.browser.js"></script>
@@ -64,16 +66,6 @@
   <script type="text/javascript" src="js/crypton.js"></script>
   <script type="text/javascript" src="js/Encryptr.js"></script>
   <script type="text/javascript" src="js/Encryptr-templates.js"></script>
-  <script type="text/javascript">
-    (function() {
-     // back the version up then re-add it
-     var version = window.app.version;
-     // replace the window.app from Encryptr.js with a real one
-     window.app = new Encryptr();
-     window.app.version = version;
-     window.app.init();
-     window.app.navigator = new window.BackStack.StackNavigator({el:'#subviews'});
-    })();
-  </script>
+  <script type="text/javascript" src="js/Encryptr-init.js"></script>
   </body>
 </html>
