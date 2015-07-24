@@ -11,3 +11,4 @@ www/js/Encryptr-tests.js
 www/js/Encryptr-templates.js
 desktopbuilds/*
 cache
+build.json
