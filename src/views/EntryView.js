@@ -69,9 +69,11 @@
       event.preventDefault();
       event.stopPropagation();
       var type = $(event.target).attr('data-type');
-      var key = _.find(this.model.get("items"), function(item) {
-        return item.key === type;
-      });
+      //var key = _.find(this.model.get("items"), function(item) {
+        //return item.key === type;
+      //});
+      var key = _.findWhere(this.model.get("items"), { key: type });
+      console.log(key.value);
       window.app.copyToClipboard(key.value);
       window.app.toastView.show("Copied to clipboard");
     },
