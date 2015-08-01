@@ -5,8 +5,8 @@
 	{{ _.each(it.items, function(item) { }}
     {{? item.value }}<li class="sep">{{= item.key}}</li>
     <li>{{= item.type === 'textarea' ? '<pre>' : ''}}
-      <a class="copyable {{= item.type || item.key.toLowerCase() }}">
-        {{= item.value }}
+      <a data-type="{{= item.key }}" class="copyable {{= item.type || item.key.toLowerCase() }}">
+        {{! item.value }}
       </a>
       {{= item.key === 'Password' ? '<a href="#" class="eye fa fa-eye"></a>' : '' }}
     {{= item.type === 'textarea' ? '</pre>' : ''}}</li>{{? }}
