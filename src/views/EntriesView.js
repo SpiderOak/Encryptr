@@ -32,28 +32,33 @@
       return this;
     },
     addAll: function (collection) {
+      var _this = this;
       collection = collection || this.collection;
       this.$(".entriesViewLoading").removeClass("loadingEntries");
-      if (collection.models.length === 0) {
+      if (this.collection.models.length === 0) {
         window.setTimeout(function() {
-          $(".emptyEntries").show();
+          _this.$(".emptyFilteredEntries").hide();
+          _this.$(".emptyEntries").show();
         }, 300);
       } else {
-        $(".emptyEntries").hide();
-        this.$(".entries").html("");
-        collection.each(this.addOne);
-        this.search(this.filterText);
+        _this.$(".emptyFilteredEntries").hide();
+        _this.$(".emptyEntries").hide();
       }
+      this.$(".entries").html("");
+      this.collection.each(this.addOne);
+      this.search(this.filterText);
     },
     addOne: function(model) {
+      var _this = this;
+      this.$(".emptyEntries").hide();
       this.$(".emptyEntries").hide();
       this.$(".entriesViewLoading").removeClass("loadingEntries");
       if (this.collection.models.length === 0) {
         window.setTimeout(function() {
-          $(".emptyEntries").show();
+          _this.$(".emptyEntries").show();
         }, 300);
       } else {
-        $(".emptyEntries").hide();
+        _this.$(".emptyEntries").hide();
       }
       var view = new Encryptr.prototype.EntriesListItemView({
         model: model
@@ -67,13 +72,13 @@
     },
     search: function() {
       var hasResults = false;
+      if (this.collection.models.length === 0) {
+        this.$("input.search").removeClass("error");
+        return;
+      }
       var filterEntries = function() {
         var filterText = this.$("input.search").val();
         this.filterText = filterText;
-        if (!filterText && this.collection.models.length === 0) {
-          this.$(".emptyEntries").show();
-          hasResults = true;
-        }
         this.$("input.search").removeClass("error");
         this.$(".emptyFilteredEntries").hide();
         this.$(".entries .entry").each(function(index, entry) {
@@ -91,7 +96,6 @@
       if (!hasResults) {
         this.$("input.search").addClass("error");
         this.$(".emptyFilteredEntries").show();
-        this.$(".emptyEntries").hide();
       }
     },
     clearSearch: function(event) {
