@@ -68,8 +68,9 @@
     copyable_longTapHandler: function(event) {
       event.preventDefault();
       event.stopPropagation();
-      var text = $(event.target).text();
-      window.app.copyToClipboard(text);
+      var type = $(event.target).attr('data-type');
+      var key = _.findWhere(this.model.get("items"), { key: type });
+      window.app.copyToClipboard(key.value);
       window.app.toastView.show("Copied to clipboard");
     },
     copyable_doubleTapHandler: function(event) {
