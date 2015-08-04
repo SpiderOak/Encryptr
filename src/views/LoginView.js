@@ -44,6 +44,15 @@
     },
     form_submitHandler: function(event) {
       var _this = this;
+
+      var sanitizeAuthError = function(err) {
+        // @TODO - this might need some more nuance
+        if (err === 'Must supply username and passphrase') {
+          return err;
+        }
+        return 'Incorrect username or password';
+      };
+
       event.preventDefault();
 
       $(".blocker").show();
@@ -57,7 +66,7 @@
         if (err) {
           window.app.dialogAlertView.show({
             title: "Authentication error",
-            subtitle: err
+            subtitle: sanitizeAuthError(err)
           }, function(){});
           $(".blocker").hide();
           return;
