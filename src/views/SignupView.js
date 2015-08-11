@@ -46,6 +46,18 @@
     },
     form_submitHandler: function(event) {
       var _this = this;
+
+      var sanitizeSignupErr = function(err) {
+        // @TODO this might need some more nuance
+        if (err === 'Must supply username and passphrase') {
+          return err;
+        }
+        if (err === 'Username is not valid: it is not alphanumeric!') {
+          return err;
+        }
+        return 'Invalid username, try something different';
+      };
+
       event.preventDefault();
 
       $(".blocker").show();
@@ -59,7 +71,7 @@
         if (err) {
           window.app.dialogAlertView.show({
             title: "Signup error",
-            subtitle: err
+            subtitle: sanitizeSignupErr(err)
           }, function(){});
           $(".blocker").hide();
           return;

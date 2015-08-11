@@ -86,7 +86,7 @@
       this.trigger("deleteentry");
     },
     setTitle: function(title) {
-      this.$(".nav .title").html(title);
+      this.$(".nav .title").text(title);
     },
     backButtonDisplay: function(show) {
       if (show) {

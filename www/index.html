@@ -9,6 +9,7 @@
   <link rel="stylesheet" type="text/css" href="css/index.css" />
   <link rel="stylesheet" type="text/css" href="css/Source_Sans_Pro/stylesheet.css" />
   <link rel="stylesheet" type="text/css" href="css/Jura_Light/stylesheet.css" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://encryptr.org https://*.crypton.io wss://*.crypton.io blob: gap: https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *">
   <title>Encryptr</title>
   </head>
   <body ontouchstart="">
@@ -65,16 +66,6 @@
   <script type="text/javascript" src="js/crypton.js"></script>
   <script type="text/javascript" src="js/Encryptr.js"></script>
   <script type="text/javascript" src="js/Encryptr-templates.js"></script>
-  <script type="text/javascript">
-    (function() {
-     // back the version up then re-add it
-     var version = window.app.version;
-     // replace the window.app from Encryptr.js with a real one
-     window.app = new Encryptr();
-     window.app.version = version;
-     window.app.init();
-     window.app.navigator = new window.BackStack.StackNavigator({el:'#subviews'});
-    })();
-  </script>
+  <script type="text/javascript" src="js/Encryptr-init.js"></script>
   </body>
 </html>

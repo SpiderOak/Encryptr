@@ -1,5 +1,5 @@
 {{? it.type === 'textarea' }}
 <textarea name="{{= it.id }}" rows="3" placeholder="{{= it.placeholder }}">{{= it.value }}</textarea>
 {{?? }}
-<input type="{{= it.type || 'text' }}" autocorrect="off" autocapitalize="off" name="{{= it.id }}" placeholder="{{= it.placeholder }}" value="{{= it.value }}" />
+<input type="{{= it.type || 'text' }}" autocorrect="off" autocapitalize="off" name="{{= it.id }}" placeholder="{{= it.placeholder }}" value="{{! it.value }}" />
 {{? }}
