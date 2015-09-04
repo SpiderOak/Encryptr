@@ -24,7 +24,8 @@
       event.stopPropagation();
       event.preventDefault();
       this.dismiss();
-      var typeModel = $(event.target).data("model");
+      var typeModel = $(event.target).data("model") ||
+        $(event.target).closest('a').data('model');
       window.app.navigator.pushView(window.app.EditView, {
         model: new window.app.EntryModel(
           new window.app.types[typeModel]()
