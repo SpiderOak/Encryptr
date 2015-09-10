@@ -23,12 +23,15 @@
     <preference name="AutoHideSplashScreen" value="true" />
     <preference name="BackupWebStorage" value="none" />
     <preference name="KeyboardDisplayRequiresUserAction" value="false" />
-    <preference name="AlternateContentSrc" value="undefined" />
+    <preference name="AlternateContentSrc" value="index.html" />
+    <preference name="FadeSplashScreen" value="true" />
+    <preference name="FadeSplashScreenDuration" value="1" />
     <plugin name="cordova-plugin-whitelist" spec="^1.0.0" />
     <plugin name="com.verso.cordova.clipboard" spec="^0.1.0" />
     <plugin name="cordova-labs-wkwebviewengine" spec="https://github.com/apache/cordova-plugins.git#master:wkwebview-engine" />
     <plugin name="cordova-plugin-device" spec="^1.0.1" />
     <plugin name="org.devgeeks.privacyscreen" spec="^0.0.5" />
-    <engine name="ios" spec="https://github.com/apache/cordova-ios.git#4.0.x" />
+    <engine name="ios" spec="https://github.com/apache/cordova-ios.git#master" />
     <plugin name="cordova-plugin-statusbar" spec="^1.0.1" />
+    <plugin name="cordova-plugin-splashscreen" spec="~2.1.0" />
 </widget>
