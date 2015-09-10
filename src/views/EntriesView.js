@@ -10,7 +10,7 @@
     destructionPolicy: "never",
     events: {
       "click .clearit": "clearSearch",
-      "keyup input.search": "search",
+      "input input.search": "search",
       "submit form.entrySearch": "noop"
     },
     initialize: function() {
