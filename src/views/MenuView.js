@@ -32,6 +32,9 @@
       event.preventDefault();
       this.dismiss();
       window.sessionStorage.clear();
+      if (window.app.logoutInterval) {
+        window.clearInterval(window.app.logoutInterval);
+      }
       window.app.accountModel.logout(function() {
         window.app.accountModel = new window.app.AccountModel();
         window.app.loginView.disable();
