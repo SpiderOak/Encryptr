@@ -11,7 +11,7 @@
     this.items = [
       { id: "cardType", key: "Type", value: "", placeholder: "Card type" },
       { id: "nameOnCard", key: "Name on card", value: "", placeholder: "e.g. J Smith" },
-      { id: "cardNumber", key: "Card Number", value: "", type: "number", placeholder: "5012 3456 7890 0000" },
+      { id: "cardNumber", key: "Card Number", value: "", type: "number", placeholder: "5012345678900000" },
       { id: "cVV", key: "CVV", value: "", type: "number", placeholder: "123" },
       { id: "expiry", key: "Expiry", value: "", placeholder: "01/15" },
       { id: "notes", key: "Notes", value: "", placeholder: "", type: "textarea" }
