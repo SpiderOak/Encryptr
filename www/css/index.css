@@ -837,7 +837,7 @@ ul li pre {
 ul li.sep {
   font-size: 80%;
   /*letter-spacing: -0.03em;*/
-  padding: 16px 24px 8px 24px;
+  padding: 16px 24px 14px 24px;
   background-color: #f8f8f8;
   border: none;
   color: #C1235B;
@@ -882,9 +882,14 @@ ul .entriesViewLoading {
 }
 ul .entriesViewLoading.sep {
   color: #5a5a5a;
-  background-color: #ededed;
+  background: linear-gradient(-45deg, #ffffff, #ffffff 25%, #F8F8F8 25%, #F8F8F8 50%, #ffffff 50%, #ffffff 75%, #F8F8F8 75%, #F8F8F8);
+  animation: shiftBackgroundLeft4rem 2s linear infinite;
+  background-size: 8rem 8rem;
+  background-position: 0 0;
+
   font-weight: normal;
   text-transform: uppercase;
+
 }
 ul .entriesViewLoading.loadingEntries {
   display: block;
@@ -1094,4 +1099,7 @@ ul .spinner > div.sep {
     -webkit-transform: scale3D(0, 0, 1);
             transform: scale3D(0, 0, 1);
   }
+}
+@keyframes shiftBackgroundLeft4rem {
+  to { background-position: 8rem 0; }
 }
