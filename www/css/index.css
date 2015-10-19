@@ -1,3 +1,35 @@
+/* Font declarations */
+
+@font-face {
+  font-family: 'Graphik';
+  font-weight: normal;
+  src:  url('fonts/Graphik-Regular.eot?') format('eot'),
+        url('fonts/Graphik-Regular.woff') format('woff'),
+        url('fonts/Graphik-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Graphik';
+  font-weight: bold;
+  src:  url('fonts/Graphik-Semibold.eot?') format('eot'),
+        url('fonts/Graphik-Semibold.woff') format('woff'),
+        url('fonts/Graphik-Semibold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'UniSans';
+  font-weight: normal;
+  src:  url('fonts/UniSans-Medium.eot?') format('eot'),
+        url('fonts/UniSans-Medium.woff') format('woff'),
+        url('fonts/UniSans-Medium.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'PTMono';
+  font-weight: normal;
+  src:  url('fonts/PT-Mono.eot?') format('eot'),
+        url('fonts/PT-Mono.woff') format('woff'),
+        url('fonts/PT-Mono.ttf') format('truetype');
+}
+
+
 * {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
@@ -7,7 +39,8 @@ body {
   -webkit-text-size-adjust: none;
   -webkit-user-select: none;
   user-select: none;
-  font-family: -apple-system-font, sans-serif;
+  font-family: Graphik, -apple-system-font, Roboto, sans-serif;
+  letter-spacing: -0.02em;
   background-color: #ffffff;
   font-size: 100%;
   font-weight: 300;
@@ -67,9 +100,10 @@ h1 {
   color: #C1235B;
   text-align: center;
   line-height: 55px;
-  font-weight: 700;
+  font-weight: normal;
   font-size: 110%;
   text-overflow: ellipsis;
+  font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
   /*text-transform: uppercase;*/
   height: 55px;
   white-space: nowrap;
@@ -170,7 +204,7 @@ h1 {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(255, 255, 255, 0.8);
   -webkit-backdrop-filter: blur(3px);
   z-index: 1000;
 }
@@ -198,9 +232,10 @@ h1 {
 .dialogAlert .dialog .title,
 .dialogConfirm .dialog .title {
   text-align: center;
-  font-weight: bold;
+  font-weight: normal;
   padding: 10px;
   text-transform: uppercase;
+  font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
   color: #C1235B;
 }
 .dialogAlert .dialog .subtitle,
@@ -269,6 +304,7 @@ h1 {
   color: inherit;
   text-align: center;
   text-transform: uppercase;
+  font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
   font-size: 75%;
 }
 .menu ul li img,
@@ -278,6 +314,7 @@ h1 {
 }
 .addMenu h3 {
   text-align: center;
+  font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
   text-transform: uppercase;
   color: #C1235B;
   padding: 0;
@@ -338,6 +375,7 @@ h1 {
 .entryTip {
   text-align: center;
   padding-top: 10px;
+  font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
   text-transform: uppercase;
   color: #5a5a5a;
 }
@@ -429,7 +467,8 @@ a.btn {
   color: transparent;
   text-align: center;
   text-transform: uppercase;
-  font-weight: 500;
+  font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
+  font-weight: normal;
   font-size: 140%;
 }
 .signup {
@@ -451,11 +490,13 @@ a.btn {
 .login-form .label {
   color: #C1235B;
   font-size: 90%;
-  font-weight: 600;
+  font-weight: normal;
+  font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
   text-transform: uppercase;
   height: 47px;
   line-height: 70px;
   padding: 0 24px;
+  position: relative;
 }
 .login-form input[type=submit] {
   visibility: hidden;
@@ -479,7 +520,8 @@ select {
   margin: 0;
   display: block;
   width: 100%;
-  font: normal 100% -apple-system-font, sans-serif;
+  font: normal 100% Graphik, -apple-system-font, Roboto, sans-serif;
+  letter-spacing: -0.02em;
   outline: 0 none;
 }
 input[type="text"],
@@ -512,8 +554,8 @@ input.error {
 .entrySearch input {
   background: url('../img/Search.svg') left center no-repeat;
   background-size: 16px;
-  background-position: 8px;
-  padding: 10px 10px 10px 32px;
+  background-position: 19px;
+  padding: 10px 10px 10px 44px;
 }
 .entrySearch .clearit {
   position: absolute;
@@ -565,7 +607,16 @@ input.error {
   margin: 5px 16px 0 0;
   text-align: right;
   line-height: 30px;
+  position: absolute;
+  top: 14px;
+  right: 0;
 }
+
+.login-form .checkbox-container label,
+.settings-input.checkbox-container label {
+  visibility: hidden;
+}
+
 .settings-input.checkbox-container {
   color: #333;
 }
@@ -576,30 +627,28 @@ input.error {
 }
 .login-form input[type=checkbox]:checked:after,
 .settings-input input[type=checkbox]:checked:after {
-  position: relative;
-  top: -5px;
-  color: #C1235B;
-  font-family: FontAwesome;
-  content: '\f058';
-  visibility: visible;
-  font-size: 25px;
-}
-.settings-input input[type=checkbox]:checked:after {
-  color: #333;
+  background: url('../img/MaskPassword.svg') center;
+  background-repeat: no-repeat;
+  background-size: 100%;
 }
 .login-form input[type=checkbox]:after,
 .settings-input input[type=checkbox]:after {
   position: relative;
-  top: -5px;
+  top: -2px;
   color: #C1235B;
-  font-family: FontAwesome;
-  /*content: '\f10c';*/
-  content: '\f111';
   visibility: visible;
-  font-size: 25px;
+  content: '';
+  right: 5px;
+  display: inline-block;
+  width: 26px;
+  height: 18px;
+  background: url('../img/RevealPassword.svg') center;
+  background-repeat: no-repeat;
+  background-size: 100%;
+
 }
 .settings-input input[type=checkbox]:after {
-  color: #333;
+  margin-top: -10px;
 }
 .signupLink,
 .backToLoginLink {
@@ -650,7 +699,8 @@ button {
   background-color: inherit;
   color: #5a5a5a;
   text-transform: uppercase;
-  font-weight: 600;
+  font-weight: normal;
+  letter-spacing: -0.01em;
 }
 a.button.not-full {
   width: 230px;
@@ -673,6 +723,7 @@ a.button.logout-button {
 }
 .emptyEntries h1,
 .emptyFilteredEntries h1 {
+  font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
   text-transform: uppercase;
   font-size: 100%;
   font-weight: 300;
@@ -780,7 +831,8 @@ ul li a.password {
 ul li pre {
   margin: 0;
   padding: 0;
-  font-family: -apple-system-font, sans-serif;
+  font-family: Graphik, -apple-system-font, Roboto, sans-serif;
+  letter-spacing: -0.02em;
 }
 ul li.sep {
   font-size: 80%;
@@ -789,7 +841,8 @@ ul li.sep {
   background-color: #f8f8f8;
   border: none;
   color: #C1235B;
-  font-weight: 600;
+  font-weight: normal;
+  font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
   text-transform: uppercase;
 }
 ul li.entry {
@@ -801,7 +854,7 @@ ul li.entry .entry-label {
   margin-top: 4px;
 }
 ul li.entry .small {
-  font-weight: 600;
+  font-weight: normal;
   font-size: 80%;
   text-transform: uppercase;
 }
@@ -814,9 +867,9 @@ ul li.entry .entry-icon {
 }
 .about-encryptr {
   position: relative;
-  top: 100px;
+  top: 24px;
   color: #ccc;
-  font-size: 120%;
+  font-size: 90%;
   width: 100%;
   text-align: center;
   margin-bottom: 30px;
@@ -830,7 +883,7 @@ ul .entriesViewLoading {
 ul .entriesViewLoading.sep {
   color: #5a5a5a;
   background-color: #ededed;
-  font-weight: 800;
+  font-weight: normal;
   text-transform: uppercase;
 }
 ul .entriesViewLoading.loadingEntries {
@@ -872,7 +925,7 @@ ul .spinner > div.sep {
   border: none;
   border-top: 1px solid #e4e4e4;
   color: #aaaaaa;
-  font-weight: 300;
+  font-weight: normal;
 }
 .entriesViewLoading .sep {
   background-color: #e4e4e4;
@@ -955,7 +1008,7 @@ ul .spinner > div.sep {
   right: 0;
   bottom: 0;
   overflow: hidden;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(255, 255, 255, 0.8);
   display: none;
   z-index: 200;
 }
@@ -990,7 +1043,7 @@ ul .spinner > div.sep {
 .sk-cube-grid .sk-cube {
   width: 33%;
   height: 33%;
-  background-color: #ffffff;
+  background-color: #C1235B;
   float: left;
   -webkit-animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
           animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;

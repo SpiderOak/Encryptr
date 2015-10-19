@@ -1,5 +1,6 @@
-platforms/*
-plugins/*
+platforms/**/*
+plugins/**/*
+www/css/fonts/**/*
 node_modules
 www/js/Encryptr.js
 www/js/Encryptr.min.js
