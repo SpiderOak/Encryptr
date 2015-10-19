@@ -648,7 +648,7 @@ input.error {
 
 }
 .settings-input input[type=checkbox]:after {
-  color: #333;
+  margin-top: -10px;
 }
 .signupLink,
 .backToLoginLink {
@@ -867,9 +867,9 @@ ul li.entry .entry-icon {
 }
 .about-encryptr {
   position: relative;
-  top: 100px;
+  top: 24px;
   color: #ccc;
-  font-size: 120%;
+  font-size: 90%;
   width: 100%;
   text-align: center;
   margin-bottom: 30px;
