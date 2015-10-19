@@ -26,6 +26,8 @@
       this.dismiss();
       var typeModel = $(event.target).data("model") ||
         $(event.target).closest('a').data('model');
+      if (!typeModel) return;
+      $(".fab").addClass("shrunken");
       window.app.navigator.pushView(window.app.EditView, {
         model: new window.app.EntryModel(
           new window.app.types[typeModel]()
@@ -36,11 +38,10 @@
       if (!this.$el.hasClass("dismissed")) {
         var _this = this;
         this.$("input").attr("disabled", true);
-        this.$el.animate({
-          "scale3d":"0.8,0.8,0.8",
-          "translate3d":"10%,-10%,0",
-          "opacity":"0"
-        }, 100, "ease-in-out", function() {
+        $(".subviews, .nav").removeClass("less");
+        $(".subviews").attr("style",
+            "overflow: auto !important; -webkit-overflow-scrolling: touch;");
+        this.$el.animate("addMenuHide", 200, "ease-out", function() {
           _this.$el.addClass("dismissed");
         });
       }
@@ -49,11 +50,9 @@
       if (this.$el.hasClass("dismissed")) {
         this.$el.removeClass("dismissed");
         this.$("input").removeAttr("disabled");
-        this.$el.animate({
-          "scale3d":"1,1,1",
-          "translate3d":"0,0,0",
-          "opacity":"1"
-        }, 100, "ease-in-out");
+        $(".subviews, .nav").addClass("less");
+        $(".subviews").attr("style", "overflow: hidden !important");
+        this.$el.animate("addMenuShow", 200, "ease-in-out");
       }
     },
     toggle: function() {

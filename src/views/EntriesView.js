@@ -84,7 +84,7 @@
         this.$(".entries .entry").each(function(index, entry) {
           var $entry = $(entry);
           $entry.show();
-          var label = $entry.find("a > div").text().toLowerCase();
+          var label = $entry.find(".entry-label").text().toLowerCase();
           if (label.indexOf(filterText.toLowerCase()) === -1) {
             $entry.hide();
           } else {
@@ -104,6 +104,7 @@
       this.search("");
     },
     viewActivate: function(event) {
+      $('.subviews').scrollTop(0);
       if (this.filterTimeout) window.clearInterval(this.filterTimeout);
       if (this.clearSearchOnActive) this.clearSearch();
       this.clearSearchOnActive = false;
@@ -111,6 +112,8 @@
       window.app.mainView.backButtonDisplay(false);
       window.app.mainView.setTitle("Encryptr");
       $(".nav .add-btn.right").removeClass("hidden");
+      $(".fab").removeClass("hidden");
+      $(".fab").removeClass("shrunken");
       var username = window.app.accountModel.get("username");
       var hashArray = window.sjcl.hash.sha256.hash(username);
       var hash = window.sjcl.codec.hex.fromBits(hashArray);
@@ -168,6 +171,7 @@
     },
     viewDeactivate: function(event) {
       var _this = this;
+      $(".fab").addClass("hidden");
       _this.filterTimeout = window.setInterval(function() {
         _this.clearSearchOnActive = true;
         window.clearInterval(_this.filterTimeout);
@@ -206,6 +210,7 @@
             !$(".addMenu").hasClass("dismissed")) {
         return;
       }
+      $(".fab").addClass("shrunken");
       window.app.navigator.pushView(window.app.EntryView, {
         model: _this.model
       }, window.app.defaultEffect);

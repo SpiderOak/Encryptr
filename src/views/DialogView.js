@@ -43,7 +43,7 @@
       if (!this.$el.hasClass("dismissed")) {
         var _this = this;
         this.$(".dialog").animate({
-          "translate3d":"0,-100%,0",
+          "translate3d":"0,-33%,0",
           "opacity":"0"
         }, 100, "linear", function() {
           _this.$el.addClass("dismissed");
@@ -114,7 +114,7 @@
       if (!this.$el.hasClass("dismissed")) {
         var _this = this;
         this.$(".dialog").animate({
-          "translate3d":"0,-100%,0",
+          "translate3d":"0,-33%,0",
           "opacity":"0"
         }, 100, "linear", function() {
           _this.$el.addClass("dismissed");

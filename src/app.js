@@ -30,8 +30,8 @@ var Encryptr = (function (window, console, undefined) {
 
     // Set the hostname for the Crypton server
     // window.crypton.host = "192.168.1.12";
-    window.crypton.host = "localhost";
-    window.crypton.port = 1025;
+    window.crypton.host = "encryptrstaging.crypton.io";
+    window.crypton.port = 443;
 
     window.Offline.options = {
       // Should we check the connection status immediatly on page load.
@@ -98,6 +98,14 @@ var Encryptr = (function (window, console, undefined) {
     $("#main").append(this.dialogAlertView.el);
 
     window.FastClick.attach(document.body);
+
+    // Backstack effects
+    Encryptr.prototype.noEffect = new window.BackStack.NoEffect();
+    Encryptr.prototype.fadeEffect = new window.BackStack.FadeEffect();
+    Encryptr.prototype.defaultEffect = new Encryptr.prototype.PopFadeEffect();
+    Encryptr.prototype.defaultPopEffect = new Encryptr.prototype.PopFadeEffect({
+      direction: "right"
+    });
   };
 
   Encryptr.prototype.onDeviceReady = function(event) {
@@ -106,15 +114,8 @@ var Encryptr = (function (window, console, undefined) {
       $(".app").css({"top":"20px"});
     }
     if (window.StatusBar && $.os.ios) {
-      window.StatusBar.styleLightContent();
+      window.StatusBar.styleDefault();
     }
-    // Backstack effects
-    Encryptr.prototype.noEffect = new window.BackStack.NoEffect();
-    Encryptr.prototype.fadeEffect = new window.BackStack.FadeEffect();
-    Encryptr.prototype.defaultEffect = new Encryptr.prototype.PopFadeEffect();
-    Encryptr.prototype.defaultPopEffect = new Encryptr.prototype.PopFadeEffect({
-      direction: "right"
-    });
     window.document.addEventListener("backbutton",
                                      Encryptr.prototype.onBackButton, false);
     window.document.addEventListener("menubutton",
@@ -192,6 +193,7 @@ var Encryptr = (function (window, console, undefined) {
     var timeoutInMinutes =
       Math.floor(((Date.now() - window.app.lastPaused) / 1000) / 60);
     if (timeoutInMinutes >= 10) {
+      window.clearInterval(window.app.logoutInterval);
       window.app.accountModel.logout(function() {
         window.app.loginView.disable();
         // Throw up the login screen

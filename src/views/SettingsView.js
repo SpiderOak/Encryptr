@@ -12,10 +12,11 @@
   var SettingsView = Backbone.View.extend({
     destructionPolicy: "never",
     events: {
+      "click .logout-button": "logout_clickHandler",
       "click .change-passphrase": "changePassphrase_clickHandler"
     },
     initialize: function () {
-      _.bindAll(this, "render");
+      _.bindAll(this, "render", "logout_clickHandler");
       this.on("viewActivate",this.viewActivate);
       this.on("viewDeactivate",this.viewDeactivate);
       this.settingsHaveChanged = false;
@@ -30,7 +31,30 @@
         model: window.app.accountModel
       }, window.app.defaultEffect);
     },
+    logout_clickHandler: function(event) {
+      event.preventDefault();
+      window.sessionStorage.clear();
+      if (window.app.logoutInterval) {
+        window.clearInterval(window.app.logoutInterval);
+      }
+      window.app.accountModel.logout(function() {
+        window.app.accountModel = new window.app.AccountModel();
+        window.app.loginView.disable();
+        // Throw up the login screen
+        window.app.loginView.show();
+        window.setTimeout(function() {
+          if (window.app.navigator.viewsStack.length > 0) {
+            window.app.navigator.popAll(window.app.noEffect);
+          }
+          window.app.mainView.close();
+        },100);
+        window.setTimeout(function() {
+          window.app.loginView.enable();
+        },350);
+      });
+    },
     viewActivate: function(event) {
+      $('.subviews').scrollTop(0);
       window.app.mainView.backButtonDisplay(true);
       $(".nav .btn.right").addClass("hidden");
       $(".nav .add-btn.right").addClass("hidden");
@@ -58,7 +82,7 @@
       this.on("viewActivate",this.viewActivate);
       this.on("viewDeactivate",this.viewDeactivate);
       this.confirmBackNav = {
-        title: "Confirm navigation",
+        title: "Are you sure?",
         subtitle: "Discard any changes?",
         callback: function() {
           window.app.toastView.show("Changes discarded.");

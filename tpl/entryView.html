@@ -1,5 +1,7 @@
-<ul>
-	<li><strong>{{! it.label }}</strong></li>
+<div class="entryTip"><small><strong>Tip:</strong> double click/tap a field to copy it.</small></div>
+<ul class="entry">
+  <li class="sep">Item name</li>
+  <li><a data-type="Label" class="copyable label">{{! it.label }}</a></li>
 	<!-- <li class="sep">Type</li>
 	<li><em>{{= it.type }}</em></li> -->
 	{{ _.each(it.items, function(item) { }}
@@ -8,9 +10,8 @@
       <a data-type="{{= item.key }}" class="copyable {{= item.type || item.key.toLowerCase() }}">
         {{! item.value }}
       </a>
-      {{= item.key === 'Password' ? '<a href="#" class="eye fa fa-eye"></a>' : '' }}
+      {{= item.key === 'Password' ? '<a href="#" class="eye"></a>' : '' }}
     {{= item.type === 'textarea' ? '</pre>' : ''}}</li>{{? }}
 	{{ }); }}
 </ul>
-<ul><li class="entriesViewLoading loadingEntries sep">loading...</li></ul>
-<div><p><small>Press and hold{{= ($.os.nodeWebkit) ? ' (or double click)' : '' }} on a field to copy it to the clipboard</small></p></div>
+<ul><li class="entriesViewLoading loadingEntries sep">loading&hellip;</li></ul>

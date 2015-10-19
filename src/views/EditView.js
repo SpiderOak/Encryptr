@@ -145,6 +145,7 @@
     },
     viewActivate: function(event) {
       var _this = this;
+      $('.subviews').scrollTop(0);
       window.app.mainView.backButtonDisplay(true);
       $(".nav .btn.right").addClass("hidden");
       $(".nav .save-btn").removeClass("hidden");

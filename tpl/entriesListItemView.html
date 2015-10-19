@@ -1,4 +1,7 @@
 <a>
-  <div>{{! it.label }}</div>
-  <div><span class='small'>{{= it.type }}</span></div>
+  <div>
+    <!--<img class='entry-icon' src='img/{{= it.assetType }}.svg' />-->
+    <object type='image/svg+xml' data='img/{{= it.type.replace(/\\s/g, '') }}.svg' class='entry-icon'></object>
+    <span class='small'>{{= it.type }}</span></div>
+  <div class='entry-label'>{{! it.label }}</div>
 </a>

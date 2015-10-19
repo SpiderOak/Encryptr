@@ -7,8 +7,6 @@
   <link rel="stylesheet" type="text/css" href="components/offline-js/themes/offline-theme-default.css" />
   <link rel="stylesheet" type="text/css" href="components/font-awesome/css/font-awesome.css" />
   <link rel="stylesheet" type="text/css" href="css/index.css" />
-  <link rel="stylesheet" type="text/css" href="css/Source_Sans_Pro/stylesheet.css" />
-  <link rel="stylesheet" type="text/css" href="css/Jura_Light/stylesheet.css" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' file: blob: gap: https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *; connect-src 'self' https://encryptr.org https://*.crypton.io wss://*.crypton.io">
   <title>Encryptr</title>
   </head>
@@ -19,37 +17,44 @@
       <div id="subviews" class="subviews"></div>
     </div>
     <div id="login" class="login">
-      <!--<img src="img/text-encryptr.png" style="width: 200px; margin: 30px auto; display: block;"/>-->
-      <h1>Encryptr</h1>
+      <h1><span class="text-gradient">Encryptr</span></h1>
       <div>
         <form name="login-form" class="login-form">
-          <div class="login-input">
+            <div class="label">Username</div>
             <input id="username" type="text" name="username"
                        autocorrect="off" autocapitalize="off"
-                       placeholder="Username"
+                       placeholder="Your username"
                        tabindex="1" />
-          </div>
-          <div class="spacer5"></div>
-          <div class="login-input">
+            <div class="label">Passphrase</div>
             <input id="passphrase" type="password" name="passphrase"
-                       placeholder="Passphrase"
+                       placeholder="Your passphrase"
                        tabindex="2" />
-          </div>
-          <a class="button loginButton primary" tabindex="-1">Log in</a>
-          <div class="middle signupLink"><a class="signupButton" tabindex="-1">Register for an account &raquo;</a></div>
-          <input type="submit" style="visibility:hidden" tabindex="-1"/>
+          <a class="button loginButton" tabindex="-1">Unlock &rsaquo;</a>
+          <input type="submit" tabindex="-1"/>
         </form>
+        <div class="middle signupLink"><a class="signupButton" tabindex="-1">New to Encryptr?</a></div>
       </div>
-      <div style="width:170px; margin:-10px auto;"><img style="width: 170px" src="img/icon-encryptr.png" /></div>
     </div>
   </div>
   <div class="blocker">
-    <div class="spinner">
-      <div class="bounce1"></div>
-      <div class="bounce2"></div>
-      <div class="bounce3"></div>
+    <!--<div class="spinner">-->
+      <!--<div class="bounce1"></div>-->
+      <!--<div class="bounce2"></div>-->
+      <!--<div class="bounce3"></div>-->
+    <!--</div>-->
+    <div class="sk-cube-grid">
+      <div class="sk-cube sk-cube1"></div>
+      <div class="sk-cube sk-cube2"></div>
+      <div class="sk-cube sk-cube3"></div>
+      <div class="sk-cube sk-cube4"></div>
+      <div class="sk-cube sk-cube5"></div>
+      <div class="sk-cube sk-cube6"></div>
+      <div class="sk-cube sk-cube7"></div>
+      <div class="sk-cube sk-cube8"></div>
+      <div class="sk-cube sk-cube9"></div>
     </div>
   </div>
+  <a class="fab add-btn">+</a>
   <div id="toast" class="toast"></div>
   <!-- Zepto -->
   <script type="text/javascript" src="components/zepto/zepto.js"></script>

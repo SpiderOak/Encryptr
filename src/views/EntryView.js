@@ -10,6 +10,7 @@
     events: {
       "longTap .copyable": "copyable_longTapHandler",
       "dblclick .copyable": "copyable_doubleTapHandler",
+      "doubleTap .copyable": "copyable_doubleTapHandler",
       "click .eye": "eye_clickHandler"
     },
     initialize: function() {
@@ -38,6 +39,8 @@
       );
       if (this.model.get("items")) {
         _this.$(".entriesViewLoading").removeClass("loadingEntries");
+        $(".nav .edit-btn.right").removeClass("hidden");
+        $(".nav .delete-btn").removeClass("hidden");
       }
 
       // this.model.fetch();
@@ -53,6 +56,8 @@
       );
       if (this.model.get("items")) {
         _this.$(".entriesViewLoading").removeClass("loadingEntries");
+        $(".nav .edit-btn.right").removeClass("hidden");
+        $(".nav .delete-btn").removeClass("hidden");
       }
       // Desktop polyfill for longTap
       var timer = null;
@@ -69,24 +74,28 @@
       event.preventDefault();
       event.stopPropagation();
       var type = $(event.target).attr('data-type');
-      var key = _.findWhere(this.model.get("items"), { key: type });
+      var key;
+      if (type === 'Label') {
+        key = { value: this.model.label };
+      } else {
+        key = _.findWhere(this.model.get("items"), { key: type });
+      }
       window.app.copyToClipboard(key.value);
-      window.app.toastView.show("Copied to clipboard");
+      window.app.toastView.show("Copied " + type);
     },
     copyable_doubleTapHandler: function(event) {
       this.copyable_longTapHandler(event);
     },
     eye_clickHandler: function(event) {
       var $this = $(event.target);
-      $this.toggleClass('fa-eye');
-      $this.toggleClass('fa-eye-slash');
+      $this.toggleClass('revealed');
       $this.closest('li').find('.copyable').toggleClass('password');
     },
     editButton_clickHandler: function(event) {
       window.app.navigator.replaceView(
         window.app.EditView,
         {model: this.model},
-        window.app.noEffect
+        window.app.defaultEffect
       );
     },
     deleteButton_clickHandler: function(event) {
@@ -138,17 +147,25 @@
     },
     viewActivate: function(event) {
       var _this = this;
+      $('.subviews').scrollTop(0);
       _this.model.fetch({success: function() {
         _this.$(".entriesViewLoading").removeClass("loadingEntries");
+        $(".nav .edit-btn.right").removeClass("hidden");
+        $(".nav .delete-btn").removeClass("hidden");
       }, error: function(err) {
         // error out and return to the entries screen
         console.log(err);
       }});
       window.app.mainView.backButtonDisplay(true);
       $(".nav .btn.right").addClass("hidden");
-      $(".nav .edit-btn.right").removeClass("hidden");
-      $(".nav .delete-btn").removeClass("hidden");
-      window.app.mainView.setTitle(_this.model.get("label"));
+      window.setTimeout(function() {
+        console.log($('.entry li').length);
+        if ($('.entry li').length > 3) {
+          $(".nav .edit-btn.right").removeClass("hidden");
+          $(".nav .delete-btn").removeClass("hidden");
+        }
+      },200);
+      window.app.mainView.setTitle(_this.model.get("type"));
     },
     viewDeactivate: function(event) {
       $(".nav .btn.right").addClass("hidden");

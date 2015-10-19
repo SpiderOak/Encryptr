@@ -113,12 +113,12 @@
               window.setTimeout(function() {
                 window.app.loginView.enable();
               },350);
-              window.app.dialogAlertView.show({
-                title: "Session timeout",
-                subtitle: "You have been logged out"
-              }, function() {
-                window.app.checkVersion();
-              });
+              //window.app.dialogAlertView.show({
+                //title: "Session timeout",
+                //subtitle: "You have been logged out"
+              //}, function() {
+                //window.app.checkVersion();
+              //});
             });
           }
         }, 60000); // check once per minute

@@ -1,31 +1,23 @@
-<h1 class="middle">Register</h1>
+<h1><span class="text-gradient">Register</span></h1>
 <div>
   <form name="login-form" class="login-form">
-    <div class="login-input">
-      <input id="newusername" type="text" name="newusername"
-                 autocorrect="off" autocapitalize="off" 
-                 placeholder="Choose a Username"
-                 tabindex="1" />
+    <div class="label">Choose a username</div>
+    <input id="newusername" type="text" name="newusername"
+               placeholder="Something you can remember"
+               autocorrect="off" autocapitalize="off"
+               tabindex="1" />
+    <div class="label">Choose a passphrase</div>
+    <input id="newpassphrase" type="text" name="newpassphrase"
+               placeholder="Make sure it's a good one"
+               autocomplete="off" autocorrect="off" autocapitalize="off"
+               tabindex="2" class="passphrase-shown" />
+    <div class="checkbox-container">
+      <label for="show-passphrase">Show passphrase<input type="checkbox" id="show-passphrase" checked="checked" class="show-passphrase" /></label>
     </div>
-    <div class="spacer5"></div>
-    <div class="login-input">
-      <input id="newpassphrase" type="text" name="newpassphrase"
-                 placeholder="Choose a Passphrase"
-                 autocomplete="off" autocorrect="off" autocapitalize="off"
-                 tabindex="2" class="passphrase-shown" />
-    </div>
-    <div class="login-input checkbox-container">
-      <label for="show-passphrase"> Show passphrase
-        <input type="checkbox" id="show-passphrase" checked="checked" 
-                  class="show-passphrase" />
-      </label>
-    </div>
-    <a class="button signupButton primary" tabindex="-1">Register</a>
-    <div class="middle backToLoginLink">
-      <a class="backToLogin">Back to login &raquo;</a>
-    </div>
-    <input type="submit" style="visibility:hidden" tabindex="-1"/>
+    <a class="button signupButton" tabindex="-1">Sign up</a>
+    <input type="submit" tabindex="-1"/>
   </form>
+  <div class="middle backToLoginLink">
+    <a class="backToLogin">Already using Encryptr?</a>
+  </div>
 </div>
-<div style="width:150px; margin:-10px auto; opacity:0.4;">
-  <img style="width: 150px" src="img/zk.png" /></div>

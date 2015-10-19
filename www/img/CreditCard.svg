@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="48px" height="48px" viewBox="0 0 48 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+    <!-- Generator: Sketch 3.3.3 (12072) - http://www.bohemiancoding.com/sketch -->
+    <title>CreditCard</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#66DBFF" offset="0%"></stop>
+            <stop stop-color="#00A0FF" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Living-Document" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+        <g id="Asset-Board" sketch:type="MSArtboardGroup" transform="translate(-96.000000, -224.000000)">
+            <g id="Credit-Card" sketch:type="MSLayerGroup" transform="translate(96.000000, 230.000000)">
+                <g id="Icon-Card" sketch:type="MSShapeGroup">
+                    <rect id="Fill" fill="url(#linearGradient-1)" x="2" y="2" width="44" height="32" rx="2"></rect>
+                    <path d="M3,4.00174332 L3,4.00174332 L3,31.9982567 C3,32.5551587 3.446619,33 4.00492334,33 L43.9950767,33 C44.5497306,33 45,32.5506337 45,31.9982567 L45,4.00174332 C45,3.44484132 44.553381,3 43.9950767,3 L4.00492334,3 C3.45026944,3 3,3.44936633 3,4.00174332 L3,4.00174332 Z M2,4.00174332 C2,2.89621101 2.89885511,2 4.00492334,2 L43.9950767,2 C45.1023652,2 46,2.88926172 46,4.00174332 L46,31.9982567 C46,33.103789 45.1011449,34 43.9950767,34 L4.00492334,34 C2.89763476,34 2,33.1107383 2,31.9982567 L2,4.00174332 L2,4.00174332 Z" id="InnerStroke" fill="#FFFFFF"></path>
+                    <path d="M2,4.00174332 L2,4.00174332 L2,31.9982567 C2,33.1107383 2.89763476,34 4.00492334,34 L43.9950767,34 C45.1011449,34 46,33.103789 46,31.9982567 L46,4.00174332 C46,2.88926172 45.1023652,2 43.9950767,2 L4.00492334,2 C2.89885511,2 2,2.89621101 2,4.00174332 L2,4.00174332 Z M0,4.00174332 L0,4.00174332 C0,1.79116226 1.79476202,0 4.00492334,0 L43.9950767,0 C46.2075628,0 48,1.78530279 48,4.00174332 L48,31.9982567 C48,34.2088377 46.205238,36 43.9950767,36 L4.00492334,36 C1.79243723,36 0,34.2146972 0,31.9982567 L0,4.00174332 Z" id="OuterStroke" fill="#0E76AA"></path>
+                    <path d="M2,9 L46,9 L46,15 L2,15 L2,9 Z M4.75,24.6285714 L22.625,24.6285714 L22.625,26.244898 L4.75,26.244898 L4.75,24.6285714 Z M4.75,27.8612245 L17.125,27.8612245 L17.125,29.477551 L4.75,29.477551 L4.75,27.8612245 Z" id="Detail" fill="#0E76AA"></path>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

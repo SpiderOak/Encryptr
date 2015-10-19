@@ -20,18 +20,28 @@
     show: function(message, timeout) {
       var _this = this;
       this.$el.html(message || "done");
-      this.$el.css({"z-index": "10002"});
-      this.$el.css({"opacity": 0.7});
+      this.$el.css({
+        "z-index": "10002",
+        "opacity": 1,
+        "transform": "translate3d(0,-25px,0)",
+        "-webkit-transform": "translate3d(0,-25px,0)"
+      });
       window.setTimeout(function() {
         _this.hide();
-      }, timeout || 1000);
+      }, timeout || 1800);
     },
     hide: function() {
       var _this = this;
-      this.$el.css({"opacity": 0});
+      this.$el.css({
+        "opacity": 0.01,
+        "transform": "translate3d(0,0,0)",
+        "-webkit-transform": "translate3d(0,0,0)"
+      });
       window.setTimeout(function(){
-        _this.$el.css({"z-index": "-1"});
-      }, 510);
+        _this.$el.css({
+          "z-index": "-1"
+        });
+      }, 600);
     },
     close: function() {
       this.remove();

@@ -1,5 +1,26 @@
+<h3>Add new&hellip;</h3>
 <ul>
-{{ _.each(it.types, function(type, index) { }}
-<li><a data-model="{{= index }}"><i class="fa {{= type.prototype.icon }}"></i>{{= type.prototype.displayName }}</a></li>
-{{ }); }}
+<!-- HARDCODE FAIL -->
+<!-- If we ever add other types :( -->
+  <li>
+    <a data-model="CreditCardType">
+      <img src="img/CreditCard.svg"
+           alt="Credit Card" class="add-menu-icon" /><br />
+      Card
+    </a>
+  </li>
+  <li>
+    <a data-model="PasswordType">
+      <img src="img/Password.svg"
+           alt="Password" class="add-menu-icon" /><br />
+           Password
+    </a>
+  </li>
+  <li>
+    <a data-model="GeneralType">
+      <img src="img/General.svg"
+           alt="General" class="add-menu-icon" /><br />
+      General
+    </a>
+  </li>
 </ul>

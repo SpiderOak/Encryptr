@@ -8,12 +8,15 @@
         Tommy-Carlos Williams (devgeeks)
     </author>
     <access origin="https://*.crypton.io" />
+    <access origin="http://localhost:47243" />
     <access origin="https://encryptr.org" />
     <access origin="wss://*.crypton.io" />
     <preference name="Orientation" value="default" />
     <platform name="ios">
         <content src="http://localhost:47243" />
         <preference name="Orientation" value="all" />
+        <preference name="StatusBarBackgroundColor" value="#ffffff" />
+        <preference name="StatusBarStyle" value="default" />
     </platform>
     <preference name="target-device" value="universal" />
     <preference name="fullscreen" value="false" />
@@ -26,11 +29,10 @@
     <preference name="FadeSplashScreenDuration" value="1" />
     <plugin name="com.verso.cordova.clipboard" spec="~0.1.0" />
     <plugin name="cordova-plugin-device" spec="~1.0.1" />
-    <plugin name="org.devgeeks.privacyscreen" spec="~0.0.5" />
-    <plugin name="cordova-plugin-statusbar" spec="~1.0.1" />
-    <plugin name="cordova-plugin-splashscreen" spec="~2.1.0" />
     <preference name="AlternateContentSrc" value="index.html" />
     <engine name="ios" spec="https://github.com/apache/cordova-ios.git#master" />
     <plugin name="cordova-labs-wkwebview-engine-localhost" spec="https://github.com/apache/cordova-plugins.git#master:wkwebview-engine-localhost" />
     <plugin name="cordova-plugin-whitelist" spec="https://github.com/apache/cordova-plugin-whitelist#master" />
+    <plugin name="cordova-plugin-privacyscreen" spec="~0.1.2" />
+    <plugin name="cordova-plugin-statusbar" spec="~1.0.1" />
 </widget>

@@ -20,6 +20,8 @@
     }
   ],
   "dependencies": {
+    "cordova-icon": "^0.3.0",
+    "cordova-splash": "^0.3.0",
     "semver": "^3.0.1"
   },
   "devDependencies": {

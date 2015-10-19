@@ -42,11 +42,22 @@
       if (!window.app.toastView) {
         window.app.toastView = new window.app.ToastView();
       }
+      if ($.os.nodeWebkit) {
+        $('.fab').css({visibility: "hidden"});
+      } else {
+        $('.nav .add-btn.right').addClass('shrunken');
+        $('.fab.add-btn').on('click', this.addButton_clickHandler);
+      }
       return this;
     },
     menuButton_clickHandler: function(event) {
       event.preventDefault();
-      this.menuView.toggle();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      $('.nav .menu-btn').addClass('hidden');
+      $(".fab").addClass("shrunken");
+      window.app.navigator.pushView(window.app.SettingsView, {},
+        window.app.defaultEffect);
     },
     backButton_clickHandler: function(event) {
       event.preventDefault();
@@ -73,6 +84,7 @@
       }
     },
     addButton_clickHandler: function(event) {
+      console.log('add');
       event.preventDefault();
       this.addMenuView.toggle();
     },
@@ -86,7 +98,12 @@
       this.trigger("deleteentry");
     },
     setTitle: function(title) {
-      this.$(".nav .title").text(title);
+      if (title === "Encryptr") {
+        this.$('.nav .title .text-gradient')
+          .html('<img src="img/LogoColoured.svg" style="height: 32px; padding: 12px 0;">');
+      } else {
+        this.$(".nav .title .text-gradient").text(title);
+      }
     },
     backButtonDisplay: function(show) {
       if (show) {
@@ -118,6 +135,7 @@
     close: function() {
       this.menuView.close();
       this.addMenuView.close();
+      $('.add-btn').off('click', this.addButton_clickHandler);
     }
   });
 
