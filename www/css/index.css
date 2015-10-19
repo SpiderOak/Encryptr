@@ -204,7 +204,7 @@ h1 {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(255, 255, 255, 0.8);
   -webkit-backdrop-filter: blur(3px);
   z-index: 1000;
 }
@@ -554,8 +554,8 @@ input.error {
 .entrySearch input {
   background: url('../img/Search.svg') left center no-repeat;
   background-size: 16px;
-  background-position: 8px;
-  padding: 10px 10px 10px 32px;
+  background-position: 19px;
+  padding: 10px 10px 10px 44px;
 }
 .entrySearch .clearit {
   position: absolute;
@@ -608,7 +608,7 @@ input.error {
   text-align: right;
   line-height: 30px;
   position: absolute;
-  top: 10px;
+  top: 14px;
   right: 0;
 }
 
@@ -854,7 +854,7 @@ ul li.entry .entry-label {
   margin-top: 4px;
 }
 ul li.entry .small {
-  font-weight: 600;
+  font-weight: normal;
   font-size: 80%;
   text-transform: uppercase;
 }
@@ -883,7 +883,7 @@ ul .entriesViewLoading {
 ul .entriesViewLoading.sep {
   color: #5a5a5a;
   background-color: #ededed;
-  font-weight: 800;
+  font-weight: normal;
   text-transform: uppercase;
 }
 ul .entriesViewLoading.loadingEntries {
@@ -925,7 +925,7 @@ ul .spinner > div.sep {
   border: none;
   border-top: 1px solid #e4e4e4;
   color: #aaaaaa;
-  font-weight: 300;
+  font-weight: normal;
 }
 .entriesViewLoading .sep {
   background-color: #e4e4e4;
@@ -1008,7 +1008,7 @@ ul .spinner > div.sep {
   right: 0;
   bottom: 0;
   overflow: hidden;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(255, 255, 255, 0.8);
   display: none;
   z-index: 200;
 }
@@ -1043,7 +1043,7 @@ ul .spinner > div.sep {
 .sk-cube-grid .sk-cube {
   width: 33%;
   height: 33%;
-  background-color: #ffffff;
+  background-color: #C1235B;
   float: left;
   -webkit-animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
           animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
