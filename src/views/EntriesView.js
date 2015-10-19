@@ -29,6 +29,7 @@
     },
     render: function() {
       this.$el.html(window.tmpl["entriesView"]({}));
+      $(".clearit").addClass("hidden");
       return this;
     },
     addAll: function (collection) {
@@ -71,6 +72,11 @@
       return false;
     },
     search: function() {
+      if (this.$("input.search").val()) {
+        $(".clearit").removeClass("hidden");
+      } else {
+        $(".clearit").addClass("hidden");
+      }
       var hasResults = false;
       if (this.collection.models.length === 0) {
         this.$("input.search").removeClass("error");

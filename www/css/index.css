@@ -178,7 +178,8 @@ h1 {
   left: 50%;
   width: 64px;
   height: 64px;
-  background: #C1235B;
+  background: url('../img/AddWhite.svg') center center no-repeat, #C1235B;
+  background-size: 24px 24px, 100% 100%;
   color: #ffffff;
   line-height: 58px;
   text-align: center;
@@ -275,8 +276,9 @@ h1 {
   bottom: -20px;
   background-color: #ffffff;
   color: #5a5a5a;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  /*box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);*/
   z-index: 2;
+  height: 152px;
 }
 .menu ul,
 .addMenu ul {
@@ -452,7 +454,7 @@ a.btn {
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('../img/LogoColoured.svg') center top no-repeat, url('../img/Grid.svg') top center;
+  background: url('../img/LogoColoured.svg') center 24px no-repeat, url('../img/Grid.svg') top center;
   background-color: #ffffff;
   color: #C1235B;
   overflow: hidden;
@@ -461,7 +463,7 @@ a.btn {
 .login h1,
 .signup h1 {
   position: absolute;
-  top: 80px;
+  top: 104px;
   margin: 0 auto;
   width: 100%;
   color: transparent;
@@ -478,7 +480,7 @@ a.btn {
 }
 .login-form {
   position: relative;
-  top: 116px;
+  top: 130px;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   width: 282px;
@@ -653,7 +655,7 @@ input.error {
 .signupLink,
 .backToLoginLink {
   position: relative;
-  top: 135px;
+  top: 159px;
   color: #C1235B;
   text-decoration: underline;
   margin-bottom: 24px;
@@ -715,7 +717,7 @@ a.button.logout-button {
 .emptyEntries {
   display: none;
   position: relative;
-  top: 60px;
+  top: 10px;
   width: 260px;
   margin: 0 auto;
   color: #333;
@@ -872,7 +874,7 @@ ul li.entry .entry-icon {
   font-size: 90%;
   width: 100%;
   text-align: center;
-  margin-bottom: 30px;
+  margin: 10px 0 108px 0;
 }
 ul .entriesViewLoading {
   text-align: center;
@@ -956,8 +958,7 @@ ul .spinner > div.sep {
   text-align: center;
   position: absolute;
   left: 50%;
-  /*top: 66%;*/
-  bottom: 100px;
+  top: -50px;
   width: 310px;
   margin-left: -155px;
   padding: 12px;

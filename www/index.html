@@ -7,7 +7,7 @@
   <link rel="stylesheet" type="text/css" href="components/offline-js/themes/offline-theme-default.css" />
   <link rel="stylesheet" type="text/css" href="components/font-awesome/css/font-awesome.css" />
   <link rel="stylesheet" type="text/css" href="css/index.css" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' file: blob: gap: https://ssl.gstatic.com; style-src 'self' 'unsafe-inline'; media-src *; connect-src 'self' https://encryptr.org https://*.crypton.io wss://*.crypton.io">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' file: blob: gap: https://ssl.gstatic.com; child-src 'self' blob:; style-src 'self' 'unsafe-inline'; media-src *; connect-src 'self' https://encryptr.org https://*.crypton.io wss://*.crypton.io">
   <title>Encryptr</title>
   </head>
   <body>
@@ -54,7 +54,7 @@
       <div class="sk-cube sk-cube9"></div>
     </div>
   </div>
-  <a class="fab add-btn">+</a>
+  <a class="fab add-btn"></a>
   <div id="toast" class="toast"></div>
   <!-- Zepto -->
   <script type="text/javascript" src="components/zepto/zepto.js"></script>

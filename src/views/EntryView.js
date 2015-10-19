@@ -16,6 +16,7 @@
     initialize: function() {
       _.bindAll(this,
           "render",
+          "showEditDelete",
           "editButton_clickHandler",
           "deleteButton_clickHandler",
           "copyable_doubleTapHandler",
@@ -39,13 +40,18 @@
       );
       if (this.model.get("items")) {
         _this.$(".entriesViewLoading").removeClass("loadingEntries");
-        $(".nav .edit-btn.right").removeClass("hidden");
-        $(".nav .delete-btn").removeClass("hidden");
+        _this.showEditDelete();
       }
 
       // this.model.fetch();
 
       return this;
+    },
+    showEditDelete: function() {
+      if ($('.entry li').length > 3) {
+        $(".nav .edit-btn.right").removeClass("hidden");
+        $(".nav .delete-btn").removeClass("hidden");
+      }
     },
     addAll: function() {
       var _this = this;
@@ -56,8 +62,7 @@
       );
       if (this.model.get("items")) {
         _this.$(".entriesViewLoading").removeClass("loadingEntries");
-        $(".nav .edit-btn.right").removeClass("hidden");
-        $(".nav .delete-btn").removeClass("hidden");
+        _this.showEditDelete();
       }
       // Desktop polyfill for longTap
       var timer = null;
@@ -150,8 +155,7 @@
       $('.subviews').scrollTop(0);
       _this.model.fetch({success: function() {
         _this.$(".entriesViewLoading").removeClass("loadingEntries");
-        $(".nav .edit-btn.right").removeClass("hidden");
-        $(".nav .delete-btn").removeClass("hidden");
+        _this.showEditDelete();
       }, error: function(err) {
         // error out and return to the entries screen
         console.log(err);
@@ -159,10 +163,8 @@
       window.app.mainView.backButtonDisplay(true);
       $(".nav .btn.right").addClass("hidden");
       window.setTimeout(function() {
-        console.log($('.entry li').length);
         if ($('.entry li').length > 3) {
-          $(".nav .edit-btn.right").removeClass("hidden");
-          $(".nav .delete-btn").removeClass("hidden");
+          _this.showEditDelete();
         }
       },200);
       window.app.mainView.setTitle(_this.model.get("type"));

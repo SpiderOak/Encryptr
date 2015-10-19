@@ -116,6 +116,9 @@ var Encryptr = (function (window, console, undefined) {
     if (window.StatusBar && $.os.ios) {
       window.StatusBar.styleDefault();
     }
+    if (window.StatusBar && $.os.android) {
+      window.StatusBar.backgroundColorByHexString("#C1235b");
+    }
     window.document.addEventListener("backbutton",
                                      Encryptr.prototype.onBackButton, false);
     window.document.addEventListener("menubutton",

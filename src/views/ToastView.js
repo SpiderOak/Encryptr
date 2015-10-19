@@ -9,7 +9,7 @@
   var ToastView = Backbone.View.extend({
     el: "#toast",
     events: {
-      // ...
+      "click": "hide"
     },
     initialize: function() {
       _.bindAll(this, "show", "hide");
@@ -23,8 +23,8 @@
       this.$el.css({
         "z-index": "10002",
         "opacity": 1,
-        "transform": "translate3d(0,-25px,0)",
-        "-webkit-transform": "translate3d(0,-25px,0)"
+        "transform": "translate3d(0,54px,0)",
+        "-webkit-transform": "translate3d(0,54px,0)"
       });
       window.setTimeout(function() {
         _this.hide();

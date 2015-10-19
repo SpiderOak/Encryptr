@@ -84,7 +84,6 @@
       }
     },
     addButton_clickHandler: function(event) {
-      console.log('add');
       event.preventDefault();
       this.addMenuView.toggle();
     },
