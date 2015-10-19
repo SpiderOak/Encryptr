@@ -1,3 +1,35 @@
+/* Font declarations */
+
+@font-face {
+  font-family: 'Graphik';
+  font-weight: normal;
+  src:  url('fonts/Graphik-Regular.eot?') format('eot'),
+        url('fonts/Graphik-Regular.woff') format('woff'),
+        url('fonts/Graphik-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Graphik';
+  font-weight: bold;
+  src:  url('fonts/Graphik-Semibold.eot?') format('eot'),
+        url('fonts/Graphik-Semibold.woff') format('woff'),
+        url('fonts/Graphik-Semibold.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'UniSans';
+  font-weight: normal;
+  src:  url('fonts/UniSans-Medium.eot?') format('eot'),
+        url('fonts/UniSans-Medium.woff') format('woff'),
+        url('fonts/UniSans-Medium.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'PTMono';
+  font-weight: normal;
+  src:  url('fonts/PT-Mono.eot?') format('eot'),
+        url('fonts/PT-Mono.woff') format('woff'),
+        url('fonts/PT-Mono.ttf') format('truetype');
+}
+
+
 * {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
@@ -7,7 +39,8 @@ body {
   -webkit-text-size-adjust: none;
   -webkit-user-select: none;
   user-select: none;
-  font-family: -apple-system-font, sans-serif;
+  font-family: Graphik, -apple-system-font, Roboto, sans-serif;
+  letter-spacing: -0.02em;
   background-color: #ffffff;
   font-size: 100%;
   font-weight: 300;
@@ -67,9 +100,10 @@ h1 {
   color: #C1235B;
   text-align: center;
   line-height: 55px;
-  font-weight: 700;
+  font-weight: normal;
   font-size: 110%;
   text-overflow: ellipsis;
+  font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
   /*text-transform: uppercase;*/
   height: 55px;
   white-space: nowrap;
@@ -198,9 +232,10 @@ h1 {
 .dialogAlert .dialog .title,
 .dialogConfirm .dialog .title {
   text-align: center;
-  font-weight: bold;
+  font-weight: normal;
   padding: 10px;
   text-transform: uppercase;
+  font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
   color: #C1235B;
 }
 .dialogAlert .dialog .subtitle,
@@ -269,6 +304,7 @@ h1 {
   color: inherit;
   text-align: center;
   text-transform: uppercase;
+  font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
   font-size: 75%;
 }
 .menu ul li img,
@@ -278,6 +314,7 @@ h1 {
 }
 .addMenu h3 {
   text-align: center;
+  font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
   text-transform: uppercase;
   color: #C1235B;
   padding: 0;
@@ -338,6 +375,7 @@ h1 {
 .entryTip {
   text-align: center;
   padding-top: 10px;
+  font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
   text-transform: uppercase;
   color: #5a5a5a;
 }
@@ -429,7 +467,8 @@ a.btn {
   color: transparent;
   text-align: center;
   text-transform: uppercase;
-  font-weight: 500;
+  font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
+  font-weight: normal;
   font-size: 140%;
 }
 .signup {
@@ -451,7 +490,8 @@ a.btn {
 .login-form .label {
   color: #C1235B;
   font-size: 90%;
-  font-weight: 600;
+  font-weight: normal;
+  font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
   text-transform: uppercase;
   height: 47px;
   line-height: 70px;
@@ -479,7 +519,8 @@ select {
   margin: 0;
   display: block;
   width: 100%;
-  font: normal 100% -apple-system-font, sans-serif;
+  font: normal 100% Graphik, -apple-system-font, Roboto, sans-serif;
+  letter-spacing: -0.02em;
   outline: 0 none;
 }
 input[type="text"],
@@ -650,7 +691,8 @@ button {
   background-color: inherit;
   color: #5a5a5a;
   text-transform: uppercase;
-  font-weight: 600;
+  font-weight: normal;
+  letter-spacing: -0.01em;
 }
 a.button.not-full {
   width: 230px;
@@ -673,6 +715,7 @@ a.button.logout-button {
 }
 .emptyEntries h1,
 .emptyFilteredEntries h1 {
+  font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
   text-transform: uppercase;
   font-size: 100%;
   font-weight: 300;
@@ -780,7 +823,8 @@ ul li a.password {
 ul li pre {
   margin: 0;
   padding: 0;
-  font-family: -apple-system-font, sans-serif;
+  font-family: Graphik, -apple-system-font, Roboto, sans-serif;
+  letter-spacing: -0.02em;
 }
 ul li.sep {
   font-size: 80%;
@@ -789,7 +833,8 @@ ul li.sep {
   background-color: #f8f8f8;
   border: none;
   color: #C1235B;
-  font-weight: 600;
+  font-weight: normal;
+  font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
   text-transform: uppercase;
 }
 ul li.entry {
