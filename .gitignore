@@ -1,5 +1,5 @@
-platforms/*
-plugins/*
+platforms/*/**
+plugins/*/**
 node_modules
 www/js/Encryptr.js
 www/js/Encryptr.min.js
@@ -12,6 +12,3 @@ www/js/Encryptr-templates.js
 desktopbuilds/*
 cache
 build.json
-platforms/ios/Encryptr/Images.xcassets/AppIcon.appiconset/icon-40.png
-platforms/ios/Encryptr/Images.xcassets/AppIcon.appiconset/icon-60@2x.png
-platforms/ios/Encryptr/Images.xcassets/AppIcon.appiconset/icon-60@3x.png
