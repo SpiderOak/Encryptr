@@ -101,10 +101,10 @@ h1 {
   text-align: center;
   line-height: 55px;
   font-weight: normal;
-  font-size: 110%;
-  text-overflow: ellipsis;
+  font-size: 108%;
+  /*text-overflow: ellipsis;*/
   font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
-  /*text-transform: uppercase;*/
+  text-transform: uppercase;
   height: 55px;
   white-space: nowrap;
   overflow: hidden;
