@@ -82,7 +82,7 @@
       this.on("viewActivate",this.viewActivate);
       this.on("viewDeactivate",this.viewDeactivate);
       this.confirmBackNav = {
-        title: "Unsaved changes.",
+        title: "You have unsaved changes",
         subtitle: "Go back and discard your changes?",
         callback: function() {
           window.app.toastView.show("Changes discarded.");

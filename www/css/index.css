@@ -288,7 +288,8 @@ h1 {
   background-color: #ffffff;
   color: #5a5a5a;
   height: 80px;
-  width: 80px;
+  width: 30%;
+  max-width: 100px;
   margin: 0;
   padding: 8px 0 16px 0;
   border: none;
@@ -395,6 +396,7 @@ h1 {
 .addMenu {
   left: 0;
   right: 0;
+  padding: 8px 0;
 }
 a.btn {
   color: inherit;
@@ -888,7 +890,7 @@ ul li pre {
 ul li.sep {
   font-size: 80%;
   /*letter-spacing: -0.03em;*/
-  padding: 16px 24px 14px 24px;
+  padding: 24px 24px 8px 24px;
   background-color: #f8f8f8;
   border: none;
   color: #C1235B;
