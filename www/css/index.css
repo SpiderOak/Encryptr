@@ -43,7 +43,6 @@ body {
   letter-spacing: -0.02em;
   background-color: #ffffff;
   font-size: 100%;
-  font-weight: 300;
   padding: 0;
   margin: 0;
 }
@@ -100,7 +99,7 @@ h1 {
   color: #C1235B;
   text-align: center;
   line-height: 55px;
-  font-weight: normal;
+  font-weight: bold;
   font-size: 108%;
   /*text-overflow: ellipsis;*/
   font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
@@ -752,7 +751,7 @@ button {
   color: #5a5a5a;
   text-transform: uppercase;
   font-weight: normal;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 a.button.not-full {
   width: 230px;
@@ -906,8 +905,8 @@ ul li.entry .entry-label {
   margin-top: 4px;
 }
 ul li.entry .small {
-  font-weight: normal;
-  font-size: 80%;
+  font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
+  font-size: 76%;
   text-transform: uppercase;
 }
 ul li.entry .entry-icon {
@@ -938,11 +937,11 @@ ul .entriesViewLoading.sep {
   animation: shiftBackgroundLeft4rem 2s linear infinite;
   background-size: 8rem 8rem;
   background-position: 0 0;
-
+  border-bottom: 1px solid white;
   font-weight: normal;
   text-transform: uppercase;
-
 }
+
 ul .entriesViewLoading.loadingEntries {
   display: block;
 }
@@ -1091,8 +1090,8 @@ ul .spinner > div.sep {
   }
 }
 .sk-cube-grid {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   margin: 100px auto;
 }
 
