@@ -932,10 +932,7 @@ ul .entriesViewLoading {
   text-align: center;
   height: 0;
   padding: 0;
-  transition: height 250ms ease-in-out 100ms;
-}
-ul .entriesViewLoading.sep span {
-  padding: 18px 0;
+  display: none;
 }
 
 ul .entriesViewLoading.sep {
@@ -946,14 +943,13 @@ ul .entriesViewLoading.sep {
   background-position: 0 0;
   border-bottom: 1px solid white;
   font-weight: normal;
+  padding: 18px 0;
   text-transform: uppercase;
   padding: 0;
 }
 
 ul .entriesViewLoading.loadingEntries {
   display: block;
-  height: 44px;
-  transition: height 250ms ease-in-out 100ms;
 }
 ul .dismissed {
   display: none;
