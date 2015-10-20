@@ -115,6 +115,7 @@ var Encryptr = (function (window, console, undefined) {
     }
     if (window.StatusBar && $.os.ios) {
       window.StatusBar.styleDefault();
+      $("body").addClass("ios");
     }
     if (window.StatusBar && $.os.android) {
       window.StatusBar.backgroundColorByHexString("#C1235b");
@@ -202,7 +203,9 @@ var Encryptr = (function (window, console, undefined) {
         // Throw up the login screen
         window.app.loginView.show();
         window.setTimeout(function() {
-          window.app.navigator.popAll(window.app.noEffect);
+          if (window.app.navigator.viewsStack.length > 0) {
+            window.app.navigator.popAll(window.app.noEffect);
+          }
           window.app.mainView.close();
         },100);
         window.setTimeout(function() {

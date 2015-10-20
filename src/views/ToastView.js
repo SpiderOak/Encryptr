@@ -23,8 +23,8 @@
       this.$el.css({
         "z-index": "10002",
         "opacity": 1,
-        "transform": "translate3d(0,54px,0)",
-        "-webkit-transform": "translate3d(0,54px,0)"
+        "transform": "translate3d(0,74px,0)",
+        "-webkit-transform": "translate3d(0,74px,0)"
       });
       window.setTimeout(function() {
         _this.hide();

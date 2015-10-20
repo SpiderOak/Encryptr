@@ -107,7 +107,9 @@
               // Throw up the login screen
               window.app.loginView.show();
               window.setTimeout(function() {
-                window.app.navigator.popAll(window.app.noEffect);
+                if (window.app.navigator.viewsStack.length > 0) {
+                  window.app.navigator.popAll(window.app.noEffect);
+                }
                 window.app.mainView.close();
               },100);
               window.setTimeout(function() {
