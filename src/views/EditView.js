@@ -18,7 +18,7 @@
       this.model.bind("all", this.addAll, this);
       this.confirmBackNav = {
         title: "You have an unsaved item",
-        subtitle: "Go back and discard this new item?",
+        subtitle: "Go back and discard any changes to this item?",
         callback: function() {
           window.app.toastView.show("Changes discarded.");
         }
