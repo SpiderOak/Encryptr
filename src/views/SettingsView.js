@@ -13,6 +13,7 @@
     destructionPolicy: "never",
     events: {
       "click .logout-button": "logout_clickHandler",
+      "click .contact-spideroak": "feedback_clickHandler",
       "click .change-passphrase": "changePassphrase_clickHandler"
     },
     initialize: function () {
@@ -52,6 +53,19 @@
           window.app.loginView.enable();
         },350);
       });
+    },
+    feedback_clickHandler: function(event) {
+      event.preventDefault();
+      var feedbackUrl = "https://spideroak.com/solutions/encryptr/feedback";
+      if (window.cordova.InAppBrowser) {
+        window.cordova.InAppBrowser.open(feedbackUrl, '_system');
+      } else if ($.os.isNodeWebkit) {
+        var gui = window.require('nw.gui');
+        gui.Shell.openExternal(feedbackUrl);
+      } else {
+        // browser fallback
+        window.open(feedbackUrl, '_blank');
+      }
     },
     viewActivate: function(event) {
       $('.subviews').scrollTop(0);

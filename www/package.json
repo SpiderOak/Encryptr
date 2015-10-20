@@ -14,7 +14,7 @@
     "toolbar": false,
     "frame": true,
     "width": 640,
-    "height": 480,
+    "height": 640,
     "min_width": 320,
     "min_height": 480
   }

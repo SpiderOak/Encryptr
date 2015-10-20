@@ -35,4 +35,5 @@
     <plugin name="cordova-plugin-whitelist" spec="https://github.com/apache/cordova-plugin-whitelist#master" />
     <plugin name="cordova-plugin-privacyscreen" spec="~0.1.2" />
     <plugin name="cordova-plugin-statusbar" spec="~1.0.1" />
+    <plugin name="cordova-plugin-inappbrowser" spec="~1.0.1" />
 </widget>
