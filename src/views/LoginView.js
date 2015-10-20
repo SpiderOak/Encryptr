@@ -47,10 +47,10 @@
 
       var sanitizeAuthError = function(err) {
         // @TODO - this might need some more nuance
-        if (err === 'Must supply username and passphrase') {
+        if (err === 'You forgot to enter both your username and passphrase') {
           return err;
         }
-        return 'Incorrect username or password';
+        return 'Check your username and password';
       };
 
       event.preventDefault();
@@ -65,7 +65,7 @@
       window.crypton.authorize(username, passphrase, function(err, session) {
         if (err) {
           window.app.dialogAlertView.show({
-            title: "Authentication error",
+            title: "Couldn't sign you in",
             subtitle: sanitizeAuthError(err)
           }, function(){});
           $(".blocker").hide();

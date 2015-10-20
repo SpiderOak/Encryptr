@@ -162,7 +162,7 @@
               // OK. This is a bit more serious...
               console.log(err);
               window.app.dialogAlertView.show({
-                title: "Critical Error",
+                title: "Error: Contact Support",
                 subtitle: err
               }, function() {
                 console.log("could not even recreate the container...");

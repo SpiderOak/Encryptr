@@ -129,6 +129,7 @@
       var subtitle = options.subtitle || "Are you sure?";
       this.$(".title").html(title);
       this.$(".subtitle").html(subtitle);
+      this.$(".dialog-accept-btn").html('Try Again');
       if (this.$el.hasClass("dismissed")) {
         if (callback) $(document).on("dialogAccept", callback, this);
         this.$el.removeClass("dismissed");

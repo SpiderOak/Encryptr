@@ -96,8 +96,8 @@
       this.on("viewActivate",this.viewActivate);
       this.on("viewDeactivate",this.viewDeactivate);
       this.confirmBackNav = {
-        title: "Are you sure?",
-        subtitle: "Discard any changes?",
+        title: "You have unsaved changes",
+        subtitle: "Go back and discard any changes?",
         callback: function() {
           window.app.toastView.show("Changes discarded.");
         }
@@ -160,8 +160,8 @@
 
       // Pop up a dialog to warn about how serious this is
       window.app.dialogConfirmView.show({
-        title: "Make sure you remember your new passphrase.",
-        subtitle: "Are you sure you want to change it?",
+        title: "Warning - Changing Passphrase",
+        subtitle: "If forget your new passphrase your account will be unrecoverable! Continue?",
         callback: function() {
           window.app.toastView.show("Passphrase unchanged");
         }

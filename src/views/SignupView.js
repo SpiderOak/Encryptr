@@ -49,13 +49,13 @@
 
       var sanitizeSignupErr = function(err) {
         // @TODO this might need some more nuance
-        if (err === 'Must supply username and passphrase') {
+        if (err === 'You forgot to enter both your username and passphrase') {
           return err;
         }
-        if (err === 'Username is not valid: it is not alphanumeric!') {
+        if (err === 'Your username can only contain letters or numbers.') {
           return err;
         }
-        return 'Invalid username, try something different';
+        return 'Username unavailable, please try something different';
       };
 
       event.preventDefault();
@@ -70,7 +70,7 @@
       window.crypton.generateAccount(username, passphrase, function(err, account) {
         if (err) {
           window.app.dialogAlertView.show({
-            title: "Signup error",
+            title: "Couldn't sign you up",
             subtitle: sanitizeSignupErr(err)
           }, function(){});
           $(".blocker").hide();
@@ -80,7 +80,7 @@
         window.crypton.authorize(username, passphrase, function(err, session) {
           if (err) {
             window.app.dialogAlertView.show({
-              title: "Authentication error",
+              title: "Couldn't sign you in",
               subtitle: err
             }, function() {});
             $(".blocker").hide();

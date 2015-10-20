@@ -17,8 +17,8 @@
       this.on("viewDeactivate",this.viewDeactivate);
       this.model.bind("all", this.addAll, this);
       this.confirmBackNav = {
-        title: "Confirm navigation",
-        subtitle: "Discard any changes?",
+        title: "You have an unsaved item",
+        subtitle: "Go back and discard any changes to this item?",
         callback: function() {
           window.app.toastView.show("Changes discarded.");
         }

@@ -106,8 +106,8 @@
     deleteButton_clickHandler: function(event) {
       var _this = this;
       window.app.dialogConfirmView.show({
-        title: "Confirm delete",
-        subtitle: "Delete this entry?"
+        title: "Deleting item",
+        subtitle: "Are you sure you want to delete this item?"
       }, function(event) {
         if (event.type === "dialogAccept") {
           $(".blocker").show();
@@ -135,7 +135,7 @@
                 $(".blocker").hide();
                 window.app.navigator.popView(window.app.defaultPopEffect);
                 window.setTimeout(function(){
-                  window.app.toastView.show("Entry deleted");
+                  window.app.toastView.show("Item deleted");
                 }, 100);
                 parentCollection.fetch();
               });

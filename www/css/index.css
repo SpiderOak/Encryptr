@@ -43,8 +43,8 @@ body {
   letter-spacing: -0.02em;
   background-color: #ffffff;
   font-size: 100%;
-  font-weight: 300;
   padding: 0;
+  font-weight: normal;
   margin: 0;
 }
 p {
@@ -100,7 +100,7 @@ h1 {
   color: #C1235B;
   text-align: center;
   line-height: 55px;
-  font-weight: normal;
+  font-weight: bold;
   font-size: 108%;
   /*text-overflow: ellipsis;*/
   font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
@@ -238,21 +238,21 @@ h1 {
   text-transform: uppercase;
   font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
   color: #C1235B;
+  border-bottom: 1px solid #eeeeee
 }
 .dialogAlert .dialog .subtitle,
 .dialogConfirm .dialog .subtitle {
   text-align: center;
-  padding: 10px;
+  padding: 16px 10px 8px;
 }
 .dialogConfirm .dialog .buttons {
   position: relative;
-  width: 300px;
   margin: 0 auto;
 }
 .dialogAlert .dialog .buttons {
   position: relative;
   width: 200px;
-  margin: 0 auto;
+  margin: 0 auto 16px auto;
 }
 .dialog .buttons .dialog-cancel-btn {
   position: absolute;
@@ -266,7 +266,6 @@ h1 {
   margin-right: 0;
 }
 .dialogAlert .dialog .buttons .dialog-accept-btn {
-  width: 50px;
   margin: 10px auto 0;
   position: relative;
 }
@@ -292,7 +291,8 @@ h1 {
   background-color: #ffffff;
   color: #5a5a5a;
   height: 80px;
-  width: 80px;
+  width: 30%;
+  max-width: 100px;
   margin: 0;
   padding: 8px 0 16px 0;
   border: none;
@@ -399,6 +399,7 @@ h1 {
 .addMenu {
   left: 0;
   right: 0;
+  padding: 8px 0;
 }
 a.btn {
   color: inherit;
@@ -521,7 +522,7 @@ a.btn {
   }
   .login-form {
     width: 328px;
-    top: 304px;
+    top: 280px;
     margin-bottom: 172px;
   }
 }
@@ -755,7 +756,7 @@ button {
   color: #5a5a5a;
   text-transform: uppercase;
   font-weight: normal;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 a.button.not-full {
   width: 230px;
@@ -892,7 +893,7 @@ ul li pre {
 ul li.sep {
   font-size: 80%;
   /*letter-spacing: -0.03em;*/
-  padding: 16px 24px 14px 24px;
+  padding: 24px 24px 8px 24px;
   background-color: #f8f8f8;
   border: none;
   color: #C1235B;
@@ -909,8 +910,8 @@ ul li.entry .entry-label {
   margin-top: 4px;
 }
 ul li.entry .small {
-  font-weight: normal;
-  font-size: 80%;
+  font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
+  font-size: 76%;
   text-transform: uppercase;
 }
 ul li.entry .entry-icon {
@@ -931,21 +932,24 @@ ul li.entry .entry-icon {
 }
 ul .entriesViewLoading {
   text-align: center;
-}
-ul .entriesViewLoading {
+  height: 0;
+  padding: 0;
   display: none;
 }
+
 ul .entriesViewLoading.sep {
   color: #5a5a5a;
   background: linear-gradient(-45deg, #ffffff, #ffffff 25%, #F8F8F8 25%, #F8F8F8 50%, #ffffff 50%, #ffffff 75%, #F8F8F8 75%, #F8F8F8);
   animation: shiftBackgroundLeft4rem 2s linear infinite;
   background-size: 8rem 8rem;
   background-position: 0 0;
-
+  border-bottom: 1px solid white;
   font-weight: normal;
+  padding: 18px 0;
   text-transform: uppercase;
-
+  padding: 0;
 }
+
 ul .entriesViewLoading.loadingEntries {
   display: block;
 }
@@ -994,9 +998,7 @@ ul .spinner > div.sep {
 .entriesViewLoading li {
   text-align: center;
 }
-.entriesViewLoading {
-  display: none;
-}
+
 .entriesViewLoading.loadingEntries {
   display: block;
 }
@@ -1097,8 +1099,8 @@ ul .spinner > div.sep {
   }
 }
 .sk-cube-grid {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   margin: 100px auto;
 }
 
