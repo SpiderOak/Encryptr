@@ -247,7 +247,6 @@ h1 {
 }
 .dialogConfirm .dialog .buttons {
   position: relative;
-  width: 300px;
   margin: 0 auto;
 }
 .dialogAlert .dialog .buttons {
