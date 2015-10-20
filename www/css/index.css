@@ -44,6 +44,7 @@ body {
   background-color: #ffffff;
   font-size: 100%;
   padding: 0;
+  font-weight: normal;
   margin: 0;
 }
 p {
@@ -519,7 +520,7 @@ a.btn {
   }
   .login-form {
     width: 328px;
-    top: 304px;
+    top: 280px;
     margin-bottom: 172px;
   }
 }
@@ -929,10 +930,14 @@ ul li.entry .entry-icon {
 }
 ul .entriesViewLoading {
   text-align: center;
+  height: 0;
+  padding: 0;
+  transition: height 250ms ease-in-out 100ms;
 }
-ul .entriesViewLoading {
-  display: none;
+ul .entriesViewLoading.sep span {
+  padding: 18px 0;
 }
+
 ul .entriesViewLoading.sep {
   color: #5a5a5a;
   background: linear-gradient(-45deg, #ffffff, #ffffff 25%, #F8F8F8 25%, #F8F8F8 50%, #ffffff 50%, #ffffff 75%, #F8F8F8 75%, #F8F8F8);
@@ -942,10 +947,13 @@ ul .entriesViewLoading.sep {
   border-bottom: 1px solid white;
   font-weight: normal;
   text-transform: uppercase;
+  padding: 0;
 }
 
 ul .entriesViewLoading.loadingEntries {
   display: block;
+  height: 44px;
+  transition: height 250ms ease-in-out 100ms;
 }
 ul .dismissed {
   display: none;
@@ -992,9 +1000,7 @@ ul .spinner > div.sep {
 .entriesViewLoading li {
   text-align: center;
 }
-.entriesViewLoading {
-  display: none;
-}
+
 .entriesViewLoading.loadingEntries {
   display: block;
 }
