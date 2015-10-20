@@ -55,7 +55,7 @@
         if (err === 'Your username can only contain letters or numbers.') {
           return err;
         }
-        return 'Invalid username, please try something different';
+        return 'Username unavailable, please try something different';
       };
 
       event.preventDefault();
