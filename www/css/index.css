@@ -238,11 +238,12 @@ h1 {
   text-transform: uppercase;
   font-family: UniSans, -apple-system-headline1, Roboto, Helvetica, sans-serif;
   color: #C1235B;
+  border-bottom: 1px solid #eeeeee
 }
 .dialogAlert .dialog .subtitle,
 .dialogConfirm .dialog .subtitle {
   text-align: center;
-  padding: 10px;
+  padding: 16px 10px 8px;
 }
 .dialogConfirm .dialog .buttons {
   position: relative;
@@ -252,7 +253,7 @@ h1 {
 .dialogAlert .dialog .buttons {
   position: relative;
   width: 200px;
-  margin: 0 auto;
+  margin: 0 auto 16px auto;
 }
 .dialog .buttons .dialog-cancel-btn {
   position: absolute;
@@ -266,7 +267,6 @@ h1 {
   margin-right: 0;
 }
 .dialogAlert .dialog .buttons .dialog-accept-btn {
-  width: 50px;
   margin: 10px auto 0;
   position: relative;
 }
