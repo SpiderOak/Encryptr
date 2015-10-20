@@ -478,13 +478,64 @@ a.btn {
 .middle {
   text-align: center;
 }
+
+/* Login + Sign up Form styles based on vertical height for better login layout. */
+
+@media (min-height: 460px) {
+  .login-form {
+    top: 140px;
+    margin-bottom: 8px;
+  }
+}
+
+@media (min-height: 568px) {
+  .login-form {
+    top: 163px;
+    margin-bottom: 32px;
+  }
+}
+
+@media (min-height: 592px) {
+  .login, .signup {
+    background: url('../img/LogoColoured.svg') center 46px no-repeat, url('../img/Grid.svg') top center;
+    background-color: #ffffff;
+  }
+  .login h1, .signup h1 {
+    top: 128px;
+  }
+  .login-form {
+    top: 210px;
+    margin-bottom: 78px;
+  }
+}
+
+@media (min-width: 410px) {
+  .login, .signup {
+    background: url('../img/LogoColoured.svg') center 92px no-repeat, url('../img/Grid.svg') top center;
+    background-color: #ffffff;
+  }
+  .login h1, .signup h1 {
+    top: 176px;
+  }
+  .login-form {
+    width: 328px;
+    top: 304px;
+    margin-bottom: 172px;
+  }
+}
+
+@media (max-width: 410px) {
+  .login-form {
+    width: 282px;
+  }
+}
+
 .login-form {
   position: relative;
-  top: 130px;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  width: 282px;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
   padding: 0 0 1px 0;
   background: #ffffff;
   box-shadow:  0 2px 4px 0 rgba(0, 0, 0, 0.1);
