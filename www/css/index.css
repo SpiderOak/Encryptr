@@ -248,22 +248,24 @@ h1 {
 .dialogConfirm .dialog .buttons {
   position: relative;
   margin: 0 auto;
+  text-align: center;
 }
 .dialogAlert .dialog .buttons {
   position: relative;
   width: 200px;
   margin: 0 auto 16px auto;
+  text-align: center;
 }
 .dialog .buttons .dialog-cancel-btn {
-  position: absolute;
+  position: relative;
   right: 0;
   margin-left: 0;
   font-weight: bold;
 }
 .dialog .buttons .dialog-accept-btn {
-  position: absolute;
+  position: relative;
   left: 0;
-  margin-right: 0;
+  margin-right: 24px;
 }
 .dialogAlert .dialog .buttons .dialog-accept-btn {
   margin: 10px auto 0;
@@ -554,6 +556,9 @@ a.btn {
   padding: 0 24px;
   position: relative;
 }
+.login-form .button {
+  display: block;
+}
 .login-form input[type=submit] {
   visibility: hidden;
   position: absolute;
@@ -745,7 +750,7 @@ a.button:active {
 }
 a.button,
 button {
-  display: block;
+  display: inline-block;
   margin: 12px 20px;
   padding: 12px 40px;
   border: 1px solid #5a5a5a;
