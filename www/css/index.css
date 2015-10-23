@@ -952,7 +952,6 @@ ul .entriesViewLoading.sep {
   font-weight: normal;
   padding: 18px 0;
   text-transform: uppercase;
-  padding: 0;
 }
 
 ul .entriesViewLoading.loadingEntries {
