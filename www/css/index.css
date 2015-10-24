@@ -87,12 +87,6 @@ h1 {
 .nav.less {
   opacity: 0.35;
 }
-/*
-  background: -moz-linear-gradient(-45deg, #C1235B 0%, #FC2E7F 100%);
-  background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#C1235B), color-stop(100%,#FC2E7F));
-  background: -webkit-linear-gradient(-45deg, #C1235B 0%,#FC2E7F 100%);
-  background: linear-gradient(135deg, #C1235B 0%,#FC2E7F 100%);
-*/
 .nav .title {
   position: absolute;
   left: 110px;
