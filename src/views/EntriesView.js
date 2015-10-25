@@ -40,10 +40,12 @@
         window.setTimeout(function() {
           _this.$(".emptyFilteredEntries").hide();
           _this.$(".emptyEntries").show();
+          _this.$(".entrySearch").hide();
         }, 300);
       } else {
         _this.$(".emptyFilteredEntries").hide();
         _this.$(".emptyEntries").hide();
+        _this.$(".entrySearch").show();
       }
       this.$(".entries").html("");
       this.collection.each(this.addOne);
@@ -53,13 +55,16 @@
       var _this = this;
       this.$(".emptyEntries").hide();
       this.$(".emptyEntries").hide();
+      this.$(".entrySearch").show();
       this.$(".entriesViewLoading").removeClass("loadingEntries");
       if (this.collection.models.length === 0) {
         window.setTimeout(function() {
           _this.$(".emptyEntries").show();
+          _this.$(".entrySearch").hide();
         }, 300);
       } else {
         _this.$(".emptyEntries").hide();
+        _this.$(".entrySearch").show();
       }
       var view = new Encryptr.prototype.EntriesListItemView({
         model: model

@@ -787,6 +787,9 @@ a.button.logout-button {
 .emptyEntries small {
   font-size: 40%;
 }
+.emptyEntries img {
+  width: 100px;
+}
 ul {
   margin: 0;
   padding: 0;
