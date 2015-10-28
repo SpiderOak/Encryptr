@@ -1,20 +1,6 @@
 /* Font declarations */
 
 @font-face {
-  font-family: 'Graphik';
-  font-weight: normal;
-  src:  url('fonts/Graphik-Regular.eot?') format('eot'),
-        url('fonts/Graphik-Regular.woff') format('woff'),
-        url('fonts/Graphik-Regular.ttf') format('truetype');
-}
-@font-face {
-  font-family: 'Graphik';
-  font-weight: bold;
-  src:  url('fonts/Graphik-Semibold.eot?') format('eot'),
-        url('fonts/Graphik-Semibold.woff') format('woff'),
-        url('fonts/Graphik-Semibold.ttf') format('truetype');
-}
-@font-face {
   font-family: 'UniSans';
   font-weight: normal;
   src:  url('fonts/UniSans-Medium.eot?') format('eot'),
@@ -39,7 +25,7 @@ body {
   -webkit-text-size-adjust: none;
   -webkit-user-select: none;
   user-select: none;
-  font-family: Graphik, -apple-system-font, Roboto, sans-serif;
+  font-family: -apple-system-font, Roboto, sans-serif;
   letter-spacing: -0.02em;
   background-color: #ffffff;
   font-size: 100%;
@@ -575,7 +561,7 @@ select {
   margin: 0;
   display: block;
   width: 100%;
-  font: normal 100% Graphik, -apple-system-font, Roboto, sans-serif;
+  font: normal 100% -apple-system-font, Roboto, sans-serif;
   letter-spacing: -0.02em;
   outline: 0 none;
 }
@@ -889,7 +875,7 @@ ul li a.password {
 ul li pre {
   margin: 0;
   padding: 0;
-  font-family: Graphik, -apple-system-font, Roboto, sans-serif;
+  font-family: -apple-system-font, Roboto, sans-serif;
   letter-spacing: -0.02em;
 }
 ul li.sep {
