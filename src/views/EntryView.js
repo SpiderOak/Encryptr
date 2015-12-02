@@ -48,7 +48,7 @@
       return this;
     },
     showEditDelete: function() {
-      if ($('.entry li').length > 3) {
+      if (!$('.loadingEntries').length) {
         $(".nav .edit-btn.right").removeClass("hidden");
         $(".nav .delete-btn").removeClass("hidden");
       }
@@ -163,9 +163,7 @@
       window.app.mainView.backButtonDisplay(true);
       $(".nav .btn.right").addClass("hidden");
       window.setTimeout(function() {
-        if ($('.entry li').length > 3) {
-          _this.showEditDelete();
-        }
+        _this.showEditDelete();
       },200);
       window.app.mainView.setTitle(_this.model.get("type"));
     },
