@@ -11,6 +11,7 @@
     <access origin="http://localhost:47243" />
     <access origin="https://encryptr.org" />
     <access origin="wss://*.crypton.io" />
+    <allow-navigation href="http://localhost:47243" />
     <preference name="Orientation" value="default" />
     <platform name="android">
     </platform>
@@ -36,6 +37,6 @@
     <plugin name="cordova-labs-wkwebview-engine-localhost" spec="https://github.com/apache/cordova-plugins.git#master:wkwebview-engine-localhost" />
     <plugin name="cordova-plugin-whitelist" spec="https://github.com/apache/cordova-plugin-whitelist#master" />
     <plugin name="cordova-plugin-statusbar" spec="~1.0.1" />
-    <plugin name="cordova-plugin-inappbrowser" spec="~1.0.1" />
+    <plugin name="cordova-plugin-inappbrowser" spec="~1.1.1" />
     <plugin name="cordova-plugin-privacyscreen" spec="https://github.com/devgeeks/PrivacyScreenPlugin#cordova-ios-4" />
 </widget>

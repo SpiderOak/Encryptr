@@ -160,7 +160,7 @@ module.exports = function(grunt) {
             CFBundleIdentifier: 'org.devgeeks.encryptr'
           },
           cacheDir: './desktopbuilds/cache',
-          winIco: './resources/icon-encryptr.ico',
+          //winIco: './resources/icon-encryptr.ico',
           win: true,
           linux32: true,
           linux64: true,
