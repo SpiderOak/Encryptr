@@ -1,9 +1,9 @@
 Encryptr
 ========
 
-### [https://encryptr.org](https://encryptr.org)
+### [https://spideroak.com/solutions/encryptr](https://spideroak.com/solutions/encryptr)
 
-[Encryptr](http://encryptr.devgeeks.org) is a zero-knowledge, cloud-based e-wallet / password manager powered by Crypton.
+[Encryptr](https://spideroak.com/solutions/encryptr) is a zero-knowledge, cloud-based e-wallet / password manager powered by Crypton.
 
 It started as an example project for seeing what [Crypton](https://crypton.io) could do in a [Apache Cordova](http://cordova.apache.org) mobile app. I had a particular itch to scratch. I got tired of trying to remember my work password. It changes fairly often, is slightly complex and is generated – I can't choose it for myself.
 
@@ -18,14 +18,6 @@ It is currently working on Android, and the Desktop – thanks to [NW.js](https:
 iOS is coming soon, just waiting on a way to either make it work with the new WKWebview or to push some of the hard crypto to native.
 
 ![screenshot](http://f.cl.ly/items/2n1r3V1D0L3k3p1q2T2O/encryptr-screenshot.png)
-
-#### Bitcoin donations accepted
-
-<div>
-  <a href="bitcoin:1M6sUtHuYo9eF1GUdPJfy374K3CqyPw3sV">
-  <img src="http://i.imgur.com/GWj62ch.png" ></a>
-  <p>1M6sUtHuYo9eF1GUdPJfy374K3CqyPw3sV</p>
-</div>
 
 ## Requirements
 
