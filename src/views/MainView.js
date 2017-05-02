@@ -57,11 +57,16 @@
       event.stopPropagation();
       event.stopImmediatePropagation();
       $('.nav .menu-btn').addClass('hidden');
+      $('.nav .export-btn').addClass('hidden');
       $(".fab").addClass("shrunken");
       window.app.navigator.pushView(window.app.SettingsView, {},
         window.app.defaultEffect);
     },
     exportButton_clickHandler: function(event) {
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      $(".entriesViewLoading").text("loading entries...");
+      $(".entriesViewLoading").addClass("loadingEntries");
     },
     backButton_clickHandler: function(event) {
       event.preventDefault();
@@ -112,10 +117,12 @@
       if (show) {
         this.$(".back-btn").removeClass("hidden");
         this.$(".menu-btn").addClass("hidden");
+        this.$(".export-btn").addClass("hidden");
         return;
       }
       this.$(".back-btn").addClass("hidden");
       this.$(".menu-btn").removeClass("hidden");
+      this.$(".export-btn").removeClass("hidden");
     },
     cancelDialogButton_clickHandler: function(event) {
       // ...
