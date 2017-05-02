@@ -151,6 +151,9 @@ h1 {
   background: url('../img/Save.svg') center center no-repeat;
   background-size: 24px 24px;
 }
+.export-btn {
+  background-size: 24px 24px;
+}
 .fab {
   display: block;
   position: absolute;
