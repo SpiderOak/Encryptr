@@ -10,6 +10,7 @@
     el: "#main",
     events: {
       "click .menu-btn": "menuButton_clickHandler",
+      "click .export-btn": "exportButton_clickHandler",
       "click .back-btn": "backButton_clickHandler",
       "click .edit-btn": "editButton_clickHandler",
       "click .save-btn": "saveButton_clickHandler",
@@ -21,6 +22,7 @@
     initialize: function(options) {
       _.bindAll(this,
           "menuButton_clickHandler",
+          "exportButton_clickHandler",
           "backButton_clickHandler",
           "addButton_clickHandler",
           "saveButton_clickHandler",
@@ -58,6 +60,8 @@
       $(".fab").addClass("shrunken");
       window.app.navigator.pushView(window.app.SettingsView, {},
         window.app.defaultEffect);
+    },
+    exportButton_clickHandler: function(event) {
     },
     backButton_clickHandler: function(event) {
       event.preventDefault();
