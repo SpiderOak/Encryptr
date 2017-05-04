@@ -62,6 +62,45 @@
       window.app.navigator.pushView(window.app.SettingsView, {},
         window.app.defaultEffect);
     },
+    addFieldFromEntry: function(entry, fields){
+      entry.items.forEach(function(item) {
+        var field = item.key;
+        if (fields.indexOf(field) === -1) {
+          fields.push(field);
+        }
+      });
+    },
+    getCsvFields: function(entries) {
+      var fields = ['Entry Type', 'Label'];
+      for (var index in entries){
+        var entry = entries[index];
+        this.addFieldFromEntry(entry, fields);
+      }
+      return fields;
+    },
+    addDataFromEntry: function(entry, fields){
+      var entry_data = {};
+      entry.items.forEach(function(item) {
+        var field = item.key;
+        entry_data[field] = item.value;
+      });
+      entry_data['Entry Type'] = entry.type;
+      entry_data['Label'] = entry.label;
+      return entry_data;
+    },
+    getCsvData: function(entries, fields) {
+      var data = [];
+      for (var index in entries){
+        var entry = entries[index];
+        data.push(this.addDataFromEntry(entry, fields));
+      }
+      return data;
+    },
+    generateCsvFromEntries: function(entries) {
+      var fields = this.getCsvFields(entries);
+      var data = this.getCsvData(entries, fields);
+      var csv = json2csv({'data': data, 'fields': fields});
+    },
     getEntries: function(options) {
       var success = options.success || console.log;
       var username = window.app.accountModel.get("username");
@@ -98,6 +137,7 @@
       this.getEntries({success: function(){
         var entries = arguments;
         $(".entriesViewLoading").removeClass("loadingEntries");
+        self.generateCsvFromEntries(entries);
       }});
     },
     backButton_clickHandler: function(event) {
