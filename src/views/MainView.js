@@ -96,8 +96,35 @@
       }
       return data;
     },
+    writeCordovaFile: function(fileName, data, options) {
+      data = JSON.stringify(data, null, '\t');
+      var success = options.success || function() {};
+      window.resolveLocalFileSystemURL(cordova.file.cacheDirectory, function (directoryEntry) {
+          directoryEntry.getFile(fileName, { create: true }, function (fileEntry) {
+              fileEntry.createWriter(function (fileWriter) {
+                  fileWriter.onwriteend = function (e) {
+                      console.log('Write of file "' + fileName + '"" completed.');
+                  };
+                  fileWriter.onerror = function (e) {
+                      console.log('Write failed: ' + e.toString());
+                  };
+                  var blob = new Blob([data], { type: 'text/plain' });
+                  fileWriter.write(blob);
+                  success(fileEntry.fullPath);
+              }, console.log);
+          }, console.log);
+      }, console.log);
+    },
     saveCsv: function(csv){
       if ($.os.ios || $.os.android || $.os.bb10) {
+        this.writeCordovaFile('export.csv', csv, {success: function(filePath) {
+          var options = {
+            message: 'Encryptr csv with entries data',
+            files: [filePath],
+            subject: 'Encryptr data'
+          };
+          window.plugins.socialsharing.shareWithOptions(options);
+        }});
       } else {
 
       }
