@@ -59,6 +59,7 @@ module.exports = function(grunt) {
           {expand: true, flatten: true, src: ['components/font-awesome/fonts/*'], dest: 'www/components/font-awesome/fonts/'},
           {expand: true, flatten: true, src: ['components/moment/moment.js'], dest: 'www/components/moment/'},
           {expand: true, flatten: true, src: ['node_modules/semver/semver.browser.js'], dest: 'www/components/semver'},
+          {expand: true, flatten: true, src: ['node_modules/json2csv/dist/json2csv.js'], dest: 'www/components/json2csv'},
           {expand: true, flatten: true, src: ['components/underscore/underscore*.js'], dest: 'www/components/underscore/'},
           {expand: true, flatten: true, src: ['components/backstack/backstack*.js'], dest: 'www/components/backstack/'},
           {expand: true, flatten: true, src: ['components/backbone/backbone*.js'], dest: 'www/components/backbone/'},
@@ -211,7 +212,8 @@ module.exports = function(grunt) {
         wsh: true,
         sub: true,
         globals: {
-          cordova: true
+          cordova: true,
+          json2csv: true
         }
       }
     },
