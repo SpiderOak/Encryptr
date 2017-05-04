@@ -96,10 +96,17 @@
       }
       return data;
     },
+    saveCsv: function(csv){
+      if ($.os.ios || $.os.android || $.os.bb10) {
+      } else {
+
+      }
+    },
     generateCsvFromEntries: function(entries) {
       var fields = this.getCsvFields(entries);
       var data = this.getCsvData(entries, fields);
       var csv = json2csv({'data': data, 'fields': fields});
+      this.saveCsv(csv);
     },
     getEntries: function(options) {
       var success = options.success || console.log;
