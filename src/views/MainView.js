@@ -90,10 +90,15 @@
       }
     },
     exportButton_clickHandler: function(event) {
+      var self = this;
       event.stopPropagation();
       event.stopImmediatePropagation();
       $(".entriesViewLoading").text("loading entries...");
       $(".entriesViewLoading").addClass("loadingEntries");
+      this.getEntries({success: function(){
+        var entries = arguments;
+        $(".entriesViewLoading").removeClass("loadingEntries");
+      }});
     },
     backButton_clickHandler: function(event) {
       event.preventDefault();
