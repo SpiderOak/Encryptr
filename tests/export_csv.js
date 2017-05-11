@@ -231,9 +231,107 @@ describe('Export to Csv', function() {
     });
 
     describe('getEntries', function() {
+
+      var hash, decryptedIndexJson, hashArray, username, passphrase;
+
+      beforeEach(function() {
+        hash = 'hash';
+        decryptedIndexJson = '{"decryptedIndexJson":"decryptedIndexJson"}';
+        hashArray = ['hashArray'];
+        username = 'username';
+        passphrase = 'passphrase';
+        window.app.accountModel = {
+          get: sinon.spy(function(item) {
+            if (item === 'passphrase') {
+              return passphrase;
+            }
+            return username;
+          })
+        };
+        window.app.toastView = {
+          show: sinon.spy()
+        };
+        sinon.stub(window.sjcl.hash.sha256, 'hash').returns(hashArray);
+        sinon.stub(window.sjcl.codec.hex, 'fromBits').returns(hash);
+        sinon.stub(window.sjcl, 'decrypt').returns(decryptedIndexJson);
+        sinon.stub(JSON, 'parse').returns([entry]);
+        sinon.stub(view, 'getEntry');
+        window.localStorage.setItem('encryptr-' + hash + '-index', 'encryptedIndexJSON');
+      });
+
+      afterEach(function () {
+        JSON.parse.restore();
+        window.sjcl.hash.sha256.hash.restore();
+        window.sjcl.codec.hex.fromBits.restore();
+        window.sjcl.decrypt.restore();
+        window.app.accountModel = undefined;
+        window.app.toastView = undefined;
+      });
+
       it('should have getEntries method', function() {
         view.getEntries.should.be.an('function');
       });
+
+      it('should call window.sjcl.hash.sha256.hash', function() {
+        view.getEntries();
+        window.sjcl.hash.sha256.hash.called.should.be.true();
+      });
+
+      it('should call window.sjcl.hash.sha256.hash with correct params', function() {
+        view.getEntries();
+        window.sjcl.hash.sha256.hash.calledWith(username).should.be.true();
+      });
+
+      it('should call window.sjcl.codec.hex.fromBits', function() {
+        view.getEntries();
+        window.sjcl.codec.hex.fromBits.called.should.be.true();
+      });
+
+      it('should call window.sjcl.codec.hex.fromBits with correct params', function() {
+        view.getEntries();
+        window.sjcl.codec.hex.fromBits.calledWith(hashArray).should.be.true();
+      });
+
+      it('should call window.sjcl.decrypt', function() {
+        view.getEntries();
+        window.sjcl.decrypt.called.should.be.true();
+      });
+
+      it('should call window.sjcl.decrypt with correct params', function() {
+        view.getEntries();
+        window.sjcl.decrypt.calledWith(passphrase, 'encryptedIndexJSON', window.crypton.cipherOptions).should.be.true();
+      });
+
+      it('should call window.app.accountModel.get', function() {
+        view.getEntries();
+        window.app.accountModel.get.called.should.be.true();
+      });
+
+      it('should call window.app.accountModel.get with correct params (passphrase)', function() {
+        view.getEntries();
+        window.app.accountModel.get.calledWith('passphrase').should.be.true();
+      });
+
+      it('should call window.app.accountModel.get with correct params (username)', function() {
+        view.getEntries();
+        window.app.accountModel.get.calledWith('username').should.be.true();
+      });
+
+      it('should not call window.app.toastView.show', function() {
+        view.getEntries();
+        window.app.toastView.show.called.should.be.false();
+      });
+
+      it('should not call getEntry', function() {
+        view.getEntries();
+        view.getEntry.called.should.be.true();
+      });
+
+      it('should not call getEntry with correct params', function() {
+        view.getEntries();
+        view.getEntry.calledWith(entry).should.be.true();
+      });
+
     });
 
     describe('exportButton_clickHandler', function() {
