@@ -337,6 +337,34 @@ describe('Export to Csv', function() {
     describe('exportButton_clickHandler', function() {
       it('should have addFieldFromEntry method', function() {
         view.addFieldFromEntry.should.be.an('function');
+    describe('getCsv', function() {
+
+      beforeEach(function() {
+        sinon.stub(view, 'getEntries', function() {
+          var promise = $.Deferred();
+          promise.resolve(entry);
+          return $.when.apply($, [promise]);
+        });
+        sinon.stub(view, 'generateCsvFromEntries').returns('generateCsvFromEntries');
+      });
+
+      it('should have getCsv method', function() {
+        view.getCsv.should.be.an('function');
+      });
+
+      it('should not call getEntries', function() {
+        view.getCsv();
+        view.getEntries.called.should.be.true();
+      });
+
+      it('should not call generateCsvFromEntries', function(done) {
+        view.getCsv().then(function() {
+          view.generateCsvFromEntries.called.should.be.true();
+        }).then(done);
+      });
+
+    });
+
       });
     });
 
