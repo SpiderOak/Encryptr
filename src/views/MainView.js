@@ -111,24 +111,19 @@
       }
       return data;
     },
-    writeCordovaFile: function(fileName, data, options) {
+    writeCordovaFile: function(fileName, data) {
       data = JSON.stringify(data, null, '\t');
-      var success = options.success || function() {};
+      var promise = $.Deferred();
       window.resolveLocalFileSystemURL(cordova.file.cacheDirectory, function (directoryEntry) {
           directoryEntry.getFile(fileName, { create: true }, function (fileEntry) {
               fileEntry.createWriter(function (fileWriter) {
-                  fileWriter.onwriteend = function (e) {
-                      console.log('Write of file "' + fileName + '"" completed.');
-                  };
-                  fileWriter.onerror = function (e) {
-                      console.log('Write failed: ' + e.toString());
-                  };
-                  var blob = new Blob([data], { type: 'text/plain' });
+                  var blob = new Blob([data], { type: 'text/csv' });
                   fileWriter.write(blob);
-                  success(fileEntry.fullPath);
+                  promise.resolve(fileEntry.fullPath);
               }, console.log);
           }, console.log);
       }, console.log);
+      return promise;
     },
     saveCsv: function(csv){
       var type = 'text/csv';
