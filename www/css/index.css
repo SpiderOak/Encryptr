@@ -154,6 +154,9 @@ h1 {
 .export-btn {
   background-size: 24px 24px;
 }
+.share-btn {
+  background-size: 24px 24px;
+}
 .fab {
   display: block;
   position: absolute;

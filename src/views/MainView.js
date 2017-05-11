@@ -11,6 +11,7 @@
     events: {
       "click .menu-btn": "menuButton_clickHandler",
       "click .export-btn": "exportButton_clickHandler",
+      "click .share-btn": "shareButton_clickHandler",
       "click .back-btn": "backButton_clickHandler",
       "click .edit-btn": "editButton_clickHandler",
       "click .save-btn": "saveButton_clickHandler",
@@ -23,6 +24,7 @@
       _.bindAll(this,
           "menuButton_clickHandler",
           "exportButton_clickHandler",
+          "shareButton_clickHandler",
           "backButton_clickHandler",
           "addButton_clickHandler",
           "saveButton_clickHandler",
@@ -36,6 +38,11 @@
       this.addMenuView.dismiss();
       if (!$(".menu").length) this.$el.append(this.menuView.el);
       if (!$(".addMenu").length) this.$el.append(this.addMenuView.el);
+      if ($.os.ios || $.os.android || $.os.bb10) {
+        $('.nav .share-btn').removeClass('hidden');
+      } else {
+        $('.nav .export-btn').removeClass('hidden');
+      }
     },
     render: function() {
       this.$(".nav").html(
@@ -57,7 +64,11 @@
       event.stopPropagation();
       event.stopImmediatePropagation();
       $('.nav .menu-btn').addClass('hidden');
-      $('.nav .export-btn').addClass('hidden');
+      if ($.os.ios || $.os.android || $.os.bb10) {
+        $('.nav .share-btn').addClass('hidden');
+      } else {
+        $('.nav .export-btn').addClass('hidden');
+      }
       $(".fab").addClass("shrunken");
       window.app.navigator.pushView(window.app.SettingsView, {},
         window.app.defaultEffect);
@@ -173,6 +184,21 @@
         $(".entriesViewLoading").removeClass("loadingEntries");
         self.generateCsvFromEntries(entries);
       }});
+    shareButton_clickHandler: function(event) {
+      var self = this;
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      return this.getCsv().then(function (csv) {
+        return self.writeCordovaFile('export.csv', csv);
+      }).then(function(filePath) {
+        var options = {
+          message: 'Encryptr csv with entries data',
+          files: [cordova.file.cacheDirectory + filePath],
+          subject: 'Encryptr data'
+        };
+        window.plugins.socialsharing.shareWithOptions(options);
+      });
+    },
     },
     backButton_clickHandler: function(event) {
       event.preventDefault();
@@ -223,12 +249,20 @@
       if (show) {
         this.$(".back-btn").removeClass("hidden");
         this.$(".menu-btn").addClass("hidden");
-        this.$(".export-btn").addClass("hidden");
+        if ($.os.ios || $.os.android || $.os.bb10) {
+          $('.nav .share-btn').addClass('hidden');
+        } else {
+          $('.nav .export-btn').addClass('hidden');
+        }
         return;
       }
       this.$(".back-btn").addClass("hidden");
       this.$(".menu-btn").removeClass("hidden");
-      this.$(".export-btn").removeClass("hidden");
+      if ($.os.ios || $.os.android || $.os.bb10) {
+        $('.nav .share-btn').removeClass('hidden');
+      } else {
+        $('.nav .export-btn').removeClass('hidden');
+      }
     },
     cancelDialogButton_clickHandler: function(event) {
       // ...
