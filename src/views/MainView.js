@@ -131,24 +131,23 @@
       }, console.log);
     },
     saveCsv: function(csv){
-      if ($.os.ios || $.os.android || $.os.bb10) {
-        this.writeCordovaFile('export.csv', csv, {success: function(filePath) {
-          var options = {
-            message: 'Encryptr csv with entries data',
-            files: [filePath],
-            subject: 'Encryptr data'
-          };
-          window.plugins.socialsharing.shareWithOptions(options);
-        }});
-      } else {
-
-      }
+      var type = 'text/csv';
+      var file = new Blob([csv], {type: type});
+      var a = document.createElement("a");
+      var url = window.URL.createObjectURL(file);
+      a.href = url;
+      a.target="_blank";
+      a.download = 'export.csv';
+      a.hidden = true;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
     },
     generateCsvFromEntries: function(entries) {
       var fields = this.getCsvFields(entries);
       var data = this.getCsvData(entries, fields);
       var csv = json2csv({'data': data, 'fields': fields});
-      this.saveCsv(csv);
     },
     getEntries: function(options) {
       var success = options.success || console.log;
