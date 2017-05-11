@@ -3,42 +3,49 @@
 describe('Export to Csv', function() {
 
     window.app = new window.Encryptr();
-    var view;
+    var view, csv, entry, entries, fields, csvData;
 
     beforeEach(function() {
       view = new window.app.MainView();
-    });
-    
-    afterEach(function() {
-      
+      entry = {
+        type: 'entry_type',
+        label: 'entry_label',
+        items: [
+          {key: 'item_name_1', value: 'value_item_1'}
+        ]
+      };
+      entries = [entry];
+      fields = ['Entry Type', 'Label'];
+      csvData = {
+        'Entry Type': 'entry_type',
+        'Label': 'entry_label',
+        'item_name_1': 'value_item_1'
+      };
+      csv = '"Entry Type","Label","item_name_1"\n"entry_type","entry_label","value_item_1"';
     });
 
     describe('addFieldFromEntry', function() {
-      
-      var fields, entry;
-
-      beforeEach(function() {
-        entry = {items: [{key: 'item_name_1'}]};
-        fields = [];
-      });
 
       it('should have addFieldFromEntry method', function() {
         view.addFieldFromEntry.should.be.an('function');
       });
       
       it('should have one field in fields', function() {
+        fields = [];
         view.addFieldFromEntry(entry, fields);
         fields.should.be.eql(['item_name_1']);
       });
       
       it('should have two field items in fields', function() {
         entry.items.push({key: 'item_name_2'});
+        fields = [];
         view.addFieldFromEntry(entry, fields);
         fields.should.be.eql(['item_name_1', 'item_name_2']);
       });
 
       it('should not add repeat field', function() {
         entry.items.push({key: 'item_name_1'});
+        fields = [];
         view.addFieldFromEntry(entry, fields);
         fields.should.be.eql(['item_name_1']);
       });
@@ -46,14 +53,6 @@ describe('Export to Csv', function() {
     });
 
     describe('getCsvFields', function() {
-
-      var fields, entries, entry;
-
-      beforeEach(function() {
-        entry = {items: [{key: 'item_name_1'}]};
-        entries = [entry];
-        fields = ['Entry Type', 'Label'];
-      });
 
       it('should have getCsvFields method', function() {
         view.getCsvFields.should.be.an('function');
@@ -91,19 +90,6 @@ describe('Export to Csv', function() {
     });
 
     describe('addDataFromEntry', function() {
-      
-     var entry, fields;
-
-      beforeEach(function() {
-        entry = {
-          type: 'entry_type',
-          label: 'entry_label',
-          items: [
-            {key: 'item_name_1', value: 'value_item_1'}
-          ]
-        };
-        fields = ['Entry Type', 'Label'];
-      });
       
       it('should have addDataFromEntry method', function() {
         view.addDataFromEntry.should.be.an('function');
