@@ -157,6 +157,9 @@ h1 {
 .share-btn {
   background-size: 24px 24px;
 }
+.copy-btn {
+  background-size: 24px 24px;
+}
 .fab {
   display: block;
   position: absolute;

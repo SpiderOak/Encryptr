@@ -12,6 +12,7 @@
       "click .menu-btn": "menuButton_clickHandler",
       "click .export-btn": "exportButton_clickHandler",
       "click .share-btn": "shareButton_clickHandler",
+      "click .copy-btn": "copyButton_clickHandler",
       "click .back-btn": "backButton_clickHandler",
       "click .edit-btn": "editButton_clickHandler",
       "click .save-btn": "saveButton_clickHandler",
@@ -25,6 +26,7 @@
           "menuButton_clickHandler",
           "exportButton_clickHandler",
           "shareButton_clickHandler",
+          "copyButton_clickHandler",
           "backButton_clickHandler",
           "addButton_clickHandler",
           "saveButton_clickHandler",
@@ -40,6 +42,7 @@
       if (!$(".addMenu").length) this.$el.append(this.addMenuView.el);
       if ($.os.ios || $.os.android || $.os.bb10) {
         $('.nav .share-btn').removeClass('hidden');
+        $('.nav .copy-btn').removeClass('hidden');
       } else {
         $('.nav .export-btn').removeClass('hidden');
       }
@@ -66,6 +69,7 @@
       $('.nav .menu-btn').addClass('hidden');
       if ($.os.ios || $.os.android || $.os.bb10) {
         $('.nav .share-btn').addClass('hidden');
+        $('.nav .copy-btn').addClass('hidden');
       } else {
         $('.nav .export-btn').addClass('hidden');
       }
@@ -199,6 +203,14 @@
         window.plugins.socialsharing.shareWithOptions(options);
       });
     },
+    copyButton_clickHandler: function(event) {
+      var self = this;
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      return this.getCsv().then(function (csv){
+        cordova.plugins.clipboard.copy(csv);
+        window.app.toastView.show("The entries were successfully copied in clipboard");
+      });
     },
     backButton_clickHandler: function(event) {
       event.preventDefault();
@@ -251,6 +263,7 @@
         this.$(".menu-btn").addClass("hidden");
         if ($.os.ios || $.os.android || $.os.bb10) {
           $('.nav .share-btn').addClass('hidden');
+          $('.nav .copy-btn').addClass('hidden');
         } else {
           $('.nav .export-btn').addClass('hidden');
         }
@@ -260,6 +273,7 @@
       this.$(".menu-btn").removeClass("hidden");
       if ($.os.ios || $.os.android || $.os.bb10) {
         $('.nav .share-btn').removeClass('hidden');
+        $('.nav .copy-btn').removeClass('hidden');
       } else {
         $('.nav .export-btn').removeClass('hidden');
       }
