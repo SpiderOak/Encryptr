@@ -143,9 +143,18 @@
       var fields = this.getCsvFields(entries);
       var data = this.getCsvData(entries, fields);
       var csv = json2csv({'data': data, 'fields': fields});
+      return csv;
     },
-    getEntries: function(options) {
-      var success = options.success || console.log;
+    getEntry: function (entry) {
+      var entry_model = new window.app.EntryModel(entry);
+      var promise = $.Deferred();
+      entry_model.fetch({success: function(_, resp){
+        promise.resolve(resp);
+      }});
+      return promise;
+    },
+    getEntries: function() {
+      var self = this;
       var username = window.app.accountModel.get("username");
       var hashArray = window.sjcl.hash.sha256.hash(username);
       var hash = window.sjcl.codec.hex.fromBits(hashArray);
@@ -155,15 +164,9 @@
           var decryptedIndexJson =
             window.sjcl.decrypt(window.app.accountModel.get("passphrase"),
                                 encryptedIndexJSON, window.crypton.cipherOptions);
-          var promises = JSON.parse(decryptedIndexJson).map(function(entry) {
-            var entry_model = new window.app.EntryModel(entry);
-            var promise = $.Deferred();
-            entry_model.fetch({success: function(_, resp){
-              promise.resolve(resp);
-            }});
-            return promise;
-          });
-          $.when.apply($, promises).then(success);
+          var promises = JSON.parse(decryptedIndexJson)
+            .map(self.getEntry);
+          return $.when.apply($, promises);
         } catch (ex) {
           window.app.toastView.show("Local cache invalid<br/>Loading from server");
           console.log(ex);
@@ -171,17 +174,24 @@
         }
       }
     },
+    getCsv: function() {
+     var self = this;
+     $(".entriesViewLoading").text("loading entries...");
+     $(".entriesViewLoading").addClass("loadingEntries");
+     return this.getEntries().then(function(){
+      var entries = arguments;
+      $(".entriesViewLoading").removeClass("loadingEntries");
+      return self.generateCsvFromEntries(entries);
+     });
+    },
     exportButton_clickHandler: function(event) {
       var self = this;
       event.stopPropagation();
       event.stopImmediatePropagation();
-      $(".entriesViewLoading").text("loading entries...");
-      $(".entriesViewLoading").addClass("loadingEntries");
-      this.getEntries({success: function(){
-        var entries = arguments;
-        $(".entriesViewLoading").removeClass("loadingEntries");
-        self.generateCsvFromEntries(entries);
-      }});
+      return this.getCsv().then(function (csv){
+        self.saveCsv(csv);
+      });
+    },
     shareButton_clickHandler: function(event) {
       var self = this;
       event.stopPropagation();
