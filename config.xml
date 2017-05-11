@@ -30,9 +30,9 @@
     <preference name="KeyboardDisplayRequiresUserAction" value="false" />
     <preference name="FadeSplashScreen" value="true" />
     <preference name="FadeSplashScreenDuration" value="1" />
-    <plugin name="com.verso.cordova.clipboard" spec="~0.1.0" />
     <preference name="AlternateContentSrc" value="index.html" />
     <engine name="ios" spec="https://github.com/apache/cordova-ios.git#master" />
+    <plugin name="com.verso.cordova.clipboard" spec="~0.1.0" />
     <plugin name="cordova-labs-wkwebview-engine-localhost" spec="https://github.com/apache/cordova-plugins.git#master:wkwebview-engine-localhost" />
     <plugin name="cordova-plugin-clipboard-x" spec="~1.0.1" />
     <plugin name="cordova-plugin-device" spec="~1.0.1" />

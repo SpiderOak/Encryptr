@@ -1,55 +1,80 @@
 {
-  "name": "Encryptr",
-  "version": "2.0.0",
-  "repository": "https://github.com/devgeeks/Encryptr.git",
-  "main": "www/js/Encryptr.js",
-  "scripts": {
-    "test": "grunt test",
-    "postinstall": "./node_modules/.bin/bower install",
-    "pluginstall": "cordova plugins add com.verso.cordova.clipboard com.blackberry.community.clipboard org.apache.cordova.statusbar org.apache.cordova.inappbrowser org.devgeeks.privacyscreen",
-    "plugremove": "cordova plugins remove com.verso.cordova.clipboard com.blackberry.community.clipboard org.apache.cordova.statusbar org.apache.cordova.inappbrowser org.devgeeks.privacyscreen"
-  },
-  "author": "tommy-carlos williams (devgeeks)",
-  "keywords": [
-    "cordova"
-  ],
-  "licenses": [
-    {
-      "type": "GPLv3",
-      "url": "http://www.gnu.org/licenses/gpl.html"
+    "name": "Encryptr",
+    "version": "2.0.0",
+    "repository": "https://github.com/devgeeks/Encryptr.git",
+    "main": "www/js/Encryptr.js",
+    "scripts": {
+        "test": "grunt test",
+        "postinstall": "./node_modules/.bin/bower install",
+        "pluginstall": "cordova plugins add com.verso.cordova.clipboard com.blackberry.community.clipboard org.apache.cordova.statusbar org.apache.cordova.inappbrowser org.devgeeks.privacyscreen",
+        "plugremove": "cordova plugins remove com.verso.cordova.clipboard com.blackberry.community.clipboard org.apache.cordova.statusbar org.apache.cordova.inappbrowser org.devgeeks.privacyscreen"
+    },
+    "author": "tommy-carlos williams (devgeeks)",
+    "keywords": [
+        "cordova"
+    ],
+    "licenses": [
+        {
+            "type": "GPLv3",
+            "url": "http://www.gnu.org/licenses/gpl.html"
+        }
+    ],
+    "dependencies": {
+        "cordova-icon": "^0.3.0",
+        "cordova-splash": "^0.3.0",
+        "json2csv": "^3.7.3",
+        "phantomjs": "^1.9.7-15",
+        "semver": "^3.0.1",
+        "cordova-ios": "https://github.com/apache/cordova-ios.git#master",
+        "com.verso.cordova.clipboard": "~0.1.0",
+        "cordova-labs-wkwebview-engine-localhost": "https://github.com/apache/cordova-plugins.git#master:wkwebview-engine-localhost",
+        "cordova-plugin-clipboard-x": "~1.0.1",
+        "cordova-plugin-device": "~1.0.1",
+        "cordova-plugin-inappbrowser": "~1.1.1",
+        "cordova-plugin-privacyscreen": "https://github.com/devgeeks/PrivacyScreenPlugin#cordova-ios-4",
+        "cordova-plugin-statusbar": "~1.0.1",
+        "cordova-plugin-whitelist": "https://github.com/apache/cordova-plugin-whitelist#master"
+    },
+    "devDependencies": {
+        "bower": "1.3.x",
+        "grunt-cli": "0.1.x",
+        "grunt-contrib-jshint": "~0.4.3",
+        "grunt": "0.4.x",
+        "grunt-contrib-concat": "~0.4.0",
+        "grunt-contrib-uglify": "~0.2.0",
+        "grunt-contrib-watch": "~0.3.1",
+        "grunt-shell": "0.2.x",
+        "grunt-dot-compiler": "~0.3.14",
+        "temporary": "0.0.5",
+        "mocha": "^1.18.2",
+        "chai": "~1.8.0",
+        "sinon": "~1.7.3",
+        "sinon-chai": "~2.4.0",
+        "chai-jquery": "~1.1.2",
+        "mocha-phantomjs": "^3.3.2",
+        "grunt-contrib-copy": "~0.5.0",
+        "cordova": "latest",
+        "grunt-mocha-test": "~0.9.0",
+        "chai-as-promised": "^4.1.1",
+        "mocha-as-promised": "^2.0.0",
+        "colors": "^0.6.2",
+        "wd": "^0.3.1",
+        "wd-query": "^0.2.0",
+        "grunt-node-webkit-builder": "^1.0.0"
+    },
+    "cordova": {
+        "platforms": [
+            "ios"
+        ],
+        "plugins": {
+            "com.verso.cordova.clipboard": {},
+            "cordova-labs-wkwebview-engine-localhost": {},
+            "cordova-plugin-clipboard-x": {},
+            "cordova-plugin-device": {},
+            "cordova-plugin-inappbrowser": {},
+            "cordova-plugin-privacyscreen": {},
+            "cordova-plugin-statusbar": {},
+            "cordova-plugin-whitelist": {}
+        }
     }
-  ],
-  "dependencies": {
-    "cordova-icon": "^0.3.0",
-    "cordova-splash": "^0.3.0",
-    "json2csv": "^3.7.3",
-    "semver": "^3.0.1"
-  },
-  "devDependencies": {
-    "bower": "1.3.x",
-    "grunt-cli": "0.1.x",
-    "grunt-contrib-jshint": "~0.4.3",
-    "grunt": "0.4.x",
-    "grunt-contrib-concat": "~0.4.0",
-    "grunt-contrib-uglify": "~0.2.0",
-    "grunt-contrib-watch": "~0.3.1",
-    "grunt-shell": "0.2.x",
-    "grunt-dot-compiler": "~0.3.14",
-    "temporary": "0.0.5",
-    "mocha": "^1.18.2",
-    "chai": "~1.8.0",
-    "sinon": "~1.7.3",
-    "sinon-chai": "~2.4.0",
-    "chai-jquery": "~1.1.2",
-    "mocha-phantomjs": "^3.3.2",
-    "grunt-contrib-copy": "~0.5.0",
-    "cordova": "latest",
-    "grunt-mocha-test": "~0.9.0",
-    "chai-as-promised": "^4.1.1",
-    "mocha-as-promised": "^2.0.0",
-    "colors": "^0.6.2",
-    "wd": "^0.3.1",
-    "wd-query": "^0.2.0",
-    "grunt-node-webkit-builder": "^1.0.0"
-  }
 }
