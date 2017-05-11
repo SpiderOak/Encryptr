@@ -145,9 +145,59 @@ describe('Export to Csv', function() {
     });
 
     describe('generateCsvFromEntries', function() {
+      
+      beforeEach(function() {
+        view.getCsvFields = sinon.spy(function (){
+          return fields;
+        });
+        view.getCsvData = sinon.spy(function (){
+          return csvData;
+        });
+        json2csv = sinon.spy(function (){
+          return csv;
+        });
+      });
+
       it('should have generateCsvFromEntries method', function() {
         view.generateCsvFromEntries.should.be.an('function');
       });
+
+      it('should call getCsvFields', function() {
+        view.generateCsvFromEntries(entries);
+        view.getCsvFields.called.should.be.true();
+      });
+
+      it('should call getCsvFields with correct params', function() {
+        view.generateCsvFromEntries(entries);
+        view.getCsvFields.calledWith(entries).should.be.true();
+      });
+
+      it('should call getCsvData', function() {
+        view.generateCsvFromEntries(entries);
+        view.getCsvData.called.should.be.true();
+      });
+
+      it('should call getCsvData with correct params', function() {
+        view.generateCsvFromEntries(entries);
+        view.getCsvData.calledWith(entries, fields).should.be.true();
+      });
+
+      it('should call json2csv', function() {
+        view.generateCsvFromEntries(entries);
+        json2csv.called.should.be.true();
+      });
+
+      it('should call json2csv with correct params', function() {
+        view.generateCsvFromEntries(entries);
+        json2csv.calledWith({'data': csvData, 'fields': fields}).should.be.true();
+      });
+
+      it('should return csv from json2csv', function() {
+        var csv_returned = view.generateCsvFromEntries(entries);
+        csv_returned.should.be.eql(csv);
+      });
+
+    });
     });
 
     describe('getEntries', function() {
