@@ -118,16 +118,19 @@ describe('Export to Csv', function() {
     });
 
     describe('getCsvData', function() {
+
+      beforeEach(function() {
+        view.addDataFromEntry = sinon.stub().returns(csvData);
+      });
+
       it('should have getCsvData method', function() {
         view.getCsvData.should.be.an('function');
       });
-    });
 
-    describe('writeCordovaFile', function() {
-      it('should have writeCordovaFile method', function() {
-        view.writeCordovaFile.should.be.an('function');
+      it('should return correct dict', function() {
+        var csvdata = view.getCsvData(entries, fields);
+        csvdata.should.be.eql([csvData]);
       });
-    });
 
     describe('saveCsv', function() {
       it('should have saveCsv method', function() {
