@@ -198,6 +198,36 @@ describe('Export to Csv', function() {
       });
 
     });
+
+    describe('getEntry', function() {
+
+      var EntryModelSpy;
+
+      beforeEach(function() {
+        EntryModelSpy = sinon.stub(window.app.EntryModel.prototype, 'fetch', function(options){
+          options.success('obj', 'resp');
+        });
+      });
+
+      afterEach(function() {
+        EntryModelSpy.restore();
+      });
+
+      it('should have getEntry method', function() {
+        view.getEntry.should.be.an('function');
+      });
+
+      it('should call window.app.EntryModel.fetch', function() {
+        view.getEntry();
+        EntryModelSpy.called.should.be.true();
+      });
+      
+      it('should promise resolve with success callback resp', function(done) {
+        view.getEntry().then(function(resp){
+          resp.should.be.eql('resp');
+        }).then(done);
+      });
+
     });
 
     describe('getEntries', function() {
