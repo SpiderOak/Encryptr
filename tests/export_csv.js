@@ -362,7 +362,182 @@ describe('Export to Csv', function() {
 
     });
 
+    describe('Methods for iOS and Android plataforms', function() {
+      
+      describe('writeCordovaFile', function() {
+
+        var filename;
+
+        beforeEach(function() {
+          filename = 'export.csv';
+          cordova.file = {
+            cacheDirectory: 'csb://cahe'
+          };
+          window.resolveLocalFileSystemURL = sinon.stub();
+        });
+
+        it('should have writeCordovaFile method', function() {
+          view.writeCordovaFile.should.be.an('function');
+        });
+
+        it('should call window.resolveLocalFileSystemURL', function() {
+          view.writeCordovaFile(filename, csvData);
+          window.resolveLocalFileSystemURL.called.should.be.true();
+        });
+
       });
+
+      describe('copyButton_clickHandler', function() {
+
+        var event;
+
+        beforeEach(function() {
+          var promise_function = function() {
+            var promise = $.Deferred();
+            promise.resolve(csv);
+            return promise;
+          };
+          event = {
+            stopPropagation: sinon.spy(),
+            stopImmediatePropagation: sinon.spy(),
+          };
+          sinon.stub(view, 'getCsv', promise_function);
+          cordova.plugins = {
+            clipboard: {
+              copy: sinon.spy()
+            }
+          };
+          window.app.toastView = {
+            show: sinon.spy()
+          };
+        });
+
+        it('should have copyButton_clickHandler method', function() {
+          view.copyButton_clickHandler.should.be.an('function');
+        });
+
+        it('should call event.stopPropagation', function() {
+          view.copyButton_clickHandler(event);
+          event.stopPropagation.called.should.be.true();
+        });
+
+        it('should call event.stopImmediatePropagation', function() {
+          view.copyButton_clickHandler(event);
+          event.stopImmediatePropagation.called.should.be.true();
+        });
+
+        it('should call getCsv', function() {
+          view.copyButton_clickHandler(event);
+          view.getCsv.called.should.be.true();
+        });
+
+        it('should call cordova.plugins.clipboard.copy', function(done) {
+          view.copyButton_clickHandler(event).then(function() {
+            cordova.plugins.clipboard.copy.called.should.be.true();
+          }).then(done);
+        });
+
+        it('should call cordova.plugins.clipboard.copy with correct params', function(done) {
+          view.copyButton_clickHandler(event).then(function() {
+            cordova.plugins.clipboard.copy.calledWith(csv).should.be.true();
+          }).then(done);
+        });
+
+        it('should call window.app.toastView.show', function(done) {
+          view.copyButton_clickHandler(event).then(function() {
+            window.app.toastView.show.called.should.be.true();
+          }).then(done);
+        });
+
+        it('should call window.app.toastView.show with correct message', function(done) {
+          var message = "The entries were successfully copied in clipboard";
+          view.copyButton_clickHandler(event).then(function() {
+            window.app.toastView.show.calledWith(message).should.be.true();
+          }).then(done);
+        });
+
+      });
+      
+      describe('shareButton_clickHandler', function() {
+        
+        var event, filePath;
+
+        beforeEach(function() {
+          filePath = '/tmp/export.csv';
+          var promise_function = function(data_return) {
+            function promise_revolved() {
+              var promise = $.Deferred();
+              promise.resolve(data_return);
+              return promise;
+            };
+            return promise_revolved;
+          };
+          event = {
+            stopPropagation: sinon.spy(),
+            stopImmediatePropagation: sinon.spy(),
+          };
+          sinon.stub(view, 'getCsv', promise_function(csv));
+          sinon.stub(view, 'writeCordovaFile', promise_function(filePath));
+          cordova.file = {
+            cacheDirectory: 'cdb://mobile'
+          };
+          window.plugins = {
+            socialsharing: {
+              shareWithOptions: sinon.spy()
+            }
+          };
+        });
+
+        it('should have shareButton_clickHandler method', function() {
+          view.shareButton_clickHandler.should.be.an('function');
+        });
+
+        it('should call event.stopPropagation', function() {
+          view.shareButton_clickHandler(event);
+          event.stopPropagation.called.should.be.true();
+        });
+
+        it('should call event.stopImmediatePropagation', function() {
+          view.shareButton_clickHandler(event);
+          event.stopImmediatePropagation.called.should.be.true();
+        });
+
+        it('should call getCsv', function() {
+          view.shareButton_clickHandler(event);
+          view.getCsv.called.should.be.true();
+        });
+
+        it('should call writeCordovaFile', function(done) {
+          view.shareButton_clickHandler(event).then(function() {
+            view.writeCordovaFile.called.should.be.true();
+          }).then(done);
+        });
+
+        it('should call writeCordovaFile with correct params', function(done) {
+          view.shareButton_clickHandler(event).then(function() {
+            view.writeCordovaFile.calledWith('export.csv', csv).should.be.true();
+          }).then(done);
+        });
+
+        it('should call window.plugins.socialsharing.shareWithOptions', function(done) {
+          view.shareButton_clickHandler(event).then(function() {
+           window.plugins.socialsharing.shareWithOptions.called.should.be.true();
+          }).then(done);
+        });
+
+        it('should call window.plugins.socialsharing.shareWithOptions with correct options', function(done) {
+          var options = {
+            message: 'Encryptr csv with entries data',
+            files: [cordova.file.cacheDirectory + filePath],
+            subject: 'Encryptr data'
+          };
+          view.shareButton_clickHandler(event).then(function() {
+            window.plugins.socialsharing.shareWithOptions.calledWith(options).should.be.true();
+          }).then(done);
+        });
+
+      });
+    
     });
 
     describe('Methods for NW.js plataforms', function() {
