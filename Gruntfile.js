@@ -213,7 +213,8 @@ module.exports = function(grunt) {
         sub: true,
         globals: {
           cordova: true,
-          json2csv: true
+          json2csv: true,
+          URL: true
         }
       }
     },
