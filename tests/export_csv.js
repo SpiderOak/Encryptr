@@ -132,10 +132,16 @@ describe('Export to Csv', function() {
         csvdata.should.be.eql([csvData]);
       });
 
-    describe('saveCsv', function() {
-      it('should have saveCsv method', function() {
-        view.saveCsv.should.be.an('function');
+      it('should call addDataFromEntry', function() {
+        view.getCsvData(entries, fields);
+        view.addDataFromEntry.called.should.be.true();
       });
+
+      it('should call addDataFromEntry with correct params', function() {
+        view.getCsvData(entries, fields);
+        view.addDataFromEntry.calledWith(entry, fields).should.be.true();
+      });
+
     });
 
     describe('generateCsvFromEntries', function() {
