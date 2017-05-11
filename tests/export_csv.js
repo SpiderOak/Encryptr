@@ -334,9 +334,6 @@ describe('Export to Csv', function() {
 
     });
 
-    describe('exportButton_clickHandler', function() {
-      it('should have addFieldFromEntry method', function() {
-        view.addFieldFromEntry.should.be.an('function');
     describe('getCsv', function() {
 
       beforeEach(function() {
@@ -367,5 +364,155 @@ describe('Export to Csv', function() {
 
       });
     });
+
+    describe('Methods for NW.js plataforms', function() {
+    
+      describe('exportButton_clickHandler', function() {
+        var event;
+
+        beforeEach(function() {
+          var promise_function = function() {
+            var promise = $.Deferred();
+            promise.resolve(csv);
+            return promise;
+          };
+          event = {
+            stopPropagation: sinon.spy(),
+            stopImmediatePropagation: sinon.spy(),
+          };
+          sinon.stub(view, 'getCsv', promise_function);
+          sinon.stub(view, 'saveCsv', promise_function);
+        });
+
+        it('should have exportButton_clickHandler method', function() {
+          view.exportButton_clickHandler.should.be.an('function');
+        });
+
+        it('should call event.stopPropagation', function() {
+          view.exportButton_clickHandler(event);
+          event.stopPropagation.called.should.be.true();
+        });
+
+        it('should call event.stopImmediatePropagation', function() {
+          view.exportButton_clickHandler(event);
+          event.stopImmediatePropagation.called.should.be.true();
+        });
+
+        it('should call getCsv', function() {
+          view.exportButton_clickHandler(event);
+          view.getCsv.called.should.be.true();
+        });
+
+        it('should call saveCsv', function(done) {
+          view.exportButton_clickHandler(event).then(function() {
+            view.saveCsv.called.should.be.true();
+          }).then(done);
+        });
+
+        it('should call saveCsv with correct params', function(done) {
+          view.exportButton_clickHandler(event).then(function() {
+            view.saveCsv.calledWith(csv).should.be.true();
+          }).then(done);
+        });
+      });
+
+      describe('saveCsv', function() {
+
+        var BlobNotStub, blob, url, a_object, type;
+
+        beforeEach(function() {
+          type = 'text/csv';
+          url = 'http://loclahost:3000/4901-234-234-653-2134';
+          URL = {
+            createObjectURL: sinon.stub().returns(url)
+          };
+          a_object = sinon.stub().returns('<a></a>');
+          a_object.click = sinon.spy();
+          sinon.stub(document, 'createElement').returns(a_object);
+          BlobNotStub = JSON.parse(JSON.stringify(Blob));
+          blob = 'blob';
+          Blob = sinon.stub().returns(blob);
+          sinon.stub(document.body, 'appendChild');
+          sinon.stub(document.body, 'removeChild');
+          window.URL = {
+            revokeObjectURL: sinon.spy(),
+            createObjectURL: sinon.stub().returns(url)
+          };
+        });
+
+        afterEach(function() {
+          Blob = BlobNotStub;
+          document.body.appendChild.restore();
+          document.body.removeChild.restore();
+          document.createElement.restore();
+        });
+
+        it('should have saveCsv method', function() {
+          view.saveCsv.should.be.an('function');
+        });
+
+        it('should call Blob', function() {
+          view.saveCsv(csv);
+          Blob.called.should.be.true();
+        });
+
+        it('should call Blob with correct params', function() {
+          view.saveCsv(csv);
+          Blob.calledWith([csv], {'type': type}).should.be.true();
+        });
+
+        it('should call document.createElement', function() {
+          view.saveCsv(csv);
+          document.createElement.called.should.be.true();
+        });
+
+        it('should call document.createElement with correct params', function() {
+          view.saveCsv(csv);
+          document.createElement.calledWith("a").should.be.true();
+        });
+
+        it('should call window.URL.createObjectURL', function() {
+          view.saveCsv(csv);
+          Blob.called.should.be.true();
+        });
+
+        it('should call document.body.appendChild', function() {
+          view.saveCsv(csv);
+          document.body.appendChild.called.should.be.true();
+        });
+
+        it('should call document.body.appendChild with correct params', function() {
+          view.saveCsv(csv);
+          document.body.appendChild.calledWith(a_object).should.be.true();
+        });
+
+        it('should call document.body.removeChild', function() {
+          view.saveCsv(csv);
+          document.body.removeChild.called.should.be.true();
+        });
+
+        it('should call document.body.removeChild with correct params', function() {
+          view.saveCsv(csv);
+          document.body.removeChild.calledWith(a_object).should.be.true();
+        });
+
+        it('should call window.URL.revokeObjectURL', function() {
+          view.saveCsv(csv);
+          window.URL.revokeObjectURL.called.should.be.true();
+        });
+
+        it('should call window.URL.revokeObjectURL with correct params', function() {
+          view.saveCsv(csv);
+          window.URL.revokeObjectURL.calledWith(url).should.be.true();
+        });
+
+        it('should call a.click', function() {
+          view.saveCsv(csv);
+          a_object.click.called.should.be.true();
+        });
+
+      });
+    
+    }); 
 
 });
