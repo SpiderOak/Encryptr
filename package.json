@@ -19,7 +19,6 @@
       "url": "http://www.gnu.org/licenses/gpl.html"
     }
   ],
-  "cordova-ios": "https://github.com/apache/cordova-ios.git#master",
   "dependencies": {
     "cordova-icon": "^0.3.0",
     "cordova-splash": "^0.3.0",
