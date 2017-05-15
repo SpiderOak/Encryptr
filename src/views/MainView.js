@@ -56,6 +56,7 @@
       }
       if ($.os.nodeWebkit) {
         $('.fab').css({visibility: "hidden"});
+        $('.nav .export-btn.right').addClass('right2');
       } else {
         $('.nav .add-btn.right').addClass('shrunken');
         $('.fab.add-btn').on('click', this.addButton_clickHandler);
