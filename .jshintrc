@@ -16,6 +16,8 @@
   "wsh": true,
   "sub": true,
   "globals": {
-    "cordova": true
+    "cordova": true,
+    "json2csv": true,
+    "URL": true
   }
 }
