@@ -177,7 +177,7 @@
     },
     getCsv: function() {
      var self = this;
-     $(".entriesViewLoading").text("loading entries...");
+     $(".entriesViewLoading").text("Generating CSV file...");
      $(".entriesViewLoading").addClass("loadingEntries");
      return this.getEntries().then(function(){
       var entries = arguments;
