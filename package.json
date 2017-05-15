@@ -77,4 +77,4 @@
             "cordova-plugin-whitelist": {}
         }
     }
-}
+}    "load-grunt-tasks": "^3.5.2",

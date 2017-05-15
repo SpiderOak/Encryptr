@@ -1,5 +1,9 @@
 /*global module:false*/
+/* jshint node: true */
+
 module.exports = function(grunt) {
+
+  require('load-grunt-tasks')(grunt);
 
   // Project configuration.
   grunt.initConfig({
@@ -209,18 +213,6 @@ module.exports = function(grunt) {
       }
     }
   });
-
-  grunt.loadNpmTasks('grunt-shell');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-dot-compiler');
-  grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-mocha-test');
-
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-node-webkit-builder');
-
 
   // Custom tasks
   grunt.registerTask('test', 'Do mocha test, default spec', function(which) {
