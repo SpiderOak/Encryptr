@@ -189,10 +189,14 @@ var Encryptr = (function (window, console, undefined) {
 
   Encryptr.prototype.setOffline = function(event) {
     this.online = false;
+    window.online = false;
+    window.crypton.online = false;
   };
 
   Encryptr.prototype.setOnline = function(event) {
     this.online = true;
+    window.online = true;
+    window.crypton.online = true;
   };
 
   Encryptr.prototype.onResume = function(event) {
