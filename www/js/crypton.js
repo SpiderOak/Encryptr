@@ -1,19 +1,16 @@
-/* Crypton Client, Copyright 2013 SpiderOak, Inc.
+/* Crypton Client, Copyright 2013, 2014, 2015 SpiderOak, Inc.
  *
  * This file is part of Crypton Client.
  *
- * Crypton Client is free software: you can redistribute it and/or modify it
- * under the terms of the Affero GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Crypton Client is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the Affero GNU General Public
- * License for more details.
- *
- * You should have received a copy of the Affero GNU General Public License
- * along with Crypton Client.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License. 
 */
 
 var crypton = {};
@@ -39,8 +36,14 @@ crypton.version = '0.0.4';
 crypton.MIN_PBKDF2_ROUNDS = 1000;
 
 /**!
+ * ### online
+ * client connection state
+ */
+crypton.online = true; 
+
+/**!
  * ### clientVersionMismatch
- * Holds cleint <-> server version mismatch status
+ * Holds client <-> server version mismatch status
  */
 crypton.clientVersionMismatch = undefined;
 
@@ -374,6 +377,173 @@ crypton.generateAccount = function (username, passphrase, callback, options) {
 };
 
 /**!
+   * ### makeSession(sessionId, account)
+   * 
+   * Makes and return new session and account for user in login
+   *
+   * @param {string} sessionId
+   * @param {Object} account
+   */
+  crypton.makeSession = function(sessionId, account){
+    crypton.sessionId = sessionId;
+    var session = new crypton.Session(crypton.sessionId);
+    session.account = new crypton.Account();
+    session.account.challengeKey = account.challengeKey;
+    session.account.containerNameHmacKeyCiphertext = account.containerNameHmacKeyCiphertext;
+    session.account.hmacKeyCiphertext = account.hmacKeyCiphertext;
+    session.account.keypairCiphertext = account.keypairCiphertext;
+    session.account.keypairMac = account.keypairMac;
+    session.account.pubKey = account.pubKey;
+    session.account.challengeKeySalt = account.challengeKeySalt;
+    session.account.keypairSalt = account.keypairSalt;
+    session.account.keypairMacSalt = account.keypairMacSalt;
+    session.account.signKeyPub = account.signKeyPub;
+    session.account.signKeyPrivateCiphertext = account.signKeyPrivateCiphertext;
+    session.account.signKeyPrivateMacSalt = account.signKeyPrivateMacSalt;
+    session.account.signKeyPrivateMac = account.signKeyPrivateMac;
+    return session;
+  };
+
+  /**!
+   * ### loginWithStorage(username, passphrase, callback, data, options)
+   * Perform zero-knowledge login with given `username`
+   * and `passphrase` with offline data in sessionStorage
+   * generating a session if successful
+   *
+   * Calls back with session and without error if successful
+   *
+   * Calls back with error if unsuccessful
+   *
+   * SRP variables are named as defined in RFC 5054
+   * and RFC 2945, prefixed with 'srp'
+   *
+   * @param {String} username
+   * @param {String} passphrase
+   * @param {Function} callback
+   * @param {Object} data
+   * @param {Object} options
+   */
+  crypton.loginWithStorage = function(username, passphrase, callback, data, options) {
+    var sessionData = JSON.parse(window.sessionStorage.getItem('crypton')).Session;
+    if (sessionData === null) {
+      callback('Offline server could not be verified');
+      return;
+    }
+    crypton.sessionId = sessionData.sessionId;
+    var session = crypton.makeSession(sessionData.sessionId, sessionData.account);
+    session.account.username = username;
+    session.account.passphrase = passphrase;
+    sessionData.options.username = username;
+    sessionData.options.passphrase = passphrase;
+    crypton.work.calculateSrpM1(sessionData.options, function(err, srpM1, ourSrpM2) {
+      if (!constEqual(sessionData.srpM2, ourSrpM2)) { 
+        callback('Server could not be verified');
+        return;
+      }
+      session.account.unravel(function(err) {
+        if (err) {
+          return callback(err);
+        }
+        return callback(null, session);
+      });
+    });
+  };
+
+  /**!
+   * ### login(username, passphrase, callback, data, options)
+   * Perform zero-knowledge authorization with given `username`
+   * and `passphrase`, generating a session if successful
+   *
+   * Calls back with session and without error if successful
+   *
+   * Calls back with error if unsuccessful
+   *
+   * SRP variables are named as defined in RFC 5054
+   * and RFC 2945, prefixed with 'srp'
+   *
+   * @param {String} username
+   * @param {String} passphrase
+   * @param {Function} callback
+   * @param {Object} data
+   * @param {Object} options
+   */
+  crypton.login = function(username, passphrase, callback, data, options) {
+    var response = {
+      srpA: data.srpAstr,
+    };
+    superagent.post(crypton.url() + '/account/' + username)
+      .withCredentials()
+      .send(response)
+      .end(function(res) {
+        if (!res.body || res.body.success !== true) {
+          return callback(res.body.error);
+        }
+        // check for response session header:
+        // XXX: Make sure we have a sid!
+        crypton.sessionId = res.body.sid;
+        options.a = data.a;
+        options.srpA = data.srpA;
+        options.srpB = res.body.srpB;
+        options.srpSalt = res.body.srpSalt;
+        // calculateSrpM1
+        crypton.work.calculateSrpM1(options, function(err, srpM1, ourSrpM2) {
+          response = {
+            srpM1: srpM1,
+          };
+          var url = crypton.url() + '/account/' + username + '/answer?sid=' + crypton.sessionId;
+          superagent.post(url)
+            .withCredentials()
+            .send(response)
+            .end(function(res) {
+              if (!res.body || res.body.success !== true) {
+                callback(res.body.error);
+                return;
+              }
+              if (!constEqual(res.body.srpM2, ourSrpM2)) {
+                callback('Server could not be verified');
+                return;
+              }
+              var session = crypton.makeSession(crypton.sessionId, res.body.account);
+
+              // Save session data in local storage
+              delete options.username;
+              delete options.passphrase;
+              var sessionToLocalStorage = {
+                Session: {
+                  sessionId: crypton.sessionId,
+                  account: session.account,
+                  options: options,
+                  srpM2: res.body.srpM2
+                },
+                  containers: {}
+              };
+              window.sessionStorage.setItem('crypton', JSON.stringify(sessionToLocalStorage));
+
+              session.account.username = username;
+              session.account.passphrase = passphrase;
+              session.account.unravel(function(err) {
+                if (err) {
+                  return callback(err);
+                }
+                // check for internal 'trusted peers' Item
+                session.getOrCreateItem(crypton.trustedPeers,
+                  function(err, item) {
+                    if (err) {
+                      var _err = 'Cannot get "trusted peers" Item';
+                      console.error(_err, err);
+                      // still need to return the session
+                      return callback(_err, session);
+                    }
+                    return callback(null, session);
+                  }
+                );
+              });
+            });
+        });
+      });
+  };
+
+/**!
  * ### authorize(username, passphrase, callback)
  * Perform zero-knowledge authorization with given `username`
  * and `passphrase`, generating a session if successful
@@ -397,7 +567,9 @@ crypton.authorize = function (username, passphrase, callback, options) {
 
   options = options || {};
   var check = typeof options.check !== 'undefined' ? options.check : true;
-
+  if (!crypton.online){
+    check = false;
+  }
   crypton.versionCheck(!check, function (err) {
     if (err) {
       return callback(MISMATCH_ERR);
@@ -421,107 +593,26 @@ crypton.authorize = function (username, passphrase, callback, options) {
           return callback(err);
         }
 
-        var response = {
-          srpA: data.srpAstr
-        };
-
-        superagent.post(crypton.url() + '/account/' + username)
-        .withCredentials()
-        .send(response)
-        .end(function (res) {
-          if (!res.body || res.body.success !== true) {
-            return callback(res.body.error);
-          }
-	  // check for response session header:
-	  // XXX: Make sure we have a sid!
-	  crypton.sessionId = res.body.sid;
-	  window.sessionStorage.setItem('sessionId', res.body.sid);
-
-          options.a = data.a;
-          options.srpA = data.srpA;
-          options.srpB = res.body.srpB;
-          options.srpSalt = res.body.srpSalt;
-
-          // calculateSrpM1
-          crypton.work.calculateSrpM1(options, function (err, srpM1, ourSrpM2) {
-            response = {
-		srpM1: srpM1
-            };
-
-	    var url = crypton.url() +
-		'/account/' + username + '/answer?sid=' + crypton.sessionId;
-            superagent.post(url)
-            .withCredentials()
-            .send(response)
-            .end(function (res) {
-              if (!res.body || res.body.success !== true) {
-                callback(res.body.error);
-                return;
-              }
-
-              if (!constEqual(res.body.srpM2, ourSrpM2)) {
-                callback('Server could not be verified');
-                return;
-              }
-
-              var session = new crypton.Session(crypton.sessionId);
-              session.account = new crypton.Account();
-              session.account.username = username;
-              session.account.passphrase = passphrase;
-              session.account.challengeKey = res.body.account.challengeKey;
-              session.account.containerNameHmacKeyCiphertext = res.body.account.containerNameHmacKeyCiphertext;
-              session.account.hmacKeyCiphertext = res.body.account.hmacKeyCiphertext;
-              session.account.keypairCiphertext = res.body.account.keypairCiphertext;
-              session.account.keypairMac = res.body.account.keypairMac;
-              session.account.pubKey = res.body.account.pubKey;
-              session.account.challengeKeySalt = res.body.account.challengeKeySalt;
-              session.account.keypairSalt = res.body.account.keypairSalt;
-              session.account.keypairMacSalt = res.body.account.keypairMacSalt;
-              session.account.signKeyPub = res.body.account.signKeyPub;
-              session.account.signKeyPrivateCiphertext = res.body.account.signKeyPrivateCiphertext;
-              session.account.signKeyPrivateMacSalt = res.body.account.signKeyPrivateMacSalt;
-              session.account.signKeyPrivateMac = res.body.account.signKeyPrivateMac;
-              session.account.unravel(function (err) {
-                if (err) {
-                  return callback(err);
-                }
-
-                // check for internal 'trusted peers' Item
-                session.getOrCreateItem(crypton.trustedPeers,
-                function (err, item) {
-                  if (err) {
-                    var _err = 'Cannot get "trusted peers" Item';
-                    console.error(_err, err);
-                    // still need to return the sesison
-                    return callback(_err, session);
-                  }
-                  return callback(null, session);
-                });
-              });
-            });
-          });
-        });
+        var loginFunction = (crypton.online) ? crypton.login:crypton.loginWithStorage;
+        return loginFunction(username, passphrase, callback, data, options);
       });
     }
   });
 };
 })();
-/* Crypton Client, Copyright 2013 SpiderOak, Inc.
+/* Crypton Client, Copyright 2013, 2014, 2015 SpiderOak, Inc.
  *
  * This file is part of Crypton Client.
  *
- * Crypton Client is free software: you can redistribute it and/or modify it
- * under the terms of the Affero GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Crypton Client is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the Affero GNU General Public
- * License for more details.
- *
- * You should have received a copy of the Affero GNU General Public License
- * along with Crypton Client.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License. 
 */
 
 (function() {
@@ -949,22 +1040,19 @@ Account.prototype.wrapAllKeys = function (wrappingKey, privateKeys, session) {
 };
 
 })();
-/* Crypton Client, Copyright 2013 SpiderOak, Inc.
+/* Crypton Client, Copyright 2013, 2014, 2015 SpiderOak, Inc.
  *
  * This file is part of Crypton Client.
  *
- * Crypton Client is free software: you can redistribute it and/or modify it
- * under the terms of the Affero GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Crypton Client is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the Affero GNU General Public
- * License for more details.
- *
- * You should have received a copy of the Affero GNU General Public License
- * along with Crypton Client.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License. 
 */
 
 (function () {
@@ -989,6 +1077,9 @@ var Session = crypton.Session = function (id) {
   this.events = {};
   this.containers = [];
   this.items = {};
+  this.itemHistory = {};
+  this.itemKeyLedger = {};
+  this.timeline = [];
   this.inbox = new crypton.Inbox(this);
 
   var that = this;
@@ -1035,7 +1126,6 @@ var Session = crypton.Session = function (id) {
       console.error(ERRS.ARG_MISSING);
       throw new Error(ERRS.ARG_MISSING);
     }
-    console.log('Item updated!', itemObj);
     // if any of the cached items match the HMAC
     // in the notification, sync the items and
     // call the listener if one has been set
@@ -1057,7 +1147,6 @@ var Session = crypton.Session = function (id) {
         }
       });
     } else {
-      console.log('Loading the item as it is not cached');
       // load item!
       // get the peer first:
       that.getPeer(itemObj.creator, function (err, peer) {
@@ -1137,7 +1226,7 @@ Session.prototype.removeItem = function removeItem (itemNameHmac, callback) {
  * @param {Function} callback
  */
 Session.prototype.getOrCreateItem =
-function getOrCreateItem (itemName,  callback) {
+  function getOrCreateItem (itemName, callback) {
 
   if (!itemName) {
     return callback('itemName is required');
@@ -1154,7 +1243,7 @@ function getOrCreateItem (itemName,  callback) {
     return;
   }
 
-  var creator = this.createSelfPeer();
+  var creator = this.selfPeer;
   var item =
   new crypton.Item(itemName, null, this, creator, function getItemCallback(err, item) {
     if (err) {
@@ -1199,6 +1288,14 @@ function getSharedItem (itemNameHmac,  peer, callback) {
   new crypton.Item(null, null, this, peer, getItemCallback, itemNameHmac);
 };
 
+Session.prototype.__defineGetter__("selfPeer", function() {
+  if (this._selfPeer) {
+    return this._selfPeer;
+  }
+  this._selfPeer = this.createSelfPeer();
+  return this._selfPeer;
+});
+
 /**!
  * ### createSelfPeer()
  * returns a 'selfPeer' object which is needed for any kind of
@@ -1216,6 +1313,302 @@ Session.prototype.createSelfPeer = function () {
   selfPeer.trusted = true;
   return selfPeer;
 };
+
+/**!
+ * ### getItemHistory()
+ * returns a row of items the user created
+ *
+ * Calls back with ItemHistory Array and without error if successful
+ *
+ * Calls back with error if unsuccessful
+ *
+ * @param {Object} options // e.g.: {lastItemRead: 12,offset: 350,limit: 20 }
+ * @param {Function} callback
+ */
+Session.prototype.getItemHistory =
+function getItemHistory (options, callback) {
+  if (typeof options != 'object') {
+    return callback(ERRS.ARG_MISSING_OBJECT);
+  }
+  if (typeof callback != 'function') {
+    return callback(ERRS.ARG_MISSING_CALLBACK);
+  }
+  var lastItemRead = options.lastItemRead; // item_history_id
+  var offset = options.offset;
+  var limit = options.limit;
+  if (typeof parseInt(lastItemRead) != 'number') {
+    lastItemRead = 0;
+  }
+  if (typeof parseInt(offset) != 'number') {
+    offset = 0;
+  }
+  if (typeof parseInt(limit) != 'number') {
+    limit = 10; // default MAX of 10 - for now
+  }
+
+  var that = this;
+  var url = crypton.url() + '/itemhistory/' + '?sid=' + crypton.sessionId
+          + '&historyid=' + lastItemRead // item_history_id
+          + '&offset=' + offset
+          + '&limit=' + limit;
+
+  superagent.get(url)
+  .withCredentials()
+  .end(function (res) {
+    if (!res.body || res.body.success !== true) {
+      console.error(res.body);
+      return callback('Cannot get item history');
+    }
+
+    // expand all item_history rows into actual items
+    var rows = res.body.rawData;
+    var history = [];
+    // XXXddahl: use async() ?
+    for (var i = 0; i < rows.length; i++) {
+      var timelineId = rows[i].timelineId;
+      if (that.itemHistory[timelineId]) {
+        // Let's not re-decrypt something that is most likely in our feed
+        continue;
+      }
+      var hitem = new crypton.HistoryItem(that, rows[i]);
+      history.push(hitem);
+    }
+    callback(null, history);
+  });
+};
+
+/**!
+ * ### getTimeline()
+ * returns a row of Timeline items
+ *
+ * Calls back with ItemHistory Array and without error if successful
+ *
+ * Calls back with error if unsuccessful
+ *
+ * @param {Object} options // e.g.: {lastItemRead: 12,offset: 350,limit: 20 }
+ * @param {Function} callback
+ */
+Session.prototype.getTimeline =
+function getTimeline (options, callback) {
+  if (typeof options != 'object') {
+    return callback(ERRS.ARG_MISSING_OBJECT);
+  }
+  if (typeof callback != 'function') {
+    return callback(ERRS.ARG_MISSING_CALLBACK);
+  }
+
+  var lastItemRead = options.lastItemRead; // item_history_id
+  var offset = options.offset;
+  var limit = options.limit;
+  var direction = options.direction;
+  if (typeof parseInt(lastItemRead) != 'number') {
+    lastItemRead = 0;
+  }
+  if (typeof parseInt(offset) != 'number') {
+    offset = 0;
+  }
+  if (typeof parseInt(limit) != 'number') {
+    limit = 10; // default MAX of 10 - for now
+  }
+
+  var that = this;
+  var url = crypton.url() + '/timeline/' + '?sid=' + crypton.sessionId
+          + '&timelineid=' + lastItemRead // timeline_id
+          + '&offset=' + offset
+          + '&limit=' + limit
+          + '&direction=' + direction;
+
+  superagent.get(url)
+  .withCredentials()
+  .end(function (res) {
+    if (!res.body || res.body.success !== true) {
+      console.error(res.body);
+      return callback('Cannot get timeline');
+    }
+
+    // expand all item_history rows into actual items
+    var rows = res.body.rawData;
+    var history = [];
+    // XXXddahl: use async() ?
+    for (var i = 0; i < rows.length; i++) {
+      var hitem = new crypton.HistoryItem(that, rows[i]);
+      history.push(hitem);
+    }
+    callback(null, history);
+  });
+};
+
+/**!
+ * ### getLatestTimeline()
+ * returns latest Timeline items
+ *
+ * Calls back with ItemHistory Array and without error if successful
+ *
+ * Calls back with error if unsuccessful
+ *
+ * @param {Object} options // e.g.: { limit: 20 }
+ * @param {Function} callback
+ */
+Session.prototype.getLatestTimeline =
+function getLatestTimeline (options, callback) {
+  if (typeof options != 'object') {
+    return callback(ERRS.ARG_MISSING_OBJECT);
+  }
+  if (typeof callback != 'function') {
+    return callback(ERRS.ARG_MISSING_CALLBACK);
+  }
+
+  var limit = options.limit;
+  if (typeof parseInt(limit) != 'number') {
+    limit = 10; // default MAX of 10 - for now
+  }
+  
+  var that = this;
+  var url = crypton.url() + '/timeline-latest/' + '?sid=' + crypton.sessionId
+        + '&limit=' + limit;
+
+  superagent.get(url)
+  .withCredentials()
+  .end(function (res) {
+    if (!res.body || res.body.success !== true) {
+      console.error(res.body);
+      return callback('Cannot get timeline');
+    }
+
+    // expand all item_history rows into actual items
+    var rows = res.body.rawData;
+    var history = [];
+    for (var i = 0; i < rows.length; i++) {
+      var hitem = new crypton.HistoryItem(that, rows[i]);
+      if (hitem === null) {
+	continue;
+	// HistoryItem will return null if the item is
+	// supposed to be ignored by the Timeline code
+      }
+      history.push(hitem);
+    }
+    history.reverse();
+  
+    callback(null, history);
+  });
+};
+
+
+/**!
+ * ### getTimelineBefore()
+ * returns Timeline items before ID
+ *
+ * Calls back with ItemHistory Array and without error if successful
+ *
+ * Calls back with error if unsuccessful
+ *
+ * @param {Object} options // e.g.: { limit: 20, beforeId: 12345 }
+ * @param {Function} callback
+ */
+Session.prototype.getTimelineBefore =
+function getTimelineBefore (options, callback) {
+  if (typeof options != 'object') {
+    return callback(ERRS.ARG_MISSING_OBJECT);
+  }
+  if (typeof callback != 'function') {
+    return callback(ERRS.ARG_MISSING_CALLBACK);
+  }
+
+  var limit = options.limit;
+  if (typeof parseInt(limit) != 'number') {
+    limit = 10; // default MAX of 10 - for now
+  }
+
+  var beforeId = options.beforeId;
+  if (typeof parseInt(beforeId) != 'number') {
+    console.error('\'beforeId\' property is missing from the options argument');	
+    return callback(ERRS.ARG_MISSING);
+  }
+    
+  var that = this;
+  var url = crypton.url() + '/timeline-before/' + '?sid=' + crypton.sessionId
+          + '&limit=' + limit
+          + '&beforeId=' + beforeId;
+    
+  superagent.get(url)
+  .withCredentials()
+  .end(function (res) {
+    if (!res.body || res.body.success !== true) {
+      console.error(res.body);
+      return callback('Cannot get timeline');
+    }
+
+    // expand all item_history rows into actual items
+    var rows = res.body.rawData;
+    var history = [];
+    for (var i = 0; i < rows.length; i++) {
+      var hitem = new crypton.HistoryItem(that, rows[i]);
+      history.push(hitem);
+    }
+  
+    callback(null, history);
+  });
+};
+
+
+/**!
+ * ### getTimelineAfter()
+ * returns Timeline items after ID
+ *
+ * Calls back with ItemHistory Array and without error if successful
+ *
+ * Calls back with error if unsuccessful
+ *
+ * @param {Object} options // e.g.: { limit: 20, afterId: 12345 }
+ * @param {Function} callback
+ */
+Session.prototype.getTimelineAfter =
+function getTimelineAfter (options, callback) {
+  if (typeof options != 'object') {
+    return callback(ERRS.ARG_MISSING_OBJECT);
+  }
+  if (typeof callback != 'function') {
+    return callback(ERRS.ARG_MISSING_CALLBACK);
+  }
+
+  var limit = options.limit;
+  if (typeof parseInt(limit) != 'number') {
+    limit = 10; // default MAX of 10 - for now
+  }
+
+  var afterId = options.afterId;
+  if (typeof parseInt(afterId) != 'number') {
+    console.error('\'afterId\' property is missing from the options argument');	
+    return callback(ERRS.ARG_MISSING);
+  }
+    
+  var that = this;
+  var url = crypton.url() + '/timeline-after/' + '?sid=' + crypton.sessionId
+          + '&limit=' + limit
+          + '&afterId=' + afterId;
+    
+  superagent.get(url)
+  .withCredentials()
+  .end(function (res) {
+    if (!res.body || res.body.success !== true) {
+      console.error(res.body);
+      return callback('Cannot get timeline');
+    }
+
+    // expand all item_history rows into actual items
+    var rows = res.body.rawData;
+    var history = [];
+    for (var i = 0; i < rows.length; i++) {
+      var hitem = new crypton.HistoryItem(that, rows[i]);
+      history.push(hitem);
+    }
+    history.reverse();
+  
+    callback(null, history);
+  });
+};
+
+// =================== Containers ===================== //
 
 /**!
  * ### load(containerName, callback)
@@ -1298,6 +1691,15 @@ Session.prototype.loadWithHmac = function (containerNameHmac, peer, callback) {
  * @param {Function} callback
  */
 Session.prototype.create = function (containerName, callback) {
+
+  if (!crypton.online){
+    var container = JSON.parse(window.sessionStorage.getItem('crypton')).containers[containerName];
+    if (container === null){
+      return callback('Container not found in sessionStorage');
+    }
+    return callback(null, container);
+  }
+
   for (var i in this.containers) {
     if (crypton.constEqual(this.containers[i].name, containerName)) {
       callback('Container already exists');
@@ -1379,6 +1781,12 @@ Session.prototype.create = function (containerName, callback) {
         container.name = containerName;
         container.sessionKey = sessionKey;
         that.containers.push(container);
+
+        // Save object in sessionStorage
+        var cryptonToLocalStorage = JSON.parse(window.sessionStorage.getItem('crypton'));
+        cryptonToLocalStorage.containers[containerName] = container;
+        window.sessionStorage.setItem('crypton', JSON.stringify(cryptonToLocalStorage));
+
         callback(null, container);
       });
     });
@@ -1551,22 +1959,19 @@ Session.prototype.emit = function (eventName, data) {
 };
 
 })();
-/* Crypton Client, Copyright 2013 SpiderOak, Inc.
+/* Crypton Client, Copyright 2013, 2014, 2015 SpiderOak, Inc.
  *
  * This file is part of Crypton Client.
  *
- * Crypton Client is free software: you can redistribute it and/or modify it
- * under the terms of the Affero GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Crypton Client is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the Affero GNU General Public
- * License for more details.
- *
- * You should have received a copy of the Affero GNU General Public License
- * along with Crypton Client.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License. 
 */
 
 (function () {
@@ -1790,9 +2195,13 @@ Container.prototype.getPublicName = function () {
 Container.prototype.getHistory = function (callback) {
   var containerNameHmac = this.getPublicName();
   var currentVersion = this.latestVersion();
+  
+  if (!crypton.online) {
+    var containers = JSON.parse(window.sessionStorage.getItem('crypton')).containers[containerNameHmac + currentVersion];
+    return callback(null, containers);
+  }
 
   var url = crypton.url() + '/container/' + containerNameHmac + '?after=' + (currentVersion + 1) + '&sid=' + crypton.sessionId;
-  console.log('getHistory', url);
   superagent.get(url)
     .withCredentials()
     // .set('X-Session-ID', crypton.sessionId)
@@ -1801,7 +2210,10 @@ Container.prototype.getHistory = function (callback) {
         callback(res.body.error);
         return;
       }
-
+      // Save object in sessionStorage
+      var cryptonToLocalStorage = JSON.parse(window.sessionStorage.getItem('crypton'));
+      cryptonToLocalStorage.containers[containerNameHmac + currentVersion] = res.body.records;
+      window.sessionStorage.setItem('crypton', JSON.stringify(cryptonToLocalStorage));
       callback(null, res.body.records);
     });
 };
@@ -2045,22 +2457,19 @@ Container.prototype.unwatch = function () {
 };
 
 })();
-/* Crypton Client, Copyright 2013 SpiderOak, Inc.
+/* Crypton Client, Copyright 2013, 2014, 2015 SpiderOak, Inc.
  *
  * This file is part of Crypton Client.
  *
- * Crypton Client is free software: you can redistribute it and/or modify it
- * under the terms of the Affero GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Crypton Client is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the Affero GNU General Public
- * License for more details.
- *
- * You should have received a copy of the Affero GNU General Public License
- * along with Crypton Client.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License. 
 */
 
 (function () {
@@ -2278,22 +2687,19 @@ Transaction.prototype.verifyChunk = function (chunk) {
 };
 
 })();
-/* Crypton Client, Copyright 2013 SpiderOak, Inc.
+/* Crypton Client, Copyright 2013, 2014, 2015 SpiderOak, Inc.
  *
  * This file is part of Crypton Client.
  *
- * Crypton Client is free software: you can redistribute it and/or modify it
- * under the terms of the Affero GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Crypton Client is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the Affero GNU General Public
- * License for more details.
- *
- * You should have received a copy of the Affero GNU General Public License
- * along with Crypton Client.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License. 
 */
 
 (function () {
@@ -2488,22 +2894,19 @@ Peer.prototype.trust = function (callback) {
 };
 
 })();
-/* Crypton Client, Copyright 2013 SpiderOak, Inc.
+/* Crypton Client, Copyright 2013, 2014, 2015 SpiderOak, Inc.
  *
  * This file is part of Crypton Client.
  *
- * Crypton Client is free software: you can redistribute it and/or modify it
- * under the terms of the Affero GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Crypton Client is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the Affero GNU General Public
- * License for more details.
- *
- * You should have received a copy of the Affero GNU General Public License
- * along with Crypton Client.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License. 
 */
 
 (function() {
@@ -2588,22 +2991,19 @@ Message.prototype.send = function (callback) {
 };
 
 })();
-/* Crypton Client, Copyright 2013 SpiderOak, Inc.
+/* Crypton Client, Copyright 2013, 2014, 2015 SpiderOak, Inc.
  *
  * This file is part of Crypton Client.
  *
- * Crypton Client is free software: you can redistribute it and/or modify it
- * under the terms of the Affero GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Crypton Client is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the Affero GNU General Public
- * License for more details.
- *
- * You should have received a copy of the Affero GNU General Public License
- * along with Crypton Client.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License. 
 */
 
 (function() {
@@ -2761,22 +3161,19 @@ Inbox.prototype.parseRawMessages = function () {
 };
 
 })();
-/* Crypton Client, Copyright 2013 SpiderOak, Inc.
+/* Crypton Client, Copyright 2013, 2014, 2015 SpiderOak, Inc.
  *
  * This file is part of Crypton Client.
  *
- * Crypton Client is free software: you can redistribute it and/or modify it
- * under the terms of the Affero GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Crypton Client is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the Affero GNU General Public
- * License for more details.
- *
- * You should have received a copy of the Affero GNU General Public License
- * along with Crypton Client.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License. 
 */
 
 (function () {
@@ -2815,22 +3212,19 @@ Diff.apply = function (delta, old) {
 
 })();
 
-/* Crypton Client, Copyright 2013 SpiderOak, Inc.
+/* Crypton Client, Copyright 2013, 2014, 2015 SpiderOak, Inc.
  *
  * This file is part of Crypton Client.
  *
- * Crypton Client is free software: you can redistribute it and/or modify it
- * under the terms of the Affero GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Crypton Client is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the Affero GNU General Public
- * License for more details.
- *
- * You should have received a copy of the Affero GNU General Public License
- * along with Crypton Client.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License. 
 */
 
 (function() {
@@ -3112,23 +3506,19 @@ work.decryptRecord = function (options, callback) {
 };
 
 })();
-
-/* Crypton Client, Copyright 2014 SpiderOak, Inc.
+/* Crypton Client, Copyright 2013, 2014, 2015 SpiderOak, Inc.
  *
  * This file is part of Crypton Client.
  *
- * Crypton Client is free software: you can redistribute it and/or modify it
- * under the terms of the Affero GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Crypton Client is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the Affero GNU General Public
- * License for more details.
- *
- * You should have received a copy of the Affero GNU General Public License
- * along with Crypton Client.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License. 
 */
 
 (function() {
@@ -3152,106 +3542,71 @@ var Card = crypton.Card = function Card () {};
  * @param {String} fingerprint
  * @param {String} username
  * @param {String} appname
- * @param {String} url [optional]
- *                 The application homepage
  * @param {String} domId [optional]
  */
 Card.prototype.createIdCard =
-  function (fingerprint, username, appname, url, domId) {
+  function (fingerprint, username, appname, domId) {
   if (!domId) {
     domId = 'id-card';
   }
-  if (!url) {
-    url = '';
-  }
 
   var fingerArr = this.createFingerprintArr(fingerprint);
-  var colorArr = this.createColorArr(fingerArr);
-
   var canvas = document.createElement('canvas');
-  canvas.width = 420;
-  canvas.height = 420;
+  canvas.width = 290;
+  canvas.height = 480;
   canvas.setAttribute('id', domId);
 
   var ctx = canvas.getContext("2d");
-  var x = 5;
-  var y = 5;
-  var w = 50;
-  var h = 50;
-
+  var x = 20;
+  var y = 15;
+    
   ctx.fillStyle = "white";
-  ctx.fillRect(0, 0, 420, 420);
+  ctx.fillRect(0, 0, 290, 480);
+    
+  ctx.fillStyle = "#CCCCCC";
+  ctx.fillRect(0, 0, 289, 1);
+  ctx.fillRect(0, 0, 1, 479);
+  ctx.fillRect(289, 0, 1, 479);
+  ctx.fillRect(0, 479, 290, 1);  
+
   ctx.fillStyle = "black";
-  y = y + 20;
-  ctx.font = "bold 24px sans-serif";
-  ctx.fillText(username, x, y);
-
-  y = y + 30;
-  ctx.font = "bold 18px sans-serif";
+  y = y + 10;
+  ctx.font = "11px sans-serif";
   ctx.fillText(appname, x, y);
-
-  y = y + 30;
-  ctx.font = "bold 24px sans-serif";
-  ctx.fillText('FINGERPRINT', x, y);
-  ctx.font = "24px sans-serif";
-
-  var i = 0;
-  var line = '';
-
-  for (var j = 0; j < fingerArr.length; j++) {
-    if (i == 3) {
-      line = line + fingerArr[j];
-      y = (y + 25);
-      ctx.fillText(line, x, y);
-      i = 0;
-      line = '';
-    } else {
-      line = line + fingerArr[j] + ' ';
-      i++;
-    }
-  }
-
-  y = y + 20;
-
-  var identigridCanvas = this.createIdentigrid(colorArr);
-  ctx.drawImage(identigridCanvas, x, y);
-
-  var qrCodeCanvas = this.createQRCode(fingerArr, username, appname, url);
-  ctx.drawImage(qrCodeCanvas, 210, 205);
-
+  y = y + 12;
+  var qrCodeCanvas = this.createQRCode(fingerArr, username, appname);
+  ctx.drawImage(qrCodeCanvas, 23, y);
+  y = y + 265;
+  ctx.fillText(username, x, y);
+    
   return canvas;
 };
-
+  
 /**!
- * ### createQRCode(fingerprint, username, appname, url)
+ * ### createQRCode(fingerprint, username, appname)
  *
  * returns canvas element
  *
  * @param {Array} fingerArr
  * @param {String} username
  * @param {String} appname
- * @param {String} url
  */
-Card.prototype.createQRCode = function (fingerArr, username, appname, url) {
+Card.prototype.createQRCode = function (fingerArr, username, appname) {
 
-  // generate QRCode
-  var qrData = this.generateQRCodeInput(fingerArr.join(" "), username, appname, url);
-  var qrCanvas = document.createElement('canvas');
-  qrCanvas.width = 200;
-  qrCanvas.height = 200;
-
-  new QRCode(qrCanvas,
-             { text: qrData,
-               width: 200,
-               height: 200,
-               colorDark : "#000000",
-               colorLight : "#ffffff",
-               correctLevel : QRCode.CorrectLevel.H
-             });
-  // XXXddahl: QRCode wraps the canvas in another one
-  return qrCanvas.childNodes[0];
+  var qrValue = JSON.stringify({ f: fingerArr.join(' '),
+			         u: username,
+			         a: appname
+			       });
+  
+  var qrCodeCanvas = qr.canvas({
+    value: qrValue,
+    level: 'H',
+    size: 10 // 250 X 250 PX
+  });
+  
+  return qrCodeCanvas;
 };
-
+ 
 /**!
  * ### createIdentigrid(fingerprint, username, appname)
  *
@@ -3342,7 +3697,7 @@ Card.prototype.createFingerprintArr = function (fingerprint) {
 };
 
 /**!
- * ### generateQRCodeInput(fingerprint, username, application, url)
+ * ### generateQRCodeInput(fingerprint, username, application)
  *
  * returns Array
  *
@@ -3353,28 +3708,25 @@ Card.prototype.generateQRCodeInput = function (fingerprint, username, applicatio
     url = '';
   }
   var json = JSON.stringify({ fingerprint: fingerprint, username: username,
-                              application: application, url: url });
+                              application: application });
   return json;
 };
 
 
 }());
-/* Crypton Client, Copyright 2015 SpiderOak, Inc.
+/* Crypton Client, Copyright 2013, 2014, 2015 SpiderOak, Inc.
  *
  * This file is part of Crypton Client.
  *
- * Crypton Client is free software: you can redistribute it and/or modify it
- * under the terms of the Affero GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Crypton Client is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the Affero GNU General Public
- * License for more details.
- *
- * You should have received a copy of the Affero GNU General Public License
- * along with Crypton Client.  If not, see <http://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License. 
 */
 
 (function() {
@@ -3585,7 +3937,6 @@ Item.prototype.save = function (callback) {
 
   superagent.post(url)
     .withCredentials()
-    // .set('X-Session-ID', crypton.sessionId)
     .send(payload)
     .end(function (res) {
       if (!res.body.success) {
@@ -3678,7 +4029,13 @@ Item.prototype.wrapItem = function item_wrapItem () {
     itemValue = '{}';
     this._value = {};
   }
-
+  var timelineVisibleFlag = 'f';
+  if (this._value.__meta) {
+    if (this._value.__meta.timelineVisible) {
+      timelineVisibleFlag = 't';
+    }
+  }
+ 
   var rawPayloadCiphertext =
     sjcl.encrypt(this.sessionKey, itemValue, crypton.cipherOptions);
   var payloadCiphertextHash = sjcl.hash.sha256.hash(rawPayloadCiphertext);
@@ -3699,7 +4056,8 @@ Item.prototype.wrapItem = function item_wrapItem () {
   var payload = {
     itemNameHmac: itemNameHmac,
     payloadCiphertext: JSON.stringify(payloadCiphertext),
-    wrappedSessionKey: JSON.stringify(sessionKeyCiphertext)
+    wrappedSessionKey: JSON.stringify(sessionKeyCiphertext),
+    timelineVisible: timelineVisibleFlag
   };
 
   return payload;
@@ -3841,7 +4199,6 @@ Item.prototype.unshare = function (peer, callback) {
 
   superagent.post(url)
     .withCredentials()
-    // .set('X-Session-ID', crypton.sessionId)
     .send(payload)
     .end(function (res) {
     if (!res.body.success) {
@@ -3873,22 +4230,160 @@ Item.prototype.lastUpdate = function (callback) {
 };
 
 })();
-/* Crypton Client, Copyright 2015 SpiderOak, Inc.
+/* Crypton Client, Copyright 2013, 2014, 2015 SpiderOak, Inc.
  *
  * This file is part of Crypton Client.
  *
- * Crypton Client is free software: you can redistribute it and/or modify it
- * under the terms of the Affero GNU General Public License as published by the
- * Free Software Foundation, either version 3 of the License, or (at your
- * option) any later version.
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  *
- * Crypton Client is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE.  See the Affero GNU General Public
- * License for more details.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License. 
+*/
+
+(function() {
+
+'use strict';
+
+var ERRS;
+
+var HistoryItem =
+crypton.HistoryItem = function HistoryItem (session, rawData) {
+  ERRS = crypton.errors;
+  this.rawData = rawData;
+  this.session = session;
+  this.timelineId = rawData.timelineId;
+  // fill out the rest of the properties needed at this level
+  this.modTime = this.rawData.modTime;
+  this.creationTime = this.rawData.creationTime;
+  var record;
+  if (!this.rawData.creatorUsername) {
+    this.itemHistoryId = this.rawData.itemHistoryId;
+    this.itemNameHmac = this.rawData.itemNameHmac;
+    record = this.decryptHistoryItem(null, null); // No shortcuts for now...
+    return record;
+  } else {
+    this.creatorUsername = this.rawData.creatorUsername;
+    this.timelineId = this.rawData.timelineId;
+    record = this.decryptTimelineItem(this.rawData.creatorUsername, null);
+  }
+  return record;
+};
+
+HistoryItem.prototype.decryptHistoryItem =
+function decryptHistoryItem (creator, sessionKey) {
+  if (!creator) {
+    this.creator = this.session.selfPeer;
+  } else {
+    this.creator = creator;
+  }
+
+  if (sessionKey) {
+    this.sessionKey = sessionKey;
+  }
+
+  var rawData = this.rawData;
+  var cipherItem = rawData.ciphertext;
+
+  var wrappedSessionKey = JSON.parse(rawData.wrappedSessionKey);
+
+  // check if this key is already in memory
+  var _key = app.session.itemKeyLedger[wrappedSessionKey.ciphertext.kemtag];
+  if (_key) {
+    this.sessionKey = _key;
+  }
+
+  // XXXddahl: create 'unwrapPayload()'
+  var ct = JSON.stringify(cipherItem.ciphertext);
+  var hash = sjcl.hash.sha256.hash(ct);
+  var verified = false;
+  try {
+    verified = this.creator.signKeyPub.verify(hash, cipherItem.signature);
+  } catch (ex) {
+    console.error(ex);
+    console.error(ex.stack);
+    throw new Error(ex);
+  }
+
+  // TODO: Keep a ledger of unwrapped keys so we dont have to unwrap a key for each item
+
+  // Check for this.sessionKey, or unwrap it
+  var sessionKeyResult;
+  if (!this.sessionKey) {
+    sessionKeyResult =
+      this.session.account.verifyAndDecrypt(wrappedSessionKey, this.creator);
+    if (sessionKeyResult.error) {
+      return new Error(ERRS.UNWRAP_KEY_ERROR);
+    }
+    this.sessionKey = JSON.parse(sessionKeyResult.plaintext);
+    var tag = wrappedSessionKey.ciphertext.kemtag;
+    app.session.itemKeyLedger[tag] = this.sessionKey;
+  }
+
+  var decrypted;
+  try {
+    decrypted = sjcl.decrypt(this.sessionKey, ct, crypton.cipherOptions);
+  } catch (ex) {
+    console.error(ex);
+    console.error(ex.stack);
+    throw new Error(ERRS.DECRYPT_CIPHERTEXT_ERROR);
+  }
+
+  if (decrypted) {
+    try {
+      this.value = JSON.parse(decrypted);
+    } catch (ex) {
+      console.error(ex);
+      console.error(ex.stack);
+      // XXXddahl: check to see if this is an actual JSON error (malformed string, etc)
+      this.value = decrypted; // Just a string, not an object
+    }
+
+    this.session.itemHistory[this.timelineId] = this;
+    return this.value;
+  }
+};
+
+HistoryItem.prototype.decryptTimelineItem =
+function decryptTimelineItem (creatorName, sessionKey) {
+  var that = this;
+  // get creator
+  // if creatorName is self, use selfPeer
+  if (creatorName == this.session.account.username) {
+    this.decryptHistoryItem(this.session.selfPeer, sessionKey);
+    return;
+  }
+  // Handle data from actual peers...
+  this.session.getPeer(creatorName, function (err, peer) {
+    if (err) {
+      console.error(err);
+      return { error: err };
+    }
+    if (!peer.trusted) {
+      return console.error('Cannot decrypt data: Peer is not trusted.');
+    }
+    that.decryptHistoryItem(peer, sessionKey);
+  });
+};
+
+})();
+/* Crypton Client, Copyright 2013, 2014, 2015 SpiderOak, Inc.
  *
- * You should have received a copy of the Affero GNU General Public License
- * along with Crypton Client.  If not, see <http://www.gnu.org/licenses/>.
+ * This file is part of Crypton Client.
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License. 
 */
 
 (function() {
@@ -6613,6 +7108,1221 @@ var QRCode;
 	 */
 	QRCode.CorrectLevel = QRErrorCorrectLevel;
 })();
+// [qr.js](http://neocotic.com/qr.js)  
+// (c) 2014 Alasdair Mercer  
+// Licensed under the GPL Version 3 license.  
+// Based on [jsqrencode](http://code.google.com/p/jsqrencode/)  
+// (c) 2010 tz@execpc.com  
+// Licensed under the GPL Version 3 license.  
+// For all details and documentation:  
+// <http://neocotic.com/qr.js>
+
+(function (root) {
+
+  'use strict';
+
+  // Private constants
+  // -----------------
+
+  // Alignment pattern.
+  var ALIGNMENT_DELTA = [
+    0,  11, 15, 19, 23, 27, 31,
+    16, 18, 20, 22, 24, 26, 28, 20, 22, 24, 24, 26, 28, 28, 22, 24, 24,
+    26, 26, 28, 28, 24, 24, 26, 26, 26, 28, 28, 24, 26, 26, 26, 28, 28
+  ];
+  // Default MIME type.
+  var DEFAULT_MIME = 'image/png';
+  // MIME used to initiate a browser download prompt when `qr.save` is called.
+  var DOWNLOAD_MIME = 'image/octet-stream';
+  // There are four elements per version. The first two indicate the number of blocks, then the
+  // data width, and finally the ECC width.
+  var ECC_BLOCKS = [
+    1,  0,  19,  7,     1,  0,  16,  10,    1,  0,  13,  13,    1,  0,  9,   17,
+    1,  0,  34,  10,    1,  0,  28,  16,    1,  0,  22,  22,    1,  0,  16,  28,
+    1,  0,  55,  15,    1,  0,  44,  26,    2,  0,  17,  18,    2,  0,  13,  22,
+    1,  0,  80,  20,    2,  0,  32,  18,    2,  0,  24,  26,    4,  0,  9,   16,
+    1,  0,  108, 26,    2,  0,  43,  24,    2,  2,  15,  18,    2,  2,  11,  22,
+    2,  0,  68,  18,    4,  0,  27,  16,    4,  0,  19,  24,    4,  0,  15,  28,
+    2,  0,  78,  20,    4,  0,  31,  18,    2,  4,  14,  18,    4,  1,  13,  26,
+    2,  0,  97,  24,    2,  2,  38,  22,    4,  2,  18,  22,    4,  2,  14,  26,
+    2,  0,  116, 30,    3,  2,  36,  22,    4,  4,  16,  20,    4,  4,  12,  24,
+    2,  2,  68,  18,    4,  1,  43,  26,    6,  2,  19,  24,    6,  2,  15,  28,
+    4,  0,  81,  20,    1,  4,  50,  30,    4,  4,  22,  28,    3,  8,  12,  24,
+    2,  2,  92,  24,    6,  2,  36,  22,    4,  6,  20,  26,    7,  4,  14,  28,
+    4,  0,  107, 26,    8,  1,  37,  22,    8,  4,  20,  24,    12, 4,  11,  22,
+    3,  1,  115, 30,    4,  5,  40,  24,    11, 5,  16,  20,    11, 5,  12,  24,
+    5,  1,  87,  22,    5,  5,  41,  24,    5,  7,  24,  30,    11, 7,  12,  24,
+    5,  1,  98,  24,    7,  3,  45,  28,    15, 2,  19,  24,    3,  13, 15,  30,
+    1,  5,  107, 28,    10, 1,  46,  28,    1,  15, 22,  28,    2,  17, 14,  28,
+    5,  1,  120, 30,    9,  4,  43,  26,    17, 1,  22,  28,    2,  19, 14,  28,
+    3,  4,  113, 28,    3,  11, 44,  26,    17, 4,  21,  26,    9,  16, 13,  26,
+    3,  5,  107, 28,    3,  13, 41,  26,    15, 5,  24,  30,    15, 10, 15,  28,
+    4,  4,  116, 28,    17, 0,  42,  26,    17, 6,  22,  28,    19, 6,  16,  30,
+    2,  7,  111, 28,    17, 0,  46,  28,    7,  16, 24,  30,    34, 0,  13,  24,
+    4,  5,  121, 30,    4,  14, 47,  28,    11, 14, 24,  30,    16, 14, 15,  30,
+    6,  4,  117, 30,    6,  14, 45,  28,    11, 16, 24,  30,    30, 2,  16,  30,
+    8,  4,  106, 26,    8,  13, 47,  28,    7,  22, 24,  30,    22, 13, 15,  30,
+    10, 2,  114, 28,    19, 4,  46,  28,    28, 6,  22,  28,    33, 4,  16,  30,
+    8,  4,  122, 30,    22, 3,  45,  28,    8,  26, 23,  30,    12, 28, 15,  30,
+    3,  10, 117, 30,    3,  23, 45,  28,    4,  31, 24,  30,    11, 31, 15,  30,
+    7,  7,  116, 30,    21, 7,  45,  28,    1,  37, 23,  30,    19, 26, 15,  30,
+    5,  10, 115, 30,    19, 10, 47,  28,    15, 25, 24,  30,    23, 25, 15,  30,
+    13, 3,  115, 30,    2,  29, 46,  28,    42, 1,  24,  30,    23, 28, 15,  30,
+    17, 0,  115, 30,    10, 23, 46,  28,    10, 35, 24,  30,    19, 35, 15,  30,
+    17, 1,  115, 30,    14, 21, 46,  28,    29, 19, 24,  30,    11, 46, 15,  30,
+    13, 6,  115, 30,    14, 23, 46,  28,    44, 7,  24,  30,    59, 1,  16,  30,
+    12, 7,  121, 30,    12, 26, 47,  28,    39, 14, 24,  30,    22, 41, 15,  30,
+    6,  14, 121, 30,    6,  34, 47,  28,    46, 10, 24,  30,    2,  64, 15,  30,
+    17, 4,  122, 30,    29, 14, 46,  28,    49, 10, 24,  30,    24, 46, 15,  30,
+    4,  18, 122, 30,    13, 32, 46,  28,    48, 14, 24,  30,    42, 32, 15,  30,
+    20, 4,  117, 30,    40, 7,  47,  28,    43, 22, 24,  30,    10, 67, 15,  30,
+    19, 6,  118, 30,    18, 31, 47,  28,    34, 34, 24,  30,    20, 61, 15,  30
+  ];
+  // Map of human-readable ECC levels.
+  var ECC_LEVELS = {
+    L: 1,
+    M: 2,
+    Q: 3,
+    H: 4
+  };
+  // Final format bits with mask (level << 3 | mask).
+  var FINAL_FORMAT = [
+    0x77c4, 0x72f3, 0x7daa, 0x789d, 0x662f, 0x6318, 0x6c41, 0x6976, /* L */
+    0x5412, 0x5125, 0x5e7c, 0x5b4b, 0x45f9, 0x40ce, 0x4f97, 0x4aa0, /* M */
+    0x355f, 0x3068, 0x3f31, 0x3a06, 0x24b4, 0x2183, 0x2eda, 0x2bed, /* Q */
+    0x1689, 0x13be, 0x1ce7, 0x19d0, 0x0762, 0x0255, 0x0d0c, 0x083b  /* H */
+  ];
+  // Galois field exponent table.
+  var GALOIS_EXPONENT = [
+    0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1d, 0x3a, 0x74, 0xe8, 0xcd, 0x87, 0x13, 0x26,
+    0x4c, 0x98, 0x2d, 0x5a, 0xb4, 0x75, 0xea, 0xc9, 0x8f, 0x03, 0x06, 0x0c, 0x18, 0x30, 0x60, 0xc0,
+    0x9d, 0x27, 0x4e, 0x9c, 0x25, 0x4a, 0x94, 0x35, 0x6a, 0xd4, 0xb5, 0x77, 0xee, 0xc1, 0x9f, 0x23,
+    0x46, 0x8c, 0x05, 0x0a, 0x14, 0x28, 0x50, 0xa0, 0x5d, 0xba, 0x69, 0xd2, 0xb9, 0x6f, 0xde, 0xa1,
+    0x5f, 0xbe, 0x61, 0xc2, 0x99, 0x2f, 0x5e, 0xbc, 0x65, 0xca, 0x89, 0x0f, 0x1e, 0x3c, 0x78, 0xf0,
+    0xfd, 0xe7, 0xd3, 0xbb, 0x6b, 0xd6, 0xb1, 0x7f, 0xfe, 0xe1, 0xdf, 0xa3, 0x5b, 0xb6, 0x71, 0xe2,
+    0xd9, 0xaf, 0x43, 0x86, 0x11, 0x22, 0x44, 0x88, 0x0d, 0x1a, 0x34, 0x68, 0xd0, 0xbd, 0x67, 0xce,
+    0x81, 0x1f, 0x3e, 0x7c, 0xf8, 0xed, 0xc7, 0x93, 0x3b, 0x76, 0xec, 0xc5, 0x97, 0x33, 0x66, 0xcc,
+    0x85, 0x17, 0x2e, 0x5c, 0xb8, 0x6d, 0xda, 0xa9, 0x4f, 0x9e, 0x21, 0x42, 0x84, 0x15, 0x2a, 0x54,
+    0xa8, 0x4d, 0x9a, 0x29, 0x52, 0xa4, 0x55, 0xaa, 0x49, 0x92, 0x39, 0x72, 0xe4, 0xd5, 0xb7, 0x73,
+    0xe6, 0xd1, 0xbf, 0x63, 0xc6, 0x91, 0x3f, 0x7e, 0xfc, 0xe5, 0xd7, 0xb3, 0x7b, 0xf6, 0xf1, 0xff,
+    0xe3, 0xdb, 0xab, 0x4b, 0x96, 0x31, 0x62, 0xc4, 0x95, 0x37, 0x6e, 0xdc, 0xa5, 0x57, 0xae, 0x41,
+    0x82, 0x19, 0x32, 0x64, 0xc8, 0x8d, 0x07, 0x0e, 0x1c, 0x38, 0x70, 0xe0, 0xdd, 0xa7, 0x53, 0xa6,
+    0x51, 0xa2, 0x59, 0xb2, 0x79, 0xf2, 0xf9, 0xef, 0xc3, 0x9b, 0x2b, 0x56, 0xac, 0x45, 0x8a, 0x09,
+    0x12, 0x24, 0x48, 0x90, 0x3d, 0x7a, 0xf4, 0xf5, 0xf7, 0xf3, 0xfb, 0xeb, 0xcb, 0x8b, 0x0b, 0x16,
+    0x2c, 0x58, 0xb0, 0x7d, 0xfa, 0xe9, 0xcf, 0x83, 0x1b, 0x36, 0x6c, 0xd8, 0xad, 0x47, 0x8e, 0x00
+  ];
+  // Galois field log table.
+  var GALOIS_LOG = [
+    0xff, 0x00, 0x01, 0x19, 0x02, 0x32, 0x1a, 0xc6, 0x03, 0xdf, 0x33, 0xee, 0x1b, 0x68, 0xc7, 0x4b,
+    0x04, 0x64, 0xe0, 0x0e, 0x34, 0x8d, 0xef, 0x81, 0x1c, 0xc1, 0x69, 0xf8, 0xc8, 0x08, 0x4c, 0x71,
+    0x05, 0x8a, 0x65, 0x2f, 0xe1, 0x24, 0x0f, 0x21, 0x35, 0x93, 0x8e, 0xda, 0xf0, 0x12, 0x82, 0x45,
+    0x1d, 0xb5, 0xc2, 0x7d, 0x6a, 0x27, 0xf9, 0xb9, 0xc9, 0x9a, 0x09, 0x78, 0x4d, 0xe4, 0x72, 0xa6,
+    0x06, 0xbf, 0x8b, 0x62, 0x66, 0xdd, 0x30, 0xfd, 0xe2, 0x98, 0x25, 0xb3, 0x10, 0x91, 0x22, 0x88,
+    0x36, 0xd0, 0x94, 0xce, 0x8f, 0x96, 0xdb, 0xbd, 0xf1, 0xd2, 0x13, 0x5c, 0x83, 0x38, 0x46, 0x40,
+    0x1e, 0x42, 0xb6, 0xa3, 0xc3, 0x48, 0x7e, 0x6e, 0x6b, 0x3a, 0x28, 0x54, 0xfa, 0x85, 0xba, 0x3d,
+    0xca, 0x5e, 0x9b, 0x9f, 0x0a, 0x15, 0x79, 0x2b, 0x4e, 0xd4, 0xe5, 0xac, 0x73, 0xf3, 0xa7, 0x57,
+    0x07, 0x70, 0xc0, 0xf7, 0x8c, 0x80, 0x63, 0x0d, 0x67, 0x4a, 0xde, 0xed, 0x31, 0xc5, 0xfe, 0x18,
+    0xe3, 0xa5, 0x99, 0x77, 0x26, 0xb8, 0xb4, 0x7c, 0x11, 0x44, 0x92, 0xd9, 0x23, 0x20, 0x89, 0x2e,
+    0x37, 0x3f, 0xd1, 0x5b, 0x95, 0xbc, 0xcf, 0xcd, 0x90, 0x87, 0x97, 0xb2, 0xdc, 0xfc, 0xbe, 0x61,
+    0xf2, 0x56, 0xd3, 0xab, 0x14, 0x2a, 0x5d, 0x9e, 0x84, 0x3c, 0x39, 0x53, 0x47, 0x6d, 0x41, 0xa2,
+    0x1f, 0x2d, 0x43, 0xd8, 0xb7, 0x7b, 0xa4, 0x76, 0xc4, 0x17, 0x49, 0xec, 0x7f, 0x0c, 0x6f, 0xf6,
+    0x6c, 0xa1, 0x3b, 0x52, 0x29, 0x9d, 0x55, 0xaa, 0xfb, 0x60, 0x86, 0xb1, 0xbb, 0xcc, 0x3e, 0x5a,
+    0xcb, 0x59, 0x5f, 0xb0, 0x9c, 0xa9, 0xa0, 0x51, 0x0b, 0xf5, 0x16, 0xeb, 0x7a, 0x75, 0x2c, 0xd7,
+    0x4f, 0xae, 0xd5, 0xe9, 0xe6, 0xe7, 0xad, 0xe8, 0x74, 0xd6, 0xf4, 0xea, 0xa8, 0x50, 0x58, 0xaf
+  ];
+  // *Badness* coefficients.
+  var N1 = 3;
+  var N2 = 3;
+  var N3 = 40;
+  var N4 = 10;
+  // Version pattern.
+  var VERSION_BLOCK = [ 
+    0xc94, 0x5bc, 0xa99, 0x4d3, 0xbf6, 0x762, 0x847, 0x60d, 0x928, 0xb78, 0x45d, 0xa17, 0x532,
+    0x9a6, 0x683, 0x8c9, 0x7ec, 0xec4, 0x1e1, 0xfab, 0x08e, 0xc1a, 0x33f, 0xd75, 0x250, 0x9d5,
+    0x6f0, 0x8ba, 0x79f, 0xb0b, 0x42e, 0xa64, 0x541, 0xc69
+  ];
+  // Mode for node.js file system file writes.
+  var WRITE_MODE = parseInt('0666', 8);
+
+  // Private variables
+  // -----------------
+
+  // Run lengths for badness.
+  var badBuffer = [];
+  // Constructor for `canvas` elements in the node.js environment.
+  var Canvas;
+  // Data block.
+  var dataBlock;
+  // ECC data blocks and tables.
+  var eccBlock, neccBlock1, neccBlock2;
+  // ECC buffer.
+  var eccBuffer = [];
+  // ECC level (defaults to **L**).
+  var eccLevel = 1;
+  // Image buffer.
+  var frameBuffer = [];
+  // Fixed part of the image.
+  var frameMask = [];
+  // File system within the node.js environment.
+  var fs;
+  // Constructor for `img` elements in the node.js environment.
+  var Image;
+  // Indicates whether or not this script is running in node.js.
+  var inNode = false;
+  // Generator polynomial.
+  var polynomial = [];
+  // Save the previous value of the `qr` variable.
+  var previousQr = root.qr;
+  // Data input buffer.
+  var stringBuffer = [];
+  // Version for the data.
+  var version;
+  // Data width is based on `version`.
+  var width;
+
+  // Private functions
+  // -----------------
+
+  // Create a new canvas  using `document.createElement` unless script is running in node.js, in
+  // which case the `canvas` module is used.
+  function createCanvas() {
+    return inNode ? new Canvas() : root.document.createElement('canvas');
+  }
+
+  // Create a new image using `document.createElement` unless script is running in node.js, in
+  // which case the `canvas` module is used.
+  function createImage() {
+    return inNode ? new Image() : root.document.createElement('img');
+  }
+
+  // Force the canvas image to be downloaded in the browser.  
+  // Optionally, a `callback` function can be specified which will be called upon completed. Since
+  // this is not an asynchronous operation, this is merely convenient and helps simplify the
+  // calling code.
+  function download(cvs, data, callback) {
+    var mime = data.mime || DEFAULT_MIME;
+
+    root.location.href = cvs.toDataURL(mime).replace(mime, DOWNLOAD_MIME);
+
+    if (typeof callback === 'function') callback();
+  }
+
+  // Normalize the `data` that is provided to the main API.
+  function normalizeData(data) {
+    if (typeof data === 'string') data = { value: data };
+    return data || {};
+  }
+
+  // Override the `qr` API methods that require HTML5 canvas support to throw a relevant error.
+  function overrideAPI(qr) {
+    var methods = [ 'canvas', 'image', 'save', 'saveSync', 'toDataURL' ];
+    var i;
+
+    function overrideMethod(name) {
+      qr[name] = function () {
+        throw new Error(name + ' requires HTML5 canvas element support');
+      };
+    }
+
+    for (i = 0; i < methods.length; i++) {
+      overrideMethod(methods[i]);
+    }
+  }
+
+  // Asynchronously write the data of the rendered canvas to a given file path.
+  function writeFile(cvs, data, callback) {
+    if (typeof data.path !== 'string') {
+      return callback(new TypeError('Invalid path type: ' + typeof data.path));
+    }
+
+    var fd, buff;
+
+    // Write the buffer to the open file stream once both prerequisites are met.
+    function writeBuffer() {
+      fs.write(fd, buff, 0, buff.length, 0, function (error) {
+        fs.close(fd);
+
+        callback(error);
+      });
+    }
+
+    // Create a buffer of the canvas' data.
+    cvs.toBuffer(function (error, _buff) {
+      if (error) return callback(error);
+
+      buff = _buff;
+      if (fd) {
+        writeBuffer();
+      }
+    });
+
+    // Open a stream for the file to be written.
+    fs.open(data.path, 'w', WRITE_MODE, function (error, _fd) {
+      if (error) return callback(error);
+
+      fd = _fd;
+      if (buff) {
+        writeBuffer();
+      }
+    });
+  }
+
+  // Write the data of the rendered canvas to a given file path.
+  function writeFileSync(cvs, data) {
+    if (typeof data.path !== 'string') {
+      throw new TypeError('Invalid path type: ' + typeof data.path);
+    }
+
+    var buff = cvs.toBuffer();
+    var fd = fs.openSync(data.path, 'w', WRITE_MODE);
+
+    try {
+      fs.writeSync(fd, buff, 0, buff.length, 0);
+    } finally {
+      fs.closeSync(fd);
+    }
+  }
+
+  // Set bit to indicate cell in frame is immutable (symmetric around diagonal).
+  function setMask(x, y) {
+    var bit;
+
+    if (x > y) {
+      bit = x;
+      x   = y;
+      y   = bit;
+    }
+
+    bit   = y;
+    bit  *= y;
+    bit  += y;
+    bit >>= 1;
+    bit  += x;
+
+    frameMask[bit] = 1;
+  }
+
+  // Enter alignment pattern. Foreground colour to frame, background to mask. Frame will be merged
+  // with mask later.
+  function addAlignment(x, y) {
+    var i;
+
+    frameBuffer[x + width * y] = 1;
+
+    for (i = -2; i < 2; i++) {
+      frameBuffer[(x + i)     + width * (y - 2)]     = 1;
+      frameBuffer[(x - 2)     + width * (y + i + 1)] = 1;
+      frameBuffer[(x + 2)     + width * (y + i)]     = 1;
+      frameBuffer[(x + i + 1) + width * (y + 2)]     = 1;
+    }
+
+    for (i = 0; i < 2; i++) {
+      setMask(x - 1, y + i);
+      setMask(x + 1, y - i);
+      setMask(x - i, y - 1);
+      setMask(x + i, y + 1);
+    }
+  }
+
+  // Exponentiation mod N.
+  function modN(x) {
+    while (x >= 255) {
+      x -= 255;
+      x  = (x >> 8) + (x & 255);
+    }
+
+    return x;
+  }
+
+  // Calculate and append `ecc` data to the `data` block. If block is in the string buffer the
+  // indices to buffers are used.
+  function appendData(data, dataLength, ecc, eccLength) {
+    var bit, i, j;
+
+    for (i = 0; i < eccLength; i++) {
+      stringBuffer[ecc + i] = 0;
+    }
+
+    for (i = 0; i < dataLength; i++) {
+      bit = GALOIS_LOG[stringBuffer[data + i] ^ stringBuffer[ecc]];
+
+      if (bit !== 255) {
+        for (j = 1; j < eccLength; j++) {
+          stringBuffer[ecc + j - 1] = stringBuffer[ecc + j] ^
+              GALOIS_EXPONENT[modN(bit + polynomial[eccLength - j])];
+        }
+      } else {
+        for (j = ecc; j < ecc + eccLength; j++) {
+          stringBuffer[j] = stringBuffer[j + 1];
+        }
+      }
+
+      stringBuffer[ecc + eccLength - 1] = bit === 255 ? 0 :
+          GALOIS_EXPONENT[modN(bit + polynomial[0])];
+    }
+  }
+
+  // Check mask since symmetricals use half.
+  function isMasked(x, y) {
+    var bit;
+
+    if (x > y) {
+      bit = x;
+      x   = y;
+      y   = bit;
+    }
+
+    bit   = y;
+    bit  += y * y;
+    bit >>= 1;
+    bit  += x;
+
+    return frameMask[bit] === 1;
+  }
+
+  // Apply the selected mask out of the 8 options.
+  function applyMask(mask) {
+    var x, y, r3x, r3y;
+
+    switch (mask) {
+      case 0:
+        for (y = 0; y < width; y++) {
+          for (x = 0; x < width; x++) {
+            if (!((x + y) & 1) && !isMasked(x, y)) {
+              frameBuffer[x + y * width] ^= 1;
+            }
+          }
+        }
+
+        break;
+      case 1:
+        for (y = 0; y < width; y++) {
+          for (x = 0; x < width; x++) {
+            if (!(y & 1) && !isMasked(x, y)) {
+              frameBuffer[x + y * width] ^= 1;
+            }
+          }
+        }
+
+        break;
+      case 2:
+        for (y = 0; y < width; y++) {
+          for (r3x = 0, x = 0; x < width; x++, r3x++) {
+            if (r3x === 3) r3x = 0;
+
+            if (!r3x && !isMasked(x, y)) {
+              frameBuffer[x + y * width] ^= 1;
+            }
+          }
+        }
+
+        break;
+      case 3:
+        for (r3y = 0, y = 0; y < width; y++, r3y++) {
+          if (r3y === 3) r3y = 0;
+
+          for (r3x = r3y, x = 0; x < width; x++, r3x++) {
+            if (r3x === 3) r3x = 0;
+
+            if (!r3x && !isMasked(x, y)) {
+              frameBuffer[x + y * width] ^= 1;
+            }
+          }
+        }
+
+        break;
+      case 4:
+        for (y = 0; y < width; y++) {
+          for (r3x = 0, r3y = ((y >> 1) & 1), x = 0; x < width; x++, r3x++) {
+            if (r3x === 3) {
+              r3x = 0;
+              r3y = !r3y;
+            }
+
+            if (!r3y && !isMasked(x, y)) {
+              frameBuffer[x + y * width] ^= 1;
+            }
+          }
+        }
+
+        break;
+      case 5:
+        for (r3y = 0, y = 0; y < width; y++, r3y++) {
+          if (r3y === 3) r3y = 0;
+
+          for (r3x = 0, x = 0; x < width; x++, r3x++) {
+            if (r3x === 3) r3x = 0;
+
+            if (!((x & y & 1) + !(!r3x | !r3y)) && !isMasked(x, y)) {
+              frameBuffer[x + y * width] ^= 1;
+            }
+          }
+        }
+
+        break;
+      case 6:
+        for (r3y = 0, y = 0; y < width; y++, r3y++) {
+          if (r3y === 3) r3y = 0;
+
+          for (r3x = 0, x = 0; x < width; x++, r3x++) {
+            if (r3x === 3) r3x = 0;
+
+            if (!(((x & y & 1) + (r3x && (r3x === r3y))) & 1) && !isMasked(x, y)) {
+              frameBuffer[x + y * width] ^= 1;
+            }
+          }
+        }
+
+        break;
+      case 7:
+        for (r3y = 0, y = 0; y < width; y++, r3y++) {
+          if (r3y === 3) r3y = 0;
+
+          for (r3x = 0, x = 0; x < width; x++, r3x++) {
+            if (r3x === 3) r3x = 0;
+
+            if (!(((r3x && (r3x === r3y)) + ((x + y) & 1)) & 1) && !isMasked(x, y)) {
+              frameBuffer[x + y * width] ^= 1;
+            }
+          }
+        }
+
+        break;
+    }
+  }
+
+  // Using the table for the length of each run, calculate the amount of bad image. Long runs or
+  // those that look like finders are called twice; once for X and Y.
+  function getBadRuns(length) {
+    var badRuns = 0;
+    var i;
+
+    for (i = 0; i <= length; i++) {
+      if (badBuffer[i] >= 5) {
+        badRuns += N1 + badBuffer[i] - 5;
+      }
+    }
+
+    // FBFFFBF as in finder.
+    for (i = 3; i < length - 1; i += 2) {
+      if (badBuffer[i - 2] === badBuffer[i + 2] &&
+          badBuffer[i + 2] === badBuffer[i - 1] &&
+          badBuffer[i - 1] === badBuffer[i + 1] &&
+          badBuffer[i - 1] * 3 === badBuffer[i] &&
+          // Background around the foreground pattern? Not part of the specs.
+          (badBuffer[i - 3] === 0 || i + 3 > length ||
+           badBuffer[i - 3] * 3 >= badBuffer[i] * 4 ||
+           badBuffer[i + 3] * 3 >= badBuffer[i] * 4)) {
+        badRuns += N3;
+      }
+    }
+
+    return badRuns;
+  }
+
+  // Calculate how bad the masked image is (e.g. blocks, imbalance, runs, or finders).
+  function checkBadness() {
+    var b, b1, bad, big, bw, count, h, x, y;
+    bad = bw = count = 0;
+
+    // Blocks of same colour.
+    for (y = 0; y < width - 1; y++) {
+      for (x = 0; x < width - 1; x++) {
+            // All foreground colour.
+        if ((frameBuffer[x + width * y] &&
+             frameBuffer[(x + 1) + width * y] &&
+             frameBuffer[x + width * (y + 1)] &&
+             frameBuffer[(x + 1) + width * (y + 1)]) ||
+            // All background colour.
+            !(frameBuffer[x + width * y] ||
+              frameBuffer[(x + 1) + width * y] ||
+              frameBuffer[x + width * (y + 1)] ||
+              frameBuffer[(x + 1) + width * (y + 1)])) {
+          bad += N2;
+        }
+      }
+    }
+
+    // X runs.
+    for (y = 0; y < width; y++) {
+      badBuffer[0] = 0;
+
+      for (h = b = x = 0; x < width; x++) {
+        if ((b1 = frameBuffer[x + width * y]) === b) {
+          badBuffer[h]++;
+        } else {
+          badBuffer[++h] = 1;
+        }
+
+        b   = b1;
+        bw += b ? 1 : -1;
+      }
+
+      bad += getBadRuns(h);
+    }
+
+    if (bw < 0) bw = -bw;
+
+    big   = bw;
+    big  += big << 2;
+    big <<= 1;
+
+    while (big > width * width) {
+      big -= width * width;
+      count++;
+    }
+
+    bad += count * N4;
+
+    // Y runs.
+    for (x = 0; x < width; x++) {
+      badBuffer[0] = 0;
+
+      for (h = b = y = 0; y < width; y++) {
+        if ((b1 = frameBuffer[x + width * y]) === b) {
+          badBuffer[h]++;
+        } else {
+          badBuffer[++h] = 1;
+        }
+
+        b = b1;
+      }
+
+      bad += getBadRuns(h);
+    }
+
+    return bad;
+  }
+
+  // Generate the encoded QR image for the string provided.
+  function generateFrame(str) {
+    var i, j, k, m, t, v, x, y;
+
+    // Find the smallest version that fits the string.
+    t = str.length;
+
+    version = 0;
+
+    do {
+      version++;
+
+      k = (eccLevel - 1) * 4 + (version - 1) * 16;
+
+      neccBlock1 = ECC_BLOCKS[k++];
+      neccBlock2 = ECC_BLOCKS[k++];
+      dataBlock  = ECC_BLOCKS[k++];
+      eccBlock   = ECC_BLOCKS[k];
+
+      k = dataBlock * (neccBlock1 + neccBlock2) + neccBlock2 - 3 + (version <= 9);
+
+      if (t <= k) break;
+    } while (version < 40);
+
+    // FIXME: Ensure that it fits insted of being truncated.
+    width = 17 + 4 * version;
+
+    // Allocate, clear and setup data structures.
+    v = dataBlock + (dataBlock + eccBlock) * (neccBlock1 + neccBlock2) + neccBlock2;
+
+    for (t = 0; t < v; t++) {
+      eccBuffer[t] = 0;
+    }
+
+    stringBuffer = str.slice(0);
+
+    for (t = 0; t < width * width; t++) {
+      frameBuffer[t] = 0;
+    }
+
+    for (t = 0; t < (width * (width + 1) + 1) / 2; t++) {
+      frameMask[t] = 0;
+    }
+
+    // Insert finders: Foreground colour to frame and background to mask.
+    for (t = 0; t < 3; t++) {
+      k = y = 0;
+
+      if (t === 1) k = (width - 7);
+      if (t === 2) y = (width - 7);
+
+      frameBuffer[(y + 3) + width * (k + 3)] = 1;
+
+      for (x = 0; x < 6; x++) {
+        frameBuffer[(y + x) + width * k] = 1;
+        frameBuffer[y + width * (k + x + 1)] = 1;
+        frameBuffer[(y + 6) + width * (k + x)] = 1;
+        frameBuffer[(y + x + 1) + width * (k + 6)] = 1;
+      }
+
+      for (x = 1; x < 5; x++) {
+        setMask(y + x, k + 1);
+        setMask(y + 1, k + x + 1);
+        setMask(y + 5, k + x);
+        setMask(y + x + 1, k + 5);
+      }
+
+      for (x = 2; x < 4; x++) {
+        frameBuffer[(y + x) + width * (k + 2)] = 1;
+        frameBuffer[(y + 2) + width * (k + x + 1)] = 1;
+        frameBuffer[(y + 4) + width * (k + x)] = 1;
+        frameBuffer[(y + x + 1) + width * (k + 4)] = 1;
+      }
+    }
+
+    // Alignment blocks.
+    if (version > 1) {
+      t = ALIGNMENT_DELTA[version];
+      y = width - 7;
+
+      for (;;) {
+        x = width - 7;
+
+        while (x > t - 3) {
+          addAlignment(x, y);
+
+          if (x < t) break;
+
+          x -= t;
+        }
+
+        if (y <= t + 9) break;
+
+        y -= t;
+
+        addAlignment(6, y);
+        addAlignment(y, 6);
+      }
+    }
+
+    // Single foreground cell.
+    frameBuffer[8 + width * (width - 8)] = 1;
+
+    // Timing gap (mask only).
+    for (y = 0; y < 7; y++) {
+      setMask(7, y);
+      setMask(width - 8, y);
+      setMask(7, y + width - 7);
+    }
+
+    for (x = 0; x < 8; x++) {
+      setMask(x, 7);
+      setMask(x + width - 8, 7);
+      setMask(x, width - 8);
+    }
+
+    // Reserve mask, format area.
+    for (x = 0; x < 9; x++) {
+      setMask(x, 8);
+    }
+
+    for (x = 0; x < 8; x++) {
+      setMask(x + width - 8, 8);
+      setMask(8, x);
+    }
+
+    for (y = 0; y < 7; y++) {
+      setMask(8, y + width - 7);
+    }
+
+    // Timing row/column.
+    for (x = 0; x < width - 14; x++) {
+      if (x & 1) {
+        setMask(8 + x, 6);
+        setMask(6, 8 + x);
+      } else {
+        frameBuffer[(8 + x) + width * 6] = 1;
+        frameBuffer[6 + width * (8 + x)] = 1;
+      }
+    }
+
+    // Version block.
+    if (version > 6) {
+      t = VERSION_BLOCK[version - 7];
+      k = 17;
+
+      for (x = 0; x < 6; x++) {
+        for (y = 0; y < 3; y++, k--) {
+          if (1 & (k > 11 ? version >> (k - 12) : t >> k)) {
+            frameBuffer[(5 - x) + width * (2 - y + width - 11)] = 1;
+            frameBuffer[(2 - y + width - 11) + width * (5 - x)] = 1;
+          } else {
+            setMask(5 - x, 2 - y + width - 11);
+            setMask(2 - y + width - 11, 5 - x);
+          }
+        }
+      }
+    }
+
+    // Sync mask bits. Only set above for background cells, so now add the foreground.
+    for (y = 0; y < width; y++) {
+      for (x = 0; x <= y; x++) {
+        if (frameBuffer[x + width * y]) {
+          setMask(x, y);
+        }
+      }
+    }
+
+    // Convert string to bit stream. 8-bit data to QR-coded 8-bit data (numeric, alphanum, or kanji
+    // not supported).
+    v = stringBuffer.length;
+
+    // String to array.
+    for (i = 0; i < v; i++) {
+      eccBuffer[i] = stringBuffer.charCodeAt(i);
+    }
+
+    stringBuffer = eccBuffer.slice(0);
+
+    // Calculate max string length.
+    x = dataBlock * (neccBlock1 + neccBlock2) + neccBlock2;
+
+    if (v >= x - 2) {
+      v = x - 2;
+
+      if (version > 9) v--;
+    }
+
+    // Shift and re-pack to insert length prefix.
+    i = v;
+
+    if (version > 9) {
+      stringBuffer[i + 2] = 0;
+      stringBuffer[i + 3] = 0;
+
+      while (i--) {
+        t = stringBuffer[i];
+
+        stringBuffer[i + 3] |= 255 & (t << 4);
+        stringBuffer[i + 2] = t >> 4;
+      }
+
+      stringBuffer[2] |= 255 & (v << 4);
+      stringBuffer[1] = v >> 4;
+      stringBuffer[0] = 0x40 | (v >> 12);
+    } else {
+      stringBuffer[i + 1] = 0;
+      stringBuffer[i + 2] = 0;
+
+      while (i--) {
+        t = stringBuffer[i];
+
+        stringBuffer[i + 2] |= 255 & (t << 4);
+        stringBuffer[i + 1] = t >> 4;
+      }
+
+      stringBuffer[1] |= 255 & (v << 4);
+      stringBuffer[0] = 0x40 | (v >> 4);
+    }
+
+    // Fill to end with pad pattern.
+    i = v + 3 - (version < 10);
+
+    while (i < x) {
+      stringBuffer[i++] = 0xec;
+      stringBuffer[i++] = 0x11;
+    }
+
+    // Calculate generator polynomial.
+    polynomial[0] = 1;
+
+    for (i = 0; i < eccBlock; i++) {
+      polynomial[i + 1] = 1;
+
+      for (j = i; j > 0; j--) {
+        polynomial[j] = polynomial[j] ? polynomial[j - 1] ^
+            GALOIS_EXPONENT[modN(GALOIS_LOG[polynomial[j]] + i)] : polynomial[j - 1];
+      }
+
+      polynomial[0] = GALOIS_EXPONENT[modN(GALOIS_LOG[polynomial[0]] + i)];
+    }
+
+    // Use logs for generator polynomial to save calculation step.
+    for (i = 0; i <= eccBlock; i++) {
+      polynomial[i] = GALOIS_LOG[polynomial[i]];
+    }
+
+    // Append ECC to data buffer.
+    k = x;
+    y = 0;
+
+    for (i = 0; i < neccBlock1; i++) {
+      appendData(y, dataBlock, k, eccBlock);
+
+      y += dataBlock;
+      k += eccBlock;
+    }
+
+    for (i = 0; i < neccBlock2; i++) {
+      appendData(y, dataBlock + 1, k, eccBlock);
+
+      y += dataBlock + 1;
+      k += eccBlock;
+    }
+
+    // Interleave blocks.
+    y = 0;
+
+    for (i = 0; i < dataBlock; i++) {
+      for (j = 0; j < neccBlock1; j++) {
+        eccBuffer[y++] = stringBuffer[i + j * dataBlock];
+      }
+
+      for (j = 0; j < neccBlock2; j++) {
+        eccBuffer[y++] = stringBuffer[(neccBlock1 * dataBlock) + i + (j * (dataBlock + 1))];
+      }
+    }
+
+    for (j = 0; j < neccBlock2; j++) {
+      eccBuffer[y++] = stringBuffer[(neccBlock1 * dataBlock) + i + (j * (dataBlock + 1))];
+    }
+
+    for (i = 0; i < eccBlock; i++) {
+      for (j = 0; j < neccBlock1 + neccBlock2; j++) {
+        eccBuffer[y++] = stringBuffer[x + i + j * eccBlock];
+      }
+    }
+
+    stringBuffer = eccBuffer;
+
+    // Pack bits into frame avoiding masked area.
+    x = y = width - 1;
+    k = v = 1;
+
+    // inteleaved data and ECC codes.
+    m = (dataBlock + eccBlock) * (neccBlock1 + neccBlock2) + neccBlock2;
+
+    for (i = 0; i < m; i++) {
+      t = stringBuffer[i];
+
+      for (j = 0; j < 8; j++, t <<= 1) {
+        if (0x80 & t) {
+          frameBuffer[x + width * y] = 1;
+        }
+
+        // Find next fill position.
+        do {
+          if (v) {
+            x--;
+          } else {
+            x++;
+
+            if (k) {
+              if (y !== 0) {
+                y--;
+              } else {
+                x -= 2;
+                k  = !k;
+
+                if (x === 6) {
+                  x--;
+                  y = 9;
+                }
+              }
+            } else {
+              if (y !== width - 1) {
+                y++;
+              } else {
+                x -= 2;
+                k  = !k;
+
+                if (x === 6) {
+                  x--;
+                  y -= 8;
+                }
+              }
+            }
+          }
+
+          v = !v;
+        } while (isMasked(x, y));
+      }
+    }
+
+    // Save pre-mask copy of frame.
+    stringBuffer = frameBuffer.slice(0);
+
+    t = 0;
+    y = 30000;
+
+    // Using `for` instead of `while` since in original Arduino code if an early mask was *good
+    // enough* it wouldn't try for a better one since they get more complex and take longer.
+    for (k = 0; k < 8; k++) {
+      // Returns foreground-background imbalance.
+      applyMask(k);
+
+      x = checkBadness();
+
+      // Is current mask better than previous best?
+      if (x < y) {
+        y = x;
+        t = k;
+      }
+
+      // Don't increment `i` to a void redoing mask.
+      if (t === 7) break;
+
+      // Reset for next pass.
+      frameBuffer = stringBuffer.slice(0);
+    }
+
+    // Redo best mask as none were *good enough* (i.e. last wasn't `t`).
+    if (t !== k) {
+      applyMask(t);
+    }
+
+    // Add in final mask/ECC level bytes.
+    y = FINAL_FORMAT[t + ((eccLevel - 1) << 3)];
+
+    // Low byte.
+    for (k = 0; k < 8; k++, y >>= 1) {
+      if (y & 1) {
+        frameBuffer[(width - 1 - k) + width * 8] = 1;
+
+        if (k < 6) {
+          frameBuffer[8 + width * k] = 1;
+        } else {
+          frameBuffer[8 + width * (k + 1)] = 1;
+        }
+      }
+    }
+
+    // High byte.
+    for (k = 0; k < 7; k++, y >>= 1) {
+      if (y & 1) {
+        frameBuffer[8 + width * (width - 7 + k)] = 1;
+
+        if (k) {
+          frameBuffer[(6 - k) + width * 8] = 1;
+        } else {
+          frameBuffer[7 + width * 8] = 1;
+        }
+      }
+    }
+
+    // Finally, return the image data.
+    return frameBuffer;
+  }
+
+  // qr.js setup
+  // -----------
+
+  // Build the publicly exposed API.
+  var qr = {
+
+    // Constants
+    // ---------
+
+    // Current version of `qr`.
+    VERSION: '1.1.3',
+
+    // QR functions
+    // ------------
+
+    // Generate the QR code using the data provided and render it on to a `<canvas>` element.  
+    // If no `<canvas>` element is specified in the argument provided a new one will be created and
+    // used.  
+    // ECC (error correction capacity) determines how many intential errors are contained in the QR
+    // code.
+    canvas: function(data) {
+      data = normalizeData(data);
+
+      // Module size of the generated QR code (i.e. 1-10).
+      var size = data.size >= 1 && data.size <= 10 ? data.size : 4;
+      // Actual size of the QR code symbol and is scaled to 25 pixels (e.g. 1 = 25px, 3 = 75px).
+      size *= 25;
+
+      // `<canvas>` element used to render the QR code.
+      var cvs = data.canvas || createCanvas();
+      // Retreive the 2D context of the canvas.
+      var c2d = cvs.getContext('2d');
+      // Ensure the canvas has the correct dimensions.
+      c2d.canvas.width  = size;
+      c2d.canvas.height = size;
+      // Fill the canvas with the correct background colour.
+      c2d.fillStyle = data.background || '#fff';
+      c2d.fillRect(0, 0, size, size);
+
+      // Determine the ECC level to be applied.
+      eccLevel = ECC_LEVELS[(data.level && data.level.toUpperCase()) || 'L'];
+
+      // Generate the image frame for the given `value`.
+      var frame = generateFrame(data.value || '');
+
+      c2d.lineWidth = 1;
+
+      // Determine the *pixel* size.
+      var px = size;
+      px /= width;
+      px  = Math.floor(px);
+
+      // Draw the QR code.
+      c2d.clearRect(0, 0, size, size);
+      c2d.fillStyle = data.background || '#fff';
+      c2d.fillRect(0, 0, px * (width + 8), px * (width + 8));
+      c2d.fillStyle = data.foreground || '#000';
+
+      var i, j;
+
+      for (i = 0; i < width; i++) {
+        for (j = 0; j < width; j++) {
+          if (frame[j * width + i]) {
+            c2d.fillRect(px * i, px * j, px, px);
+          }
+        }
+      }
+
+      return cvs;
+    },
+
+    // Generate the QR code using the data provided and render it on to a `<img>` element.  
+    // If no `<img>` element is specified in the argument provided a new one will be created and
+    // used.  
+    // ECC (error correction capacity) determines how many intential errors are contained in the QR
+    // code.
+    image: function(data) {
+      data = normalizeData(data);
+
+      // `<canvas>` element only which the QR code is rendered.
+      var cvs = this.canvas(data);
+      // `<img>` element used to display the QR code.
+      var img = data.image || createImage();
+
+      // Apply the QR code to `img`.
+      img.src    = cvs.toDataURL(data.mime || DEFAULT_MIME);
+      img.height = cvs.height;
+      img.width  = cvs.width;
+
+      return img;
+    },
+
+    // Generate the QR code using the data provided and render it on to a `<canvas>` element and
+    // save it as an image file.  
+    // If no `<canvas>` element is specified in the argument provided a new one will be created and
+    // used.  
+    // ECC (error correction capacity) determines how many intential errors are contained in the QR
+    // code.  
+    // If called in a browser the `path` property/argument is ignored and will simply prompt the
+    // user to choose a location and file name. However, if called within node.js the file will be
+    // saved to specified path.  
+    // A `callback` function must be provided which will be called once the saving process has
+    // started. If an error occurs it will be passed as the first argument to this function,
+    // otherwise this argument will be `null`.
+    save: function(data, path, callback) {
+      data = normalizeData(data);
+
+      switch (typeof path) {
+        case 'function':
+          callback = path;
+          path = null;
+          break;
+        case 'string':
+          data.path = path;
+          break;
+      }
+
+      // Callback function is required.
+      if (typeof callback !== 'function') {
+        throw new TypeError('Invalid callback type: ' + typeof callback);
+      }
+
+      var completed = false;
+      // `<canvas>` element only which the QR code is rendered.
+      var cvs = this.canvas(data);
+
+      // Simple function to try and ensure that the `callback` function is only called once.
+      function done(error) {
+        if (!completed) {
+          completed = true;
+
+          callback(error);
+        }
+      }
+
+      if (inNode) {
+        writeFile(cvs, data, done);
+      } else {
+        download(cvs, data, done);
+      }
+    },
+
+    // Generate the QR code using the data provided and render it on to a `<canvas>` element and
+    // save it as an image file.  
+    // If no `<canvas>` element is specified in the argument provided a new one will be created and
+    // used.  
+    // ECC (error correction capacity) determines how many intential errors are contained in the QR
+    // code.  
+    // If called in a browser the `path` property/argument is ignored and will simply prompt the
+    // user to choose a location and file name. However, if called within node.js the file will be
+    // saved to specified path.
+    saveSync: function(data, path) {
+      data = normalizeData(data);
+
+      if (typeof path === 'string') data.path = path;
+
+      // `<canvas>` element only which the QR code is rendered.
+      var cvs = this.canvas(data);
+
+      if (inNode) {
+        writeFileSync(cvs, data);
+      } else {
+        download(cvs, data);
+      }
+    },
+
+    // Generate the QR code using the data provided and render it on to a `<canvas>` element before
+    // returning its data URI.  
+    // If no `<canvas>` element is specified in the argument provided a new one will be created and
+    // used.  
+    // ECC (error correction capacity) determines how many intential errors are contained in the QR
+    // code.
+    toDataURL: function(data) {
+      data = normalizeData(data);
+
+      return this.canvas(data).toDataURL(data.mime || DEFAULT_MIME);
+    },
+
+    // Utility functions
+    // -----------------
+
+    // Run qr.js in *noConflict* mode, returning the `qr` variable to its previous owner.  
+    // Returns a reference to `qr`.
+    noConflict: function() {
+      root.qr = previousQr;
+      return this;
+    }
+
+  };
+
+  // Support
+  // -------
+
+  // Export `qr` for node.js and CommonJS.
+  if (typeof exports !== 'undefined') {
+    inNode = true;
+
+    if (typeof module !== 'undefined' && module.exports) {
+      exports = module.exports = qr;
+    }
+    exports.qr = qr;
+
+    // Import required node.js modules.
+    Canvas = require('canvas');
+    Image = Canvas.Image;
+    fs = require('fs');
+  } else if (typeof define === 'function' && define.amd) {
+    define(function () {
+      return qr;
+    });
+  } else {
+    // In non-HTML5 browser so strip base functionality.
+    if (!root.HTMLCanvasElement) {
+      overrideAPI(qr);
+    }
+
+    root.qr = qr;
+  }
+
+})(this);
 ;(function(){
 
 /**
