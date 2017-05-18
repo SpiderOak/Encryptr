@@ -127,6 +127,10 @@
       return promise;
     },
     saveCsv: function(csv){
+      /**
+       * This method (use a.download) works in all browser and all node-webkit version
+       * Read documentation: https://www.w3schools.com/tags/att_a_download.asp
+       */
       var type = 'text/csv';
       var file = new Blob([csv], {type: type});
       var a = document.createElement("a");
