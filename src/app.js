@@ -67,6 +67,10 @@ var Encryptr = (function (window, console, undefined) {
         }
       }
     };
+    window.Offline.on('up', this.setOnline.bind(this));
+    window.Offline.on('confirmed-up', this.setOnline.bind(this));
+    window.Offline.on('down', this.setOffline.bind(this));
+    window.Offline.on('confirmed-down', this.setOffline.bind(this));
 
     var isNodeWebkit = (typeof process == "object");
     if (isNodeWebkit) $.os.nodeWebkit = true;
