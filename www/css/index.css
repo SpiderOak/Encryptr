@@ -138,10 +138,14 @@ h1 {
 .add-btn {
   background: url('../img/Add.svg') center center no-repeat;
   background-size: 24px 24px;
+.disabled-btn {
+  color: gray !important;
 }
 .edit-btn {
   background: url('../img/Edit.svg') center center no-repeat;
   background-size: 24px 24px;
+.fab.add-btn.disabled-btn {
+  background-color: gray !important;
 }
 .delete-btn {
   background: url('../img/Delete.svg') center center no-repeat;
@@ -159,6 +163,10 @@ h1 {
 }
 .copy-btn {
   background-size: 24px 24px;
+.disabled-link {
+  pointer-events: none !important;
+  cursor: default !important;
+  opacity: 0.55 !important;
 }
 .fab {
   display: block;
