@@ -21,6 +21,7 @@
       this.on("viewActivate",this.viewActivate);
       this.on("viewDeactivate",this.viewDeactivate);
       this.settingsHaveChanged = false;
+      app.checkonline(['.change-passphrase', '.btn.save-btn']);
     },
     render: function () {
       this.$el.html(window.tmpl["settingsView"]({}));

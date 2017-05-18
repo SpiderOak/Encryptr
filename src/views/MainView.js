@@ -34,6 +34,7 @@
           "deleteButton_clickHandler",
           "backButtonDisplay"
       );
+      app.checkonline(['.add-btn', '.fab.add-btn']);
       this.menuView = new Encryptr.prototype.MenuView().render();
       this.menuView.dismiss();
       this.addMenuView = new Encryptr.prototype.AddMenuView().render();

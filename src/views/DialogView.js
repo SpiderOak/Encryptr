@@ -21,6 +21,7 @@
         "cancel_clickHandler",
         "dialogCancelButton_clickHandler",
         "dialogAcceptButton_clickHandler");
+      app.checkonline(['.signupButton']);
     },
     render: function() {
       this.$el.html(window.tmpl["dialogConfirmView"]({}));
