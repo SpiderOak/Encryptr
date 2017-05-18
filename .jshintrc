@@ -18,6 +18,7 @@
   "globals": {
     "cordova": true,
     "json2csv": true,
-    "URL": true
+    "URL": true,
+    "app": true
   }
 }
