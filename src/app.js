@@ -8,6 +8,7 @@ var Encryptr = (function (window, console, undefined) {
 
   var Encryptr = function () {
     this.online = true; // assume a hopeful default
+    this.offline_btns = [];
   };
 
   Encryptr.prototype.init = function() {
@@ -187,16 +188,33 @@ var Encryptr = (function (window, console, undefined) {
     }
   };
 
+  Encryptr.prototype.checkonline = function(btns_classes){
+    var self = this;
+    btns_classes.map(function(btn_class) {
+      if (self.offline_btns.indexOf(btn_class) === -1){
+        self.offline_btns.push(btn_class);
+      }
+    });
+    var setStatus = (this.online) ? this.setOnline:this.setOffline;
+    return setStatus.bind(this)();
+  };
+
   Encryptr.prototype.setOffline = function(event) {
     this.online = false;
     window.online = false;
     window.crypton.online = false;
+    this.offline_btns.forEach(function(btn_class) {
+      $(btn_class).addClass('disabled-link disabled-btn');
+    });
   };
 
   Encryptr.prototype.setOnline = function(event) {
     this.online = true;
     window.online = true;
     window.crypton.online = true;
+    this.offline_btns.forEach(function(btn_class) {
+      $(btn_class).removeClass('disabled-link disabled-btn');
+    });
   };
 
   Encryptr.prototype.onResume = function(event) {
