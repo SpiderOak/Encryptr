@@ -70,6 +70,7 @@
       return this.getEntries().then(function(){
         var data = window.sessionStorage.getItem('crypton');
         if ($.os.ios || $.os.android || $.os.bb10) {
+          return self.saveOfflineDataCordova('encrypt.data', data);
         } else if ($.os.nodeWebkit) {
           return self.saveOfflineDataInDesktop('encrypt.data', data);
         }
@@ -124,18 +125,22 @@
       }
       return data;
     },
-    writeCordovaFile: function(fileName, data) {
-      data = JSON.stringify(data, null, '\t');
+    writeCordovaFile: function(directory, fileName, data){
       var promise = $.Deferred();
-      window.resolveLocalFileSystemURL(cordova.file.cacheDirectory, function (directoryEntry) {
+      window.resolveLocalFileSystemURL(directory, function (directoryEntry) {
           directoryEntry.getFile(fileName, { create: true }, function (fileEntry) {
               fileEntry.createWriter(function (fileWriter) {
                   var blob = new Blob([data], { type: 'text/csv' });
                   fileWriter.write(blob);
                   promise.resolve(fileEntry.fullPath);
-              }, console.log);
-          }, console.log);
-      }, console.log);
+              }, promise.reject);
+          }, promise.reject);
+      }, promise.reject);
+      return promise;
+    },
+    saveOfflineDataCordova: function(file, data){
+      return this.writeCordovaFile(cordova.file.dataDirectory, file, data);
+    },
     saveOfflineDataInDesktop: function(file, data){
       var nw = require('nw.gui');
       var fs = require('fs');
@@ -229,7 +234,8 @@
       event.stopPropagation();
       event.stopImmediatePropagation();
       return this.getCsv().then(function (csv) {
-        return self.writeCordovaFile('export.csv', csv);
+        csv = JSON.stringify(csv, null, '\t');
+        return self.writeCordovaFile(cordova.file.cacheDirectory, 'export.csv', csv);
       }).then(function(filePath) {
         var options = {
           message: 'Encryptr csv with entries data',

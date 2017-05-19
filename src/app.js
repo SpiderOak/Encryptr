@@ -191,11 +191,34 @@ var Encryptr = (function (window, console, undefined) {
   Encryptr.prototype.loadOfflineData = function() {
     var self = this;
     if ($.os.ios || $.os.android || $.os.bb10) {
+      return this.readOfflineDataCordova('encrypt.data').then(function(data){
+        window.sessionStorage.setItem('crypton', data);
+      });
     } else if ($.os.nodeWebkit) {
       return this.readOfflineDataInDesktop('encrypt.data').then(function(data){
         window.sessionStorage.setItem('crypton', data);
       });
     }
+  };
+
+  Encryptr.prototype.readCordovaFile = function(directory, fileName){
+    var promise = $.Deferred();
+    window.resolveLocalFileSystemURL(directory, function (directoryEntry) {
+      directoryEntry.getFile(fileName, {}, function (fileEntry) {
+        fileEntry.file(function (file) {
+          var reader = new FileReader();
+          reader.onloadend = function() {
+          promise.resolve(this.result);
+          };
+          reader.readAsText(file);
+        }, promise.reject);
+      }, promise.reject);
+    }, promise.reject);
+    return promise;
+  };
+
+  Encryptr.prototype.readOfflineDataCordova = function(file){
+    return this.readCordovaFile(cordova.file.dataDirectory, file);
   };
 
   Encryptr.prototype.readOfflineDataInDesktop = function(file){
