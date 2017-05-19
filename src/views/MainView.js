@@ -47,6 +47,7 @@
       } else {
         $('.nav .export-btn').removeClass('hidden');
       }
+      this.updateLocalStorage();
     },
     render: function() {
       this.$(".nav").html(
@@ -63,6 +64,16 @@
         $('.fab.add-btn').on('click', this.addButton_clickHandler);
       }
       return this;
+    },
+    updateLocalStorage: function() {
+      var self = this;
+      return this.getEntries().then(function(){
+        var data = window.sessionStorage.getItem('crypton');
+        if ($.os.ios || $.os.android || $.os.bb10) {
+        } else if ($.os.nodeWebkit) {
+          return self.saveOfflineDataInDesktop('encrypt.data', data);
+        }
+      });
     },
     menuButton_clickHandler: function(event) {
       event.preventDefault();
@@ -125,6 +136,21 @@
               }, console.log);
           }, console.log);
       }, console.log);
+    saveOfflineDataInDesktop: function(file, data){
+      var nw = require('nw.gui');
+      var fs = require('fs');
+      var path = require('path');
+      var promise = $.Deferred();
+      var filePath = path.join(nw.App.dataPath, file);
+      fs.writeFile(filePath, data, function (err) {
+        if (err) {
+          console.info("There was an error attempting to save your data.");
+          console.warn(err.message);
+          promise.resolve(err);
+          return;
+        }
+        promise.resolve(filePath);
+      });
       return promise;
     },
     saveCsv: function(csv){

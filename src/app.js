@@ -188,6 +188,31 @@ var Encryptr = (function (window, console, undefined) {
     }
   };
 
+  Encryptr.prototype.loadOfflineData = function() {
+    var self = this;
+    if ($.os.ios || $.os.android || $.os.bb10) {
+    } else if ($.os.nodeWebkit) {
+      return this.readOfflineDataInDesktop('encrypt.data').then(function(data){
+        window.sessionStorage.setItem('crypton', data);
+      });
+    }
+  };
+
+  Encryptr.prototype.readOfflineDataInDesktop = function(file){
+    var nw = require('nw.gui');
+    var fs = require('fs');
+    var path = require('path');
+    var promise = $.Deferred();
+    var filePath = path.join(nw.App.dataPath, file);
+    fs.readFile(filePath, 'utf8', function(err, data) {
+      if (err) {
+        return promise.reject(err);
+      }
+      promise.resolve(data);
+    });
+    return promise;
+  };
+
   Encryptr.prototype.checkonline = function(btns_classes){
     var self = this;
     btns_classes.map(function(btn_class) {
@@ -206,6 +231,9 @@ var Encryptr = (function (window, console, undefined) {
     this.offline_btns.forEach(function(btn_class) {
       $(btn_class).addClass('disabled-link disabled-btn');
     });
+    if (window.sessionStorage.getItem('crypton') === null) {
+      app.loadOfflineData();
+    }
   };
 
   Encryptr.prototype.setOnline = function(event) {

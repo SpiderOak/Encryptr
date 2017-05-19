@@ -19,6 +19,7 @@
     "cordova": true,
     "json2csv": true,
     "URL": true,
-    "app": true
+    "app": true,
+    "require": true
   }
 }

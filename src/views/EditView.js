@@ -126,12 +126,14 @@
                 }
                 window.app.navigator.popView(window.app.defaultPopEffect);
                 window.app.toastView.show("Entry saved");
+                window.app.mainView.updateLocalStorage();
                 $(".blocker").hide();
               });
             });
           } else {
             window.app.navigator.popView(window.app.defaultPopEffect);
             window.app.toastView.show("Entry saved");
+            window.app.mainView.updateLocalStorage();
             $(".blocker").hide();
           }
         },
