@@ -436,7 +436,7 @@ crypton.generateAccount = function (username, passphrase, callback, options) {
     sessionData.options.username = username;
     sessionData.options.passphrase = passphrase;
     crypton.work.calculateSrpM1(sessionData.options, function(err, srpM1, ourSrpM2) {
-      if (!constEqual(sessionData.srpM2, ourSrpM2)) { 
+      if (!constEqual(sessionData.srpM2, ourSrpM2)) {
         callback('Server could not be verified');
         return;
       }
@@ -1694,8 +1694,8 @@ Session.prototype.create = function (containerName, callback) {
 
   if (!crypton.online){
     var container = JSON.parse(window.sessionStorage.getItem('crypton')).containers[containerName];
-    if (container === null){
-      return callback('Container not found in sessionStorage');
+    if (container === null || container === undefined){
+      return callback('Container', containerName, 'not found in sessionStorage');
     }
     return callback(null, container);
   }
@@ -2198,6 +2198,9 @@ Container.prototype.getHistory = function (callback) {
   
   if (!crypton.online) {
     var containers = JSON.parse(window.sessionStorage.getItem('crypton')).containers[containerNameHmac + currentVersion];
+    if (containers === null || containers === undefined){
+      return callback('container', containerNameHmac, 'not found in sessionStorage');
+    }
     return callback(null, containers);
   }
 
