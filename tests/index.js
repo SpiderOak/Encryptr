@@ -43,6 +43,12 @@ describe('Application setup', function() {
       });
     });
 
+    describe('json2csv', function() {
+      it('should have json2csv', function() {
+        json2csv.should.be.an('function');
+      });
+    });
+
   });
 
   describe('initialize', function() {

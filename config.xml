@@ -30,13 +30,13 @@
     <preference name="KeyboardDisplayRequiresUserAction" value="false" />
     <preference name="FadeSplashScreen" value="true" />
     <preference name="FadeSplashScreenDuration" value="1" />
-    <plugin name="com.verso.cordova.clipboard" spec="~0.1.0" />
-    <plugin name="cordova-plugin-device" spec="~1.0.1" />
     <preference name="AlternateContentSrc" value="index.html" />
     <engine name="ios" spec="https://github.com/apache/cordova-ios.git#master" />
     <plugin name="cordova-labs-wkwebview-engine-localhost" spec="https://github.com/apache/cordova-plugins.git#master:wkwebview-engine-localhost" />
-    <plugin name="cordova-plugin-whitelist" spec="https://github.com/apache/cordova-plugin-whitelist#master" />
-    <plugin name="cordova-plugin-statusbar" spec="~1.0.1" />
+    <plugin name="cordova-plugin-clipboard-x" spec="~1.0.1" />
+    <plugin name="cordova-plugin-device" spec="~1.0.1" />
     <plugin name="cordova-plugin-inappbrowser" spec="~1.1.1" />
     <plugin name="cordova-plugin-privacyscreen" spec="https://github.com/devgeeks/PrivacyScreenPlugin#cordova-ios-4" />
+    <plugin name="cordova-plugin-statusbar" spec="~1.0.1" />
+    <plugin name="cordova-plugin-whitelist" spec="https://github.com/apache/cordova-plugin-whitelist#master" />
 </widget>
