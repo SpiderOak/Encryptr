@@ -47,9 +47,9 @@
       } else {
         $('.nav .export-btn').removeClass('hidden');
       }
-      this.updateLocalStorage();
     },
     render: function() {
+      this.updateLocalStorage();
       this.$(".nav").html(
         window.tmpl["navView"]({})
       );
