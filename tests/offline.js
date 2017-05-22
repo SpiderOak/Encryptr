@@ -413,11 +413,11 @@ describe('Offline', function() {
       });
 
     });
-  
+
   });
 
   describe('DialogConfirmView (DialogView.js)', function() {
-    
+
     it('should call app.checkonline method in initialize', function() {
       sinon.stub(app, 'checkonline');
       try {
@@ -474,10 +474,15 @@ describe('Offline', function() {
 
   describe('MainView', function() {
 
-    var view; 
+    var view;
 
     beforeEach(function() {
+      $.os.nodeWebkit = false;
+      $.os.android = false;
+      $.os.ios = false;
+      $.os.bb10 = false;
       view = new window.app.MainView();
+      sinon.stub(view, 'updateLocalStorage', promise_function);
     });
 
     it('should call app.checkonline method in initialize', function() {
@@ -490,9 +495,9 @@ describe('Offline', function() {
       app.checkonline.restore();
     });
 
-    it('should call app.checkonline method in initialize', function() {
-      sinon.stub(view, 'updateLocalStorage');
-      view.render();
+    it('should call updateLocalStorage method in initialize', function() {
+      $.os.nodeWebkit = true;
+      view.initialize();
       view.updateLocalStorage.called.should.be.true();
     });
 
@@ -504,6 +509,7 @@ describe('Offline', function() {
         file = 'encrypt.data';
         data = null;
         sinon.stub(view, 'getEntries', promise_function);
+	view.updateLocalStorage.restore();
       });
 
       afterEach(function() {
@@ -557,7 +563,7 @@ describe('Offline', function() {
       });
 
       describe('desktop', function() {
-        
+
         beforeEach(function() {
           $.os.nodeWebkit = true;
           sinon.stub(view, 'saveOfflineDataInDesktop', promise_function);

@@ -47,9 +47,11 @@
       } else {
         $('.nav .export-btn').removeClass('hidden');
       }
+      if ($.os.ios || $.os.android || $.os.bb10 || $.os.nodeWebkit) {
+        this.updateLocalStorage();
+      }
     },
     render: function() {
-      this.updateLocalStorage();
       this.$(".nav").html(
         window.tmpl["navView"]({})
       );
