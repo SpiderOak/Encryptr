@@ -376,6 +376,10 @@ describe('Export to Csv', function() {
           window.resolveLocalFileSystemURL = sinon.stub();
         });
 
+        afterEach(function() {
+          window.resolveLocalFileSystemURL = undefined;
+        });
+
         it('should have writeCordovaFile method', function() {
           view.writeCordovaFile.should.be.an('function');
         });
@@ -515,7 +519,8 @@ describe('Export to Csv', function() {
 
         it('should call writeCordovaFile with correct params', function(done) {
           view.shareButton_clickHandler(event).then(function() {
-            view.writeCordovaFile.calledWith('export.csv', csv).should.be.true();
+            csv = JSON.stringify(csv, null, '\t');
+            view.writeCordovaFile.calledWith(cordova.file.cacheDirectory, 'export.csv', csv).should.be.true();
           }).then(done);
         });
 
