@@ -15,6 +15,7 @@
   "browser": true,
   "wsh": true,
   "sub": true,
+  "es5": true,
   "globals": {
     "cordova": true,
     "json2csv": true,

@@ -195,24 +195,12 @@
     },
     getEntries: function() {
       var self = this;
-      var username = window.app.accountModel.get("username");
-      var hashArray = window.sjcl.hash.sha256.hash(username);
-      var hash = window.sjcl.codec.hex.fromBits(hashArray);
-      var encryptedIndexJSON = window.localStorage.getItem("encryptr-" + hash + "-index");
-      if (encryptedIndexJSON && window.app.accountModel.get("passphrase")) {
-        try {
-          var decryptedIndexJson =
-            window.sjcl.decrypt(window.app.accountModel.get("passphrase"),
-                                encryptedIndexJSON, window.crypton.cipherOptions);
-          var promises = JSON.parse(decryptedIndexJson)
-            .map(self.getEntry);
-          return $.when.apply($, promises);
-        } catch (ex) {
-          window.app.toastView.show("Local cache invalid<br/>Loading from server");
-          console.log(ex);
-          return ex;
-        }
-      }
+      var entriesCollection = new window.app.EntriesCollection();
+      var entriesView = new window.app.EntriesView({collection: entriesCollection});
+      return entriesView.getCollection().then(function(collection) {
+        var promises = collection.map(self.getEntry);
+        return $.when.apply($, promises);
+      });
     },
     getCsv: function() {
      var self = this;
