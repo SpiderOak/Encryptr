@@ -13,12 +13,9 @@
       "input input.search": "search",
       "submit form.entrySearch": "noop"
     },
-    initialize: function(collection) {
+    initialize: function() {
       _.bindAll(this, "render", "addAll", "addOne", "viewActivate", "search",
         "clearSearch", "viewDeactivate");
-      if (collection && collection.collection) {
-        this.collection = collection.collection;
-      }
       this.collection.bind("reset", this.addAll, this);
       this.collection.bind("add", this.addOne, this);
       this.collection.bind("remove", this.addAll, this);
