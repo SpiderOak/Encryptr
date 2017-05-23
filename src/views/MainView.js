@@ -188,18 +188,24 @@
     getEntry: function (entry) {
       var entry_model = new window.app.EntryModel(entry);
       var promise = $.Deferred();
-      entry_model.fetch({success: function(_, resp){
-        promise.resolve(resp);
-      }});
+      entry_model.fetch({
+        success: function(_, resp){
+          promise.resolve(resp);
+        },
+        error: promise.reject
+      });
       return promise;
     },
     getEntries: function() {
       var self = this;
-      var entriesCollection = new window.app.EntriesCollection();
-      var entriesView = new window.app.EntriesView({collection: entriesCollection});
-      return entriesView.getCollection().then(function(collection) {
-        var promises = collection.map(self.getEntry);
-        return $.when.apply($, promises);
+      return window.app.entriesView.getCollection().then(function(collection) {
+        var promise = $.Deferred();
+        if (collection) {
+          var promises = collection.map(self.getEntry);
+          return $.when.apply($, promises);
+        }
+        promise.reject();
+        return promise;
       });
     },
     getCsv: function() {

@@ -112,6 +112,7 @@
               { collection: new window.app.EntriesCollection() },
               window.app.noEffect
             );
+            window.app.entriesView = window.app.navigator.viewsStack[0].instance;
             $(".blocker").hide();
             window.app.loginView.dismiss();
             _this.dismiss();

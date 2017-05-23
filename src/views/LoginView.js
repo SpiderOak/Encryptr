@@ -88,6 +88,7 @@
           { collection: entriesCollection },
           window.app.noEffect
         );
+        window.app.entriesView = window.app.navigator.viewsStack[0].instance;
         _this.dismiss();
         $(".blocker").hide();
         window.app.loginBegan = Date.now();
