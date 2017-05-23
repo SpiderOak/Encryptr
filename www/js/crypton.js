@@ -1052,7 +1052,7 @@ Account.prototype.wrapAllKeys = function (wrappingKey, privateKeys, session) {
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License. 
+ * limitations under the License.
 */
 
 (function () {
@@ -1784,7 +1784,9 @@ Session.prototype.create = function (containerName, callback) {
 
         // Save object in sessionStorage
         var cryptonToLocalStorage = JSON.parse(window.sessionStorage.getItem('crypton'));
-        cryptonToLocalStorage.containers[containerName] = container;
+        cryptonToLocalStorage.containers[containerName] = JSON.parse(JSON.stringify(container, function(key, value) {
+          return (key === 'session') ? null : value;
+        }));
         window.sessionStorage.setItem('crypton', JSON.stringify(cryptonToLocalStorage));
 
         callback(null, container);
@@ -2125,6 +2127,7 @@ Container.prototype.save = function (callback, options) {
 Container.prototype.getDiff = function (callback) {
   var last = this.latestVersion();
   var old = this.versions[last] || {};
+  console.log(last, old);
   callback(null, crypton.diff.create(old, this.keys));
 };
 
