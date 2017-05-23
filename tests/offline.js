@@ -482,6 +482,7 @@ describe('Offline', function() {
       $.os.ios = false;
       $.os.bb10 = false;
       view = new window.app.MainView();
+      window.app.mainView = view;
       sinon.stub(view, 'updateLocalStorage', promise_function);
     });
 
@@ -495,12 +496,6 @@ describe('Offline', function() {
       app.checkonline.restore();
     });
 
-    it('should call updateLocalStorage method in initialize', function() {
-      $.os.nodeWebkit = true;
-      view.initialize();
-      view.updateLocalStorage.called.should.be.true();
-    });
-
     describe('updateLocalStorage', function(){
 
       var file, data;
@@ -509,7 +504,7 @@ describe('Offline', function() {
         file = 'encrypt.data';
         data = null;
         sinon.stub(view, 'getEntries', promise_function);
-	view.updateLocalStorage.restore();
+        view.updateLocalStorage.restore();
       });
 
       afterEach(function() {
