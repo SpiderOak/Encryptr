@@ -3,10 +3,18 @@
 describe('Export to Csv', function() {
 
     window.app = new window.Encryptr();
-    var view, csv, entry, entries, fields, csvData;
+    var view, csv, entry, entries, fields, csvData, promise_function;
 
     beforeEach(function() {
       view = new window.app.MainView();
+      promise_function = function(data_return) {
+        function promise_revolved() {
+          var promise = $.Deferred();
+          promise.resolve(data_return);
+          return promise;
+        }
+        return promise_revolved;
+      };
       entry = {
         type: 'entry_type',
         label: 'entry_label',
@@ -22,6 +30,13 @@ describe('Export to Csv', function() {
         'item_name_1': 'value_item_1'
       };
       csv = '"Entry Type","Label","item_name_1"\n"entry_type","entry_label","value_item_1"';
+      window.app.entriesView = {
+        getCollection: sinon.stub().returns(promise_function(entries)())
+      };
+    });
+
+    afterEach(function() {
+      window.app.entriesView = undefined;
     });
 
     describe('addFieldFromEntry', function() {
@@ -232,94 +247,21 @@ describe('Export to Csv', function() {
 
     describe('getEntries', function() {
 
-      var hash, decryptedIndexJson, hashArray, username, passphrase;
+      var collection;
 
       beforeEach(function() {
-        hash = 'hash';
-        decryptedIndexJson = '{"decryptedIndexJson":"decryptedIndexJson"}';
-        hashArray = ['hashArray'];
-        username = 'username';
-        passphrase = 'passphrase';
-        window.app.accountModel = {
-          get: sinon.spy(function(item) {
-            if (item === 'passphrase') {
-              return passphrase;
-            }
-            return username;
-          })
-        };
-        window.app.toastView = {
-          show: sinon.spy()
-        };
-        sinon.stub(window.sjcl.hash.sha256, 'hash').returns(hashArray);
-        sinon.stub(window.sjcl.codec.hex, 'fromBits').returns(hash);
-        sinon.stub(window.sjcl, 'decrypt').returns(decryptedIndexJson);
-        sinon.stub(JSON, 'parse').returns([entry]);
-        sinon.stub(view, 'getEntry');
-        window.localStorage.setItem('encryptr-' + hash + '-index', 'encryptedIndexJSON');
-      });
-
-      afterEach(function () {
-        JSON.parse.restore();
-        window.sjcl.hash.sha256.hash.restore();
-        window.sjcl.codec.hex.fromBits.restore();
-        window.sjcl.decrypt.restore();
-        window.app.accountModel = undefined;
-        window.app.toastView = undefined;
+        collection = entries;
+        view.getEntry = sinon.stub().returns(promise_function(entry)());
+        window.app.entriesView.getCollection = sinon.stub().returns(promise_function(entries)());
       });
 
       it('should have getEntries method', function() {
         view.getEntries.should.be.an('function');
       });
 
-      it('should call window.sjcl.hash.sha256.hash', function() {
+      it('should call window.app.entriesView.getCollection', function() {
         view.getEntries();
-        window.sjcl.hash.sha256.hash.called.should.be.true();
-      });
-
-      it('should call window.sjcl.hash.sha256.hash with correct params', function() {
-        view.getEntries();
-        window.sjcl.hash.sha256.hash.calledWith(username).should.be.true();
-      });
-
-      it('should call window.sjcl.codec.hex.fromBits', function() {
-        view.getEntries();
-        window.sjcl.codec.hex.fromBits.called.should.be.true();
-      });
-
-      it('should call window.sjcl.codec.hex.fromBits with correct params', function() {
-        view.getEntries();
-        window.sjcl.codec.hex.fromBits.calledWith(hashArray).should.be.true();
-      });
-
-      it('should call window.sjcl.decrypt', function() {
-        view.getEntries();
-        window.sjcl.decrypt.called.should.be.true();
-      });
-
-      it('should call window.sjcl.decrypt with correct params', function() {
-        view.getEntries();
-        window.sjcl.decrypt.calledWith(passphrase, 'encryptedIndexJSON', window.crypton.cipherOptions).should.be.true();
-      });
-
-      it('should call window.app.accountModel.get', function() {
-        view.getEntries();
-        window.app.accountModel.get.called.should.be.true();
-      });
-
-      it('should call window.app.accountModel.get with correct params (passphrase)', function() {
-        view.getEntries();
-        window.app.accountModel.get.calledWith('passphrase').should.be.true();
-      });
-
-      it('should call window.app.accountModel.get with correct params (username)', function() {
-        view.getEntries();
-        window.app.accountModel.get.calledWith('username').should.be.true();
-      });
-
-      it('should not call window.app.toastView.show', function() {
-        view.getEntries();
-        window.app.toastView.show.called.should.be.false();
+        window.app.entriesView.getCollection.called.should.be.true();
       });
 
       it('should not call getEntry', function() {
@@ -342,6 +284,7 @@ describe('Export to Csv', function() {
           promise.resolve(entry);
           return $.when.apply($, [promise]);
         });
+        window.app.entriesView.getCollection = view.getEntries;
         sinon.stub(view, 'generateCsvFromEntries').returns('generateCsvFromEntries');
       });
 
@@ -396,16 +339,11 @@ describe('Export to Csv', function() {
         var event;
 
         beforeEach(function() {
-          var promise_function = function() {
-            var promise = $.Deferred();
-            promise.resolve(csv);
-            return promise;
-          };
           event = {
             stopPropagation: sinon.spy(),
             stopImmediatePropagation: sinon.spy(),
           };
-          sinon.stub(view, 'getCsv', promise_function);
+          sinon.stub(view, 'getCsv', promise_function(csv));
           cordova.plugins = {
             clipboard: {
               copy: sinon.spy()
@@ -468,14 +406,6 @@ describe('Export to Csv', function() {
 
         beforeEach(function() {
           filePath = '/tmp/export.csv';
-          var promise_function = function(data_return) {
-            function promise_revolved() {
-              var promise = $.Deferred();
-              promise.resolve(data_return);
-              return promise;
-            };
-            return promise_revolved;
-          };
           event = {
             stopPropagation: sinon.spy(),
             stopImmediatePropagation: sinon.spy(),
@@ -551,17 +481,12 @@ describe('Export to Csv', function() {
         var event;
 
         beforeEach(function() {
-          var promise_function = function() {
-            var promise = $.Deferred();
-            promise.resolve(csv);
-            return promise;
-          };
           event = {
             stopPropagation: sinon.spy(),
             stopImmediatePropagation: sinon.spy(),
           };
-          sinon.stub(view, 'getCsv', promise_function);
-          sinon.stub(view, 'saveCsv', promise_function);
+          sinon.stub(view, 'getCsv', promise_function(csv));
+          sinon.stub(view, 'saveCsv', promise_function(csv));
         });
 
         it('should have exportButton_clickHandler method', function() {
