@@ -35,6 +35,7 @@
           "backButtonDisplay"
       );
       app.checkonline(['.add-btn', '.fab.add-btn']);
+      this.updatedLocalStorage = false;
       this.menuView = new Encryptr.prototype.MenuView().render();
       this.menuView.dismiss();
       this.addMenuView = new Encryptr.prototype.AddMenuView().render();
@@ -46,9 +47,6 @@
         $('.nav .copy-btn').removeClass('hidden');
       } else {
         $('.nav .export-btn').removeClass('hidden');
-      }
-      if ($.os.ios || $.os.android || $.os.bb10 || $.os.nodeWebkit) {
-        this.updateLocalStorage();
       }
     },
     render: function() {
@@ -69,14 +67,17 @@
     },
     updateLocalStorage: function() {
       var self = this;
-      return this.getEntries().then(function(){
-        var data = window.sessionStorage.getItem('crypton');
-        if ($.os.ios || $.os.android || $.os.bb10) {
-          return self.saveOfflineDataCordova('encrypt.data', data);
-        } else if ($.os.nodeWebkit) {
-          return self.saveOfflineDataInDesktop('encrypt.data', data);
-        }
-      });
+      if (!this.updatedLocalStorage) {
+        return this.getEntries().then(function(){
+          var data = window.sessionStorage.getItem('crypton');
+          window.app.mainView.updatedLocalStorage = true;
+          if ($.os.ios || $.os.android || $.os.bb10) {
+            return self.saveOfflineDataCordova('encrypt.data', data);
+          } else if ($.os.nodeWebkit) {
+            return self.saveOfflineDataInDesktop('encrypt.data', data);
+          }
+        });
+      }
     },
     menuButton_clickHandler: function(event) {
       event.preventDefault();
