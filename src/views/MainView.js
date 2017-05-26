@@ -59,9 +59,12 @@
       if ($.os.nodeWebkit) {
         $('.fab').css({visibility: "hidden"});
         $('.nav .export-btn.right').addClass('right2');
+        $('.nav .export-btn').addClass('disabled-link disabled-btn');
       } else {
         $('.nav .add-btn.right').addClass('shrunken');
         $('.fab.add-btn').on('click', this.addButton_clickHandler);
+        $('.nav .share-btn').addClass('disabled-link disabled-btn');
+        $('.nav .copy-btn').addClass('disabled-link disabled-btn');
       }
       return this;
     },
@@ -72,9 +75,14 @@
           var data = window.sessionStorage.getItem('crypton');
           window.app.mainView.updatedLocalStorage = true;
           if ($.os.ios || $.os.android || $.os.bb10) {
+            $('.nav .share-btn').removeClass('disabled-link disabled-btn');
+            $('.nav .copy-btn').removeClass('disabled-link disabled-btn');
             return self.saveOfflineDataCordova('encrypt.data', data);
           } else if ($.os.nodeWebkit) {
-            return self.saveOfflineDataInDesktop('encrypt.data', data);
+            if ($.os.nodeWebkit) {
+              $('.nav .export-btn').removeClass('disabled-link disabled-btn');
+              return self.saveOfflineDataInDesktop('encrypt.data', data);
+            }
           }
         });
       }
