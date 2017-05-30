@@ -38,6 +38,6 @@
     <plugin name="cordova-plugin-privacyscreen" spec="https://github.com/devgeeks/PrivacyScreenPlugin" />
     <plugin name="cordova-plugin-statusbar" spec="~1.0.1" />
     <plugin name="cordova-plugin-whitelist" spec="https://github.com/apache/cordova-plugin-whitelist" />
-    <plugin name="cordova-labs-wkwebview-engine-localhost" spec="https://github.com/apache/cordova-plugins" />
     <plugin name="cordova-plugin-x-socialsharing" spec="~5.1.8" />
+    <plugin name="cordova-labs-wkwebview-engine-localhost" spec="https://github.com/apache/cordova-plugins#wkwebview-engine-localhost" />
 </widget>
