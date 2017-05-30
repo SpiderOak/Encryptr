@@ -35,7 +35,8 @@ for PLATFORM in "$@"; do
     cordova-splash 
     grunt --force
     cordova prepare
-    cordova build
+    cordova build $PLATFORM
+    cordova build $PLATFORM --release
   elif [ "$PLATFORM" == "desktop" ]; then
     npm install
     grunt --force
