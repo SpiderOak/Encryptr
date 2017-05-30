@@ -41,16 +41,16 @@ It is currently working on Android, iOS, and the Desktop – thanks to [NW.js](h
   - `cordova platform add ios` and/or `cordova platform add android`
   - `cordova-icon && cordova-splash`
 - With script:
-  - iOS: ./build.sh ios
-  - Android: ./build.sh android
-  - Desktop: ./build.sh desktop
+  - iOS: `./build.sh ios`
+  - Android: `./build.sh android`
+  - Desktop: `./build.sh desktop`
 
 ## Build Encryptr
 
-- iOS: ./build.sh ios
-- Android: ./build.sh android
-- Desktop: ./build.sh desktop
-- All platforms: ./build.sh desktop ios android
+- iOS: `./build.sh ios`
+- Android: `./build.sh android`
+- Desktop: `./build.sh desktop`
+- All platforms: `./build.sh desktop ios android`
 
 ## First test
 
