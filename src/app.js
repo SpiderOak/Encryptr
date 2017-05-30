@@ -193,10 +193,16 @@ var Encryptr = (function (window, console, undefined) {
     if ($.os.ios || $.os.android || $.os.bb10) {
       return this.readOfflineDataCordova('encrypt.data').then(function(data){
         window.sessionStorage.setItem('crypton', data);
+      }, function(err) {
+        window.app.toastView.show("We are having trouble reading the data while offline, please connect to the internet");
+        console.err(err);
       });
     } else if ($.os.nodeWebkit) {
       return this.readOfflineDataInDesktop('encrypt.data').then(function(data){
         window.sessionStorage.setItem('crypton', data);
+      }, function(err) {
+        window.app.toastView.show("We are having trouble reading the data while offline, please connect to the internet");
+        console.err(err);
       });
     }
   };
