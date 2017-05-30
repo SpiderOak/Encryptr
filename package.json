@@ -20,6 +20,7 @@
     }
   ],
   "dependencies": {
+    "cordova": "^6.5.0",
     "cordova-icon": "^0.3.0",
     "cordova-splash": "^0.3.0",
     "json2csv": "^3.7.3",
