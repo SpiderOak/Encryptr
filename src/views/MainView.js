@@ -34,6 +34,8 @@
           "deleteButton_clickHandler",
           "backButtonDisplay"
       );
+      app.checkonline(['.add-btn', '.fab.add-btn']);
+      this.updatedLocalStorage = false;
       this.menuView = new Encryptr.prototype.MenuView().render();
       this.menuView.dismiss();
       this.addMenuView = new Encryptr.prototype.AddMenuView().render();
@@ -57,11 +59,33 @@
       if ($.os.nodeWebkit) {
         $('.fab').css({visibility: "hidden"});
         $('.nav .export-btn.right').addClass('right2');
+        $('.nav .export-btn').addClass('disabled-link disabled-btn');
       } else {
         $('.nav .add-btn.right').addClass('shrunken');
         $('.fab.add-btn').on('click', this.addButton_clickHandler);
+        $('.nav .share-btn').addClass('disabled-link disabled-btn');
+        $('.nav .copy-btn').addClass('disabled-link disabled-btn');
       }
       return this;
+    },
+    updateLocalStorage: function() {
+      var self = this;
+      if (!this.updatedLocalStorage) {
+        return this.getEntries().then(function(){
+          var data = window.sessionStorage.getItem('crypton');
+          window.app.mainView.updatedLocalStorage = true;
+          if ($.os.ios || $.os.android || $.os.bb10) {
+            $('.nav .share-btn').removeClass('disabled-link disabled-btn');
+            $('.nav .copy-btn').removeClass('disabled-link disabled-btn');
+            return self.saveOfflineDataCordova('encrypt.data', data);
+          } else if ($.os.nodeWebkit) {
+            if ($.os.nodeWebkit) {
+              $('.nav .export-btn').removeClass('disabled-link disabled-btn');
+              return self.saveOfflineDataInDesktop('encrypt.data', data);
+            }
+          }
+        });
+      }
     },
     menuButton_clickHandler: function(event) {
       event.preventDefault();
@@ -112,18 +136,37 @@
       }
       return data;
     },
-    writeCordovaFile: function(fileName, data) {
-      data = JSON.stringify(data, null, '\t');
+    writeCordovaFile: function(directory, fileName, data){
       var promise = $.Deferred();
-      window.resolveLocalFileSystemURL(cordova.file.cacheDirectory, function (directoryEntry) {
+      window.resolveLocalFileSystemURL(directory, function (directoryEntry) {
           directoryEntry.getFile(fileName, { create: true }, function (fileEntry) {
               fileEntry.createWriter(function (fileWriter) {
                   var blob = new Blob([data], { type: 'text/csv' });
                   fileWriter.write(blob);
                   promise.resolve(fileEntry.fullPath);
-              }, console.log);
-          }, console.log);
-      }, console.log);
+              }, promise.reject);
+          }, promise.reject);
+      }, promise.reject);
+      return promise;
+    },
+    saveOfflineDataCordova: function(file, data){
+      return this.writeCordovaFile(cordova.file.dataDirectory, file, data);
+    },
+    saveOfflineDataInDesktop: function(file, data){
+      var nw = require('nw.gui');
+      var fs = require('fs');
+      var path = require('path');
+      var promise = $.Deferred();
+      var filePath = path.join(nw.App.dataPath, file);
+      fs.writeFile(filePath, data, function (err) {
+        if (err) {
+          console.info("There was an error attempting to save your data.");
+          console.warn(err.message);
+          promise.resolve(err);
+          return;
+        }
+        promise.resolve(filePath);
+      });
       return promise;
     },
     saveCsv: function(csv){
@@ -153,31 +196,25 @@
     getEntry: function (entry) {
       var entry_model = new window.app.EntryModel(entry);
       var promise = $.Deferred();
-      entry_model.fetch({success: function(_, resp){
-        promise.resolve(resp);
-      }});
+      entry_model.fetch({
+        success: function(_, resp){
+          promise.resolve(resp);
+        },
+        error: promise.reject
+      });
       return promise;
     },
     getEntries: function() {
       var self = this;
-      var username = window.app.accountModel.get("username");
-      var hashArray = window.sjcl.hash.sha256.hash(username);
-      var hash = window.sjcl.codec.hex.fromBits(hashArray);
-      var encryptedIndexJSON = window.localStorage.getItem("encryptr-" + hash + "-index");
-      if (encryptedIndexJSON && window.app.accountModel.get("passphrase")) {
-        try {
-          var decryptedIndexJson =
-            window.sjcl.decrypt(window.app.accountModel.get("passphrase"),
-                                encryptedIndexJSON, window.crypton.cipherOptions);
-          var promises = JSON.parse(decryptedIndexJson)
-            .map(self.getEntry);
+      return window.app.entriesView.getCollection().then(function(collection) {
+        var promise = $.Deferred();
+        if (collection) {
+          var promises = collection.map(self.getEntry);
           return $.when.apply($, promises);
-        } catch (ex) {
-          window.app.toastView.show("Local cache invalid<br/>Loading from server");
-          console.log(ex);
-          return ex;
         }
-      }
+        promise.reject();
+        return promise;
+      });
     },
     getCsv: function() {
      var self = this;
@@ -202,7 +239,8 @@
       event.stopPropagation();
       event.stopImmediatePropagation();
       return this.getCsv().then(function (csv) {
-        return self.writeCordovaFile('export.csv', csv);
+        csv = JSON.stringify(csv, null, '\t');
+        return self.writeCordovaFile(cordova.file.cacheDirectory, 'export.csv', csv);
       }).then(function(filePath) {
         var options = {
           message: 'Encryptr csv with entries data',

@@ -125,59 +125,86 @@
       $(".nav .add-btn.right").removeClass("hidden");
       $(".fab").removeClass("hidden");
       $(".fab").removeClass("shrunken");
+      if ($.os.nodeWebkit) {
+        _this.$("input.search").focus();
+      }
+      return this.getEntries().then(function(entries) {
+        if (entries.length === 0) {
+          _this.addAll();
+          return;
+        }
+        var indexJSON = JSON.stringify(entries.toJSON());
+        if (window.app.accountModel.get("passphrase")) {
+          var encryptedIndexJSON = window.sjcl.encrypt(
+            window.app.accountModel.get("passphrase"), indexJSON,
+            window.crypton.cipherOptions
+          );
+          var username = window.app.accountModel.get("username");
+          var hashArray = window.sjcl.hash.sha256.hash(username);
+          var hash = window.sjcl.codec.hex.fromBits(hashArray);
+          window.localStorage.setItem("encryptr-" + hash + "-index",
+            encryptedIndexJSON);
+        }
+      }, function(err) {
+        window.app.session.create("_encryptrIndex", function(err, container) {
+          if (err) {
+            // OK. This is a bit more serious...
+            console.log(err);
+            window.app.dialogAlertView.show({
+              title: "Error: Contact Support",
+              subtitle: err
+            }, function() {
+              console.log("could not even recreate the container...");
+            });
+            return;
+          }
+          // the container should exist now...
+          _this.viewActivate(event);
+        });
+      }).then(function() {
+        if ($.os.ios || $.os.android || $.os.bb10 || $.os.nodeWebkit) {
+          window.app.mainView.updateLocalStorage();
+          setInterval(window.app.mainView.updateLocalStorage.bind(window.app.mainView), 60*1000);
+        }
+      });
+    },
+    getCollection: function(){
+      var promise = $.Deferred();
       var username = window.app.accountModel.get("username");
       var hashArray = window.sjcl.hash.sha256.hash(username);
       var hash = window.sjcl.codec.hex.fromBits(hashArray);
       var encryptedIndexJSON = window.localStorage.getItem("encryptr-" + hash + "-index");
-      if ($.os.nodeWebkit) {
-        _this.$("input.search").focus();
-      }
       if (encryptedIndexJSON && window.app.accountModel.get("passphrase")) {
         try {
           var decryptedIndexJson =
             window.sjcl.decrypt(window.app.accountModel.get("passphrase"),
                                 encryptedIndexJSON, window.crypton.cipherOptions);
-          this.collection.set(JSON.parse(decryptedIndexJson));
-          this.$(".entriesViewLoading").text("syncing entries...");
-          this.$(".entriesViewLoading").addClass("loadingEntries");
+          promise.resolve(JSON.parse(decryptedIndexJson));
         } catch (ex) {
           window.app.toastView.show("Local cache invalid<br/>Loading from server");
           console.log(ex);
+          promise.reject(ex);
         }
+      } else {
+        promise.resolve(null);
       }
-      this.collection.fetch({
-        container: "_encryptrIndex",
-        success: function(entries) {
-          if (entries.length === 0) {
-            _this.addAll();
-            return;
-          }
-          var indexJSON = JSON.stringify(entries.toJSON());
-          if (window.app.accountModel.get("passphrase")) {
-            var encryptedIndexJSON = window.sjcl.encrypt(
-              window.app.accountModel.get("passphrase"), indexJSON,
-              window.crypton.cipherOptions
-            );
-            window.localStorage.setItem("encryptr-" + hash + "-index",
-              encryptedIndexJSON);
-          }
-        }, error: function(err) {
-          window.app.session.create("_encryptrIndex", function(err, container) {
-            if (err) {
-              // OK. This is a bit more serious...
-              console.log(err);
-              window.app.dialogAlertView.show({
-                title: "Error: Contact Support",
-                subtitle: err
-              }, function() {
-                console.log("could not even recreate the container...");
-              });
-              return;
-            }
-            // the container should exist now...
-            _this.viewActivate(event);
-          });
+      return promise;
+    },
+    getEntries: function(){
+      var self = this;
+      return this.getCollection().then(function success(collection){
+        var promise = $.Deferred();
+        if (collection) {
+          self.collection.set(collection);
+          self.$(".entriesViewLoading").text("syncing entries...");
+          self.$(".entriesViewLoading").addClass("loadingEntries");
         }
+        self.collection.fetch({
+          container: "_encryptrIndex",
+          success: promise.resolve,
+          error: promise.reject
+        });
+        return promise;
       });
     },
     viewDeactivate: function(event) {

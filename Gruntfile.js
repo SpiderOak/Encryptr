@@ -56,6 +56,13 @@ module.exports = function(grunt) {
         dest: 'www/js/<%= pkg.name %>-tests.js'
       }
     },
+    rename: {
+      main: {
+        files: [
+          {src: ['components/offline-js/themes/offline-theme-dark.css'], dest: 'components/offline-js/themes/offline-theme-default.css'}
+        ]
+      }
+    },
     copy: {
       main: {
         files: [
@@ -216,11 +223,11 @@ module.exports = function(grunt) {
 
   // Custom tasks
   grunt.registerTask('test', 'Do mocha test, default spec', function(which) {
-    grunt.task.run('jshint', 'dot', 'copy', 'concat', 'min');
+    grunt.task.run('jshint', 'dot', 'rename', 'copy', 'concat', 'min');
     grunt.task.run('shell:mocha' + (which || 'spec'));
   });
   grunt.registerTask('desktop', 'Build for desktop', function(which) {
-    grunt.task.run('jshint', 'dot', 'copy', 'concat', 'min', 'shell:mochadot');
+    grunt.task.run('jshint', 'dot', 'rename', 'copy', 'concat', 'min', 'shell:mochadot');
     if (which === 'release') {
       grunt.task.run('nodewebkit:release');
     } else {
@@ -229,7 +236,7 @@ module.exports = function(grunt) {
   });
   grunt.registerTask('min', ['uglify']); // polyfil for uglify
   grunt.registerTask('debug','Create a debug build', function(platform) {
-    grunt.task.run('jshint', 'dot', 'copy', 'concat', 'min', 'shell:mochadot');
+    grunt.task.run('jshint', 'dot', 'rename', 'copy', 'concat', 'min', 'shell:mochadot');
     if (platform === 'desktop') {
       grunt.task.run('nodewebkit:debug');
     } else {
@@ -238,8 +245,8 @@ module.exports = function(grunt) {
   });
 
   // Default task
-  grunt.registerTask('default', ['jshint', 'dot', 'copy', 'concat', 'min', 'shell:mochaspec']);
-  grunt.registerTask('yolo', ['jshint', 'dot', 'copy', 'concat', 'min']);
+  grunt.registerTask('default', ['jshint', 'dot', 'rename', 'copy', 'concat', 'min', 'shell:mochaspec']);
+  grunt.registerTask('yolo', ['jshint', 'dot', 'rename', 'copy', 'concat', 'min']);
 
 
 };

@@ -20,6 +20,7 @@
     }
   ],
   "dependencies": {
+    "cordova": "^6.5.0",
     "cordova-icon": "^0.3.0",
     "cordova-splash": "^0.3.0",
     "json2csv": "^3.7.3",
@@ -37,6 +38,7 @@
     "grunt-contrib-concat": "~0.4.0",
     "grunt-contrib-copy": "~0.5.0",
     "grunt-contrib-jshint": "~0.4.3",
+    "grunt-contrib-rename": "^0.2.0",
     "grunt-contrib-uglify": "~0.2.0",
     "grunt-contrib-watch": "~0.3.1",
     "grunt-dot-compiler": "~0.3.14",

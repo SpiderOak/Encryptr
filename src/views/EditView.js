@@ -13,6 +13,7 @@
     initialize: function() {
       _.bindAll(this, "render", "addAll", "addOne", "form_submitHandler",
         "viewActivate", "viewDeactivate");
+      app.checkonline(['.btn.save-btn']);
       this.on("viewActivate",this.viewActivate);
       this.on("viewDeactivate",this.viewDeactivate);
       this.model.bind("all", this.addAll, this);
@@ -125,12 +126,16 @@
                 }
                 window.app.navigator.popView(window.app.defaultPopEffect);
                 window.app.toastView.show("Entry saved");
+                window.app.mainView.updatedLocalStorage = false;
+                window.app.mainView.updateLocalStorage();
                 $(".blocker").hide();
               });
             });
           } else {
             window.app.navigator.popView(window.app.defaultPopEffect);
             window.app.toastView.show("Entry saved");
+            window.app.mainView.updatedLocalStorage = false;
+            window.app.mainView.updateLocalStorage();
             $(".blocker").hide();
           }
         },

@@ -22,6 +22,7 @@
           "copyable_doubleTapHandler",
           "viewActivate",
           "viewDeactivate");
+      app.checkonline(['.btn.delete-btn', '.btn.edit-btn']);
       this.model.on("change", this.addAll, this);
       this.on("viewActivate",this.viewActivate);
       this.on("viewDeactivate",this.viewDeactivate);

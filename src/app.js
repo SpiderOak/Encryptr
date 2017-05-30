@@ -8,6 +8,7 @@ var Encryptr = (function (window, console, undefined) {
 
   var Encryptr = function () {
     this.online = true; // assume a hopeful default
+    this.offline_btns = [];
   };
 
   Encryptr.prototype.init = function() {
@@ -67,6 +68,10 @@ var Encryptr = (function (window, console, undefined) {
         }
       }
     };
+    window.Offline.on('up', this.setOnline.bind(this));
+    window.Offline.on('confirmed-up', this.setOnline.bind(this));
+    window.Offline.on('down', this.setOffline.bind(this));
+    window.Offline.on('confirmed-down', this.setOffline.bind(this));
 
     var isNodeWebkit = (typeof process == "object");
     if (isNodeWebkit) $.os.nodeWebkit = true;
@@ -183,12 +188,90 @@ var Encryptr = (function (window, console, undefined) {
     }
   };
 
+  Encryptr.prototype.loadOfflineData = function() {
+    var self = this;
+    if ($.os.ios || $.os.android || $.os.bb10) {
+      return this.readOfflineDataCordova('encrypt.data').then(function(data){
+        window.sessionStorage.setItem('crypton', data);
+      }, function(err) {
+        window.app.toastView.show("We are having trouble reading the data while offline, please connect to the internet");
+        console.err(err);
+      });
+    } else if ($.os.nodeWebkit) {
+      return this.readOfflineDataInDesktop('encrypt.data').then(function(data){
+        window.sessionStorage.setItem('crypton', data);
+      }, function(err) {
+        window.app.toastView.show("We are having trouble reading the data while offline, please connect to the internet");
+        console.err(err);
+      });
+    }
+  };
+
+  Encryptr.prototype.readCordovaFile = function(directory, fileName){
+    var promise = $.Deferred();
+    window.resolveLocalFileSystemURL(directory, function (directoryEntry) {
+      directoryEntry.getFile(fileName, {}, function (fileEntry) {
+        fileEntry.file(function (file) {
+          var reader = new FileReader();
+          reader.onloadend = function() {
+          promise.resolve(this.result);
+          };
+          reader.readAsText(file);
+        }, promise.reject);
+      }, promise.reject);
+    }, promise.reject);
+    return promise;
+  };
+
+  Encryptr.prototype.readOfflineDataCordova = function(file){
+    return this.readCordovaFile(cordova.file.dataDirectory, file);
+  };
+
+  Encryptr.prototype.readOfflineDataInDesktop = function(file){
+    var nw = require('nw.gui');
+    var fs = require('fs');
+    var path = require('path');
+    var promise = $.Deferred();
+    var filePath = path.join(nw.App.dataPath, file);
+    fs.readFile(filePath, 'utf8', function(err, data) {
+      if (err) {
+        return promise.reject(err);
+      }
+      promise.resolve(data);
+    });
+    return promise;
+  };
+
+  Encryptr.prototype.checkonline = function(btns_classes){
+    var self = this;
+    btns_classes.map(function(btn_class) {
+      if (self.offline_btns.indexOf(btn_class) === -1){
+        self.offline_btns.push(btn_class);
+      }
+    });
+    var setStatus = (this.online) ? this.setOnline:this.setOffline;
+    return setStatus.bind(this)();
+  };
+
   Encryptr.prototype.setOffline = function(event) {
     this.online = false;
+    window.online = false;
+    window.crypton.online = false;
+    this.offline_btns.forEach(function(btn_class) {
+      $(btn_class).addClass('disabled-link disabled-btn');
+    });
+    if (window.sessionStorage.getItem('crypton') === null) {
+      app.loadOfflineData();
+    }
   };
 
   Encryptr.prototype.setOnline = function(event) {
     this.online = true;
+    window.online = true;
+    window.crypton.online = true;
+    this.offline_btns.forEach(function(btn_class) {
+      $(btn_class).removeClass('disabled-link disabled-btn');
+    });
   };
 
   Encryptr.prototype.onResume = function(event) {
