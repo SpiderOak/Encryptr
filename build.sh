@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$#" -ne 1 ]; then
+if [ "$#" -ge 1 ]; then
     echo "Select platform to build: ios, android or desktop"
     exit
 fi
