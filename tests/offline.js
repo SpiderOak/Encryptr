@@ -505,6 +505,9 @@ describe('Offline', function() {
         data = null;
         sinon.stub(view, 'getEntries', promise_function);
         view.updateLocalStorage.restore();
+        window.app.entriesCollection = {
+          length: 1
+        };
       });
 
       afterEach(function() {

@@ -70,9 +70,8 @@
     },
     saveLocalStorage: function(onlySession){
       var self = this;
-      onlySession = (onlySession) ? onlySession : false;
       var data = window.sessionStorage.getItem('crypton');
-      if (onlySession) {
+      if (onlySession === true) {
         data = JSON.stringify({Session: JSON.parse(data).Session});
       }
       window.app.mainView.updatedLocalStorage = true;
