@@ -107,9 +107,10 @@
             // Set up MainView
             window.app.mainView = new window.app.MainView().render();
             // Push a ListView
+            var entriesCollection = window.app.entriesCollection = new window.app.EntriesCollection();
             window.app.navigator.pushView(
               window.app.EntriesView,
-              { collection: new window.app.EntriesCollection() },
+              { collection: entriesCollection },
               window.app.noEffect
             );
             window.app.entriesView = window.app.navigator.viewsStack[0].instance;
