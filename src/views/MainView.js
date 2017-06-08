@@ -68,21 +68,31 @@
       }
       return this;
     },
+    saveLocalStorage: function(onlySession){
+      var self = this;
+      onlySession = (onlySession) ? onlySession : false;
+      var data = window.sessionStorage.getItem('crypton');
+      if (onlySession) {
+        data = JSON.stringify({Session: JSON.parse(data).Session});
+      }
+      window.app.mainView.updatedLocalStorage = true;
+      if ($.os.ios || $.os.android || $.os.bb10) {
+        $('.nav .share-btn').removeClass('disabled-link disabled-btn');
+        $('.nav .copy-btn').removeClass('disabled-link disabled-btn');
+        return self.saveOfflineDataCordova('encrypt.data', data);
+      } else if ($.os.nodeWebkit) {
+        if ($.os.nodeWebkit) {
+          $('.nav .export-btn').removeClass('disabled-link disabled-btn');
+          return self.saveOfflineDataInDesktop('encrypt.data', data);
+        }
+      }
+    },
     updateLocalStorage: function() {
       var self = this;
       if (!this.updatedLocalStorage) {
-        return this.getEntries().then(function(){
-          var data = window.sessionStorage.getItem('crypton');
-          window.app.mainView.updatedLocalStorage = true;
-          if ($.os.ios || $.os.android || $.os.bb10) {
-            $('.nav .share-btn').removeClass('disabled-link disabled-btn');
-            $('.nav .copy-btn').removeClass('disabled-link disabled-btn');
-            return self.saveOfflineDataCordova('encrypt.data', data);
-          } else if ($.os.nodeWebkit) {
-            if ($.os.nodeWebkit) {
-              $('.nav .export-btn').removeClass('disabled-link disabled-btn');
-              return self.saveOfflineDataInDesktop('encrypt.data', data);
-            }
+        return this.getEntries().then(self.saveLocalStorage.bind(self), function(){
+          if (window.app.entriesCollection.length === 0) {
+            self.saveLocalStorage(true);
           }
         });
       }
