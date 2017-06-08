@@ -194,15 +194,19 @@ var Encryptr = (function (window, console, undefined) {
       return this.readOfflineDataCordova('encrypt.data').then(function(data){
         window.sessionStorage.setItem('crypton', data);
       }, function(err) {
-        window.app.toastView.show("We are having trouble reading the data while offline, please connect to the internet");
-        console.err(err);
+        window.app.dialogAlertView.show({
+          title: "Couldn't sign you in",
+          subtitle: "We are having trouble reading the data while offline, please connect to the internet"
+        }, function(){});
       });
     } else if ($.os.nodeWebkit) {
       return this.readOfflineDataInDesktop('encrypt.data').then(function(data){
         window.sessionStorage.setItem('crypton', data);
       }, function(err) {
-        window.app.toastView.show("We are having trouble reading the data while offline, please connect to the internet");
-        console.err(err);
+        window.app.dialogAlertView.show({
+          title: "Couldn't sign you in",
+          subtitle: "We are having trouble reading the data while offline, please connect to the internet"
+        }, function(){});
       });
     }
   };

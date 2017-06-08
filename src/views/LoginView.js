@@ -50,6 +50,9 @@
         if (err === 'You forgot to enter both your username and passphrase') {
           return err;
         }
+        if (err === 'We are having trouble reading the data while offline, please connect to the internet') {
+          return err;
+        }
         return 'Check your username and password';
       };
 

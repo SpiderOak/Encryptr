@@ -424,6 +424,10 @@ crypton.generateAccount = function (username, passphrase, callback, options) {
    * @param {Object} options
    */
   crypton.loginWithStorage = function(username, passphrase, callback, data, options) {
+    var cryptonData = window.sessionStorage.getItem('crypton');
+    if (!cryptonData) {
+      return callback('We are having trouble reading the data while offline, please connect to the internet');
+    }
     var sessionData = JSON.parse(window.sessionStorage.getItem('crypton')).Session;
     if (sessionData === null) {
       callback('Offline server could not be verified');
@@ -1052,7 +1056,7 @@ Account.prototype.wrapAllKeys = function (wrappingKey, privateKeys, session) {
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
+ * limitations under the License. 
 */
 
 (function () {
@@ -2127,7 +2131,6 @@ Container.prototype.save = function (callback, options) {
 Container.prototype.getDiff = function (callback) {
   var last = this.latestVersion();
   var old = this.versions[last] || {};
-  console.log(last, old);
   callback(null, crypton.diff.create(old, this.keys));
 };
 
