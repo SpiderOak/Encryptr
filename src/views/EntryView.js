@@ -137,6 +137,8 @@
                 window.app.navigator.popView(window.app.defaultPopEffect);
                 window.setTimeout(function(){
                   window.app.toastView.show("Item deleted");
+                  window.app.mainView.updatedLocalStorage = false;
+                  window.app.mainView.updateLocalStorage();
                 }, 100);
                 parentCollection.fetch();
               });

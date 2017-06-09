@@ -60,30 +60,43 @@
       if ($.os.nodeWebkit) {
         $('.fab').css({visibility: "hidden"});
         $('.nav .export-btn.right').addClass('right2');
-        $('.nav .export-btn').addClass('disabled-link disabled-btn');
       } else {
         $('.nav .add-btn.right').addClass('shrunken');
         $('.fab.add-btn').on('click', this.addButton_clickHandler);
+      }
+      this.enabledBtns(false);
+      return this;
+    },
+    enabledBtns: function(enabled){
+      if ($.os.nodeWebkit) {
+        if (enabled) {
+          return $('.nav .export-btn').removeClass('disabled-link disabled-btn');
+        }
+        $('.nav .export-btn').addClass('disabled-link disabled-btn');
+      } else {
+        if (enabled) {
+          $('.nav .share-btn').removeClass('disabled-link disabled-btn');
+          return $('.nav .copy-btn').removeClass('disabled-link disabled-btn');
+        }
         $('.nav .share-btn').addClass('disabled-link disabled-btn');
         $('.nav .copy-btn').addClass('disabled-link disabled-btn');
       }
-      return this;
     },
-    saveLocalStorage: function(onlySession){
+    saveLocalStorage: function(){
       var self = this;
       var data = window.sessionStorage.getItem('crypton');
-      if (onlySession === true) {
+      if (window.app.entriesCollection.length === 0) {
+        this.enabledBtns(false);
         data = JSON.stringify({Session: JSON.parse(data).Session});
+      } else {
+        this.enabledBtns(true);
       }
       this.updatedLocalStorage = true;
       this.updatingLocalStorage = false;
       if ($.os.ios || $.os.android || $.os.bb10) {
-        $('.nav .share-btn').removeClass('disabled-link disabled-btn');
-        $('.nav .copy-btn').removeClass('disabled-link disabled-btn');
         return self.saveOfflineDataCordova('encrypt.data', data);
       } else if ($.os.nodeWebkit) {
         if ($.os.nodeWebkit) {
-          $('.nav .export-btn').removeClass('disabled-link disabled-btn');
           return self.saveOfflineDataInDesktop('encrypt.data', data);
         }
       }
@@ -92,11 +105,10 @@
       var self = this;
       if (!this.updatedLocalStorage && !this.updatingLocalStorage) {
         this.updatingLocalStorage = true;
-        return this.getEntries().then(self.saveLocalStorage.bind(self), function(){
-          if (window.app.entriesCollection.length === 0) {
-            self.saveLocalStorage(true);
-          }
-        });
+        if (window.app.entriesCollection.length === 0) {
+          return self.saveLocalStorage();
+        }
+        return this.getEntries().then(self.saveLocalStorage.bind(self));
       }
     },
     menuButton_clickHandler: function(event) {

@@ -168,6 +168,10 @@
       window.app.mainView.off("saveentry", null, null);
       window.app.mainView.off("editentry", null, null);
       window.app.mainView.off("deleteentry", null, null);
+      window.setTimeout(function() {
+        window.app.mainView.updatedLocalStorage = false;
+        window.app.mainView.updateLocalStorage();
+      }, 100);
     },
     close: function() {
       _.each(this.subViews, function(view) {
