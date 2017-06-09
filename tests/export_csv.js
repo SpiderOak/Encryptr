@@ -459,7 +459,6 @@ describe('Export to Csv', function() {
 
         it('should call writeCordovaFile with correct params', function(done) {
           view.shareButton_clickHandler(event).then(function() {
-            csv = JSON.stringify(csv, null, '\t');
             view.writeCordovaFile.calledWith(cordova.file.cacheDirectory, 'export.csv', csv).should.be.true();
           }).then(done);
         });

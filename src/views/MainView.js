@@ -93,17 +93,18 @@
       }
       this.updatedLocalStorage = true;
       this.updatingLocalStorage = false;
+      $(".entriesViewLoading").removeClass("loadingEntries");
       if ($.os.ios || $.os.android || $.os.bb10) {
         return self.saveOfflineDataCordova('encrypt.data', data);
       } else if ($.os.nodeWebkit) {
-        if ($.os.nodeWebkit) {
-          return self.saveOfflineDataInDesktop('encrypt.data', data);
-        }
+        return self.saveOfflineDataInDesktop('encrypt.data', data);
       }
     },
     updateLocalStorage: function() {
       var self = this;
       if (!this.updatedLocalStorage && !this.updatingLocalStorage) {
+        $(".entriesViewLoading").text("Fetching data...");
+        $(".entriesViewLoading").addClass("loadingEntries");
         this.updatingLocalStorage = true;
         if (window.app.entriesCollection.length === 0) {
           return self.saveLocalStorage();
@@ -288,7 +289,6 @@
       event.stopPropagation();
       event.stopImmediatePropagation();
       return this.getCsv().then(function (csv) {
-        csv = JSON.stringify(csv, null, '\t');
         return self.writeCordovaFile(cordova.file.cacheDirectory, 'export.csv', csv);
       }).then(function(filePath) {
         var options = {
