@@ -5,12 +5,6 @@ Encryptr
 
 [Encryptr](https://spideroak.com/solutions/encryptr) is a zero-knowledge, cloud-based e-wallet / password manager powered by Crypton.
 
-It started as an example project for seeing what [Crypton](https://crypton.io) could do in a [Apache Cordova](http://cordova.apache.org) mobile app. I had a particular itch to scratch. I got tired of trying to remember my work password. It changes fairly often, is slightly complex and is generated – I can't choose it for myself.
-
-I had tried a few password managers but hadn't loved any of them – particularly on Android. So, when I needed an idea of an app to make to try out Crypton, this seemed like an obvious choice. At its simplest, Crypton is basically a cloud based key/value store using end to end zero-knowledge encryption. None of the data stored on the server can be viewed by the server.
-
-I wanted something to store hard to remember passwords, important numbers, etc across devices.
-
 Encryptr keeps it simple. It has three types of data it can store. Passwords, Credit Card numbers and general key/value pairs. It can easily be expanded to include other default entry types.
 
 It is currently working on Android, iOS, and the Desktop – thanks to [NW.js](https://github.com/nwjs/nw.js).
