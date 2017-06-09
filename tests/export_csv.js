@@ -252,7 +252,9 @@ describe('Export to Csv', function() {
       beforeEach(function() {
         collection = entries;
         view.getEntry = sinon.stub().returns(promise_function(entry)());
+        view.getEntryRec = sinon.stub().returns(promise_function(entry)());
         window.app.entriesView.getCollection = sinon.stub().returns(promise_function(entries)());
+        window.requestAnimationFrame = sinon.spy();
       });
 
       it('should have getEntries method', function() {
@@ -264,14 +266,22 @@ describe('Export to Csv', function() {
         window.app.entriesView.getCollection.called.should.be.true();
       });
 
-      it('should not call getEntry', function() {
+      it('should not call getEntry when this.updatedLocalStorage is false', function() {
+        view.updatedLocalStorage = false;
         view.getEntries();
-        view.getEntry.called.should.be.true();
+        view.getEntry.called.should.be.false();
       });
 
-      it('should not call getEntry with correct params', function() {
+      it('should call getEntryRec this.updatedLocalStorage is false', function() {
+        view.updatedLocalStorage = false;
         view.getEntries();
-        view.getEntry.calledWith(entry).should.be.true();
+        view.getEntryRec.called.should.be.true();
+      });
+
+      it('should call getEntryRec with correct params this.updatedLocalStorage is false', function() {
+        view.updatedLocalStorage = false;
+        view.getEntries();
+        view.getEntryRec.calledWith(entries, []).should.be.true();
       });
 
     });

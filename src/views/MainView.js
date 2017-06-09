@@ -36,6 +36,7 @@
       );
       app.checkonline(['.add-btn', '.fab.add-btn']);
       this.updatedLocalStorage = false;
+      this.updatingLocalStorage = false;
       this.menuView = new Encryptr.prototype.MenuView().render();
       this.menuView.dismiss();
       this.addMenuView = new Encryptr.prototype.AddMenuView().render();
@@ -74,7 +75,8 @@
       if (onlySession === true) {
         data = JSON.stringify({Session: JSON.parse(data).Session});
       }
-      window.app.mainView.updatedLocalStorage = true;
+      this.updatedLocalStorage = true;
+      this.updatingLocalStorage = false;
       if ($.os.ios || $.os.android || $.os.bb10) {
         $('.nav .share-btn').removeClass('disabled-link disabled-btn');
         $('.nav .copy-btn').removeClass('disabled-link disabled-btn');
@@ -88,7 +90,8 @@
     },
     updateLocalStorage: function() {
       var self = this;
-      if (!this.updatedLocalStorage) {
+      if (!this.updatedLocalStorage && !this.updatingLocalStorage) {
+        this.updatingLocalStorage = true;
         return this.getEntries().then(self.saveLocalStorage.bind(self), function(){
           if (window.app.entriesCollection.length === 0) {
             self.saveLocalStorage(true);
@@ -213,15 +216,41 @@
       });
       return promise;
     },
+    getEntryRec: function (entries, history, callWhenDone) {
+      var self = this;
+      var entry = entries.pop();
+      if (!entry) {
+        return callWhenDone(history);
+      }
+      var entry_model = new window.app.EntryModel(entry);
+      var fetchEntry = function () {
+        entry_model.fetch({
+          success: function(_, resp) {
+            history.push(resp);
+            self.getEntryRec(entries, history, callWhenDone);
+          },
+          error: callWhenDone
+        });
+      };
+      window.requestAnimationFrame(fetchEntry);
+    },
     getEntries: function() {
       var self = this;
       return window.app.entriesView.getCollection().then(function(collection) {
         var promise = $.Deferred();
         if (collection) {
-          var promises = collection.map(self.getEntry);
-          return $.when.apply($, promises);
+          if (self.updatedLocalStorage) {
+            var promises = collection.map(self.getEntry);
+            return $.when.apply($, promises).then(function(){
+              return arguments;
+            });
+          }
+          self.getEntryRec(collection, [], function(entries) {
+            promise.resolve(entries);
+          });
+        } else {
+          promise.reject();
         }
-        promise.reject();
         return promise;
       });
     },
@@ -229,8 +258,7 @@
      var self = this;
      $(".entriesViewLoading").text("Generating CSV file...");
      $(".entriesViewLoading").addClass("loadingEntries");
-     return this.getEntries().then(function(){
-      var entries = arguments;
+     return this.getEntries().then(function(entries){
       $(".entriesViewLoading").removeClass("loadingEntries");
       return self.generateCsvFromEntries(entries);
      });
