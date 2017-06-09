@@ -35,7 +35,9 @@
     addAll: function (collection) {
       var _this = this;
       collection = collection || this.collection;
-      this.$(".entriesViewLoading").removeClass("loadingEntries");
+      if (!window.app.mainView && !window.app.mainView.updatingLocalStorage) {
+        this.$(".entriesViewLoading").removeClass("loadingEntries");
+      }
       if (this.collection.models.length === 0) {
         window.setTimeout(function() {
           _this.$(".emptyFilteredEntries").hide();
@@ -56,7 +58,9 @@
       this.$(".emptyEntries").hide();
       this.$(".emptyEntries").hide();
       this.$(".entrySearch").show();
-      this.$(".entriesViewLoading").removeClass("loadingEntries");
+      if (!window.app.mainView && !window.app.mainView.updatingLocalStorage) {
+        this.$(".entriesViewLoading").removeClass("loadingEntries");
+      }
       if (this.collection.models.length === 0) {
         window.setTimeout(function() {
           _this.$(".emptyEntries").show();
@@ -198,6 +202,10 @@
           self.collection.set(collection);
           self.$(".entriesViewLoading").text("syncing entries...");
           self.$(".entriesViewLoading").addClass("loadingEntries");
+        }
+        if (window.app.mainView && window.app.mainView.updatingLocalStorage) {
+          $(".entriesViewLoading").text("Fetching data...");
+          $(".entriesViewLoading").addClass("loadingEntries");
         }
         self.collection.fetch({
           container: "_encryptrIndex",

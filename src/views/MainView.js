@@ -103,9 +103,9 @@
     updateLocalStorage: function() {
       var self = this;
       if (!this.updatedLocalStorage && !this.updatingLocalStorage) {
+        this.updatingLocalStorage = true;
         $(".entriesViewLoading").text("Fetching data...");
         $(".entriesViewLoading").addClass("loadingEntries");
-        this.updatingLocalStorage = true;
         if (window.app.entriesCollection.length === 0) {
           return self.saveLocalStorage();
         }
