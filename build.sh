@@ -28,8 +28,6 @@ for PLATFORM in "$@"; do
   if [ "$PLATFORM" == "ios" ] || [ "$PLATFORM" == "android" ]; then
     npm install
     install_platform $PLATFORM
-    git stash
-    git stash drop
     cp_icon $PLATFORM
     cordova-icon
     cordova-splash
