@@ -141,7 +141,7 @@
                   window.app.mainView.updateLocalStorage();
                 }, 100);
                 parentCollection.fetch();
-              });
+              }, {force: true});
             });
           }, error: function(err) {
             window.app.dialogAlertView.show({
