@@ -2061,7 +2061,7 @@ Container.prototype.save = function (callback, options) {
   var that = this;
 
   this.getDiff(function (err, diff) {
-    if (!diff && !option.force) {
+    if (!diff && !options.force) {
       callback('Container has not changed');
       return;
     }
