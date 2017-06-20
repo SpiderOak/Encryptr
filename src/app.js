@@ -188,7 +188,7 @@ var Encryptr = (function (window, console, undefined) {
     }
     window.app.dialogAlertView.show({
       title: 'PLEASE EXPORT YOUR DATA',
-      subtitle: 'This version of Encryptr will no longer be supported as of January 1st, 2018. We encourage you to export your stored secrets prior to that date.',
+      subtitle: 'This version of Encryptr will no longer be supported as of January 1st, 2018. <br />We encourage you to export your stored secrets prior to that date.',
       textbtn: 'okay'
     }, function(){});
     $(".blocker").hide();
