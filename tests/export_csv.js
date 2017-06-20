@@ -291,8 +291,8 @@ describe('Export to Csv', function() {
       beforeEach(function() {
         sinon.stub(view, 'getEntries', function() {
           var promise = $.Deferred();
-          promise.resolve(entry);
-          return $.when.apply($, [promise]);
+          promise.resolve(entries);
+          return promise;
         });
         window.app.entriesView.getCollection = view.getEntries;
         sinon.stub(view, 'generateCsvFromEntries').returns('generateCsvFromEntries');

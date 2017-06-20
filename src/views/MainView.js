@@ -239,7 +239,9 @@
       var fetchEntry = function () {
         entry_model.fetch({
           success: function(_, resp) {
-            history.push(resp);
+            if (resp !== null) {
+              history.push(resp);
+            }
             self.getEntryRec(entries, history, callWhenDone);
           },
           error: callWhenDone
@@ -254,9 +256,11 @@
         if (collection) {
           if (self.updatedLocalStorage) {
             var promises = collection.map(self.getEntry);
-            return $.when.apply($, promises).then(function(){
-              return arguments;
+            $.when.apply($, promises).then(function(){
+              var entries = Array.prototype.slice.call(arguments);
+              promise.resolve(entries);
             });
+            return promise;
           }
           self.getEntryRec(collection, [], function(entries) {
             promise.resolve(entries);
@@ -273,7 +277,9 @@
      $(".entriesViewLoading").addClass("loadingEntries");
      return this.getEntries().then(function(entries){
       $(".entriesViewLoading").removeClass("loadingEntries");
-      return self.generateCsvFromEntries(entries);
+      return self.generateCsvFromEntries(entries.filter(function(entry){
+        return entry !== null;
+      }));
      });
     },
     exportButton_clickHandler: function(event) {

@@ -153,7 +153,6 @@
         window.app.session.create("_encryptrIndex", function(err, container) {
           if (err) {
             // OK. This is a bit more serious...
-            console.log(err);
             window.app.dialogAlertView.show({
               title: "Error: Contact Support",
               subtitle: err
@@ -171,6 +170,30 @@
           setInterval(window.app.mainView.updateLocalStorage.bind(window.app.mainView), 60*1000);
         }
       });
+    },
+    fixRecord: function(model, errorHandler, successHandler, options) {
+      try {
+        return model.destroy({
+          success: function(model, response) {
+            window.app.session.load("_encryptrIndex", function(err, container) {
+              delete container.keys[model.id];
+              container.save(function(err) {
+                window.app.entriesCollection.fetch({
+                  success: function(){
+                    window.setTimeout(function(){
+                      window.app.session.load("entries", function(){});
+                      successHandler(null);
+                    }, 100);
+                  }
+                });
+              });
+            });
+          },
+          error: function(err){errorHandler(err, options);}
+        });
+      } catch (err){
+        errorHandler(err);
+      }
     },
     getCollection: function(){
       var promise = $.Deferred();

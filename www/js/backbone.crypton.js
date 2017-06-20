@@ -49,7 +49,9 @@
         }
         session.load(model.id, function(err, container) {
           if (err) {
-            console.error(err);
+            if (err === 'No new records') {
+              return window.app.entriesView.fixRecord(model, errorHandler, successHandler, options);
+            }
             return errorHandler(err, options);
           }
           return successHandler(container.keys);

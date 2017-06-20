@@ -129,7 +129,7 @@
                 window.app.mainView.updatedLocalStorage = false;
                 window.app.mainView.updateLocalStorage();
                 $(".blocker").hide();
-              });
+              }, {save: true, force: true});
             });
           } else {
             window.app.navigator.popView(window.app.defaultPopEffect);
