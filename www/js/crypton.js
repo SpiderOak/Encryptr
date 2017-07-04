@@ -1697,10 +1697,13 @@ Session.prototype.loadWithHmac = function (containerNameHmac, peer, callback) {
 Session.prototype.create = function (containerName, callback) {
 
   if (!crypton.online){
-    var container = JSON.parse(window.sessionStorage.getItem('crypton')).containers[containerName];
-    if (container === null || container === undefined){
+    var containers = JSON.parse(window.sessionStorage.getItem('crypton')).containers;
+    var hasContainers = containers !== null && containers !== undefined;
+    var hasContainer = hasContainers && containers.hasOwnProperty(containerName);
+    if (!hasContainers || !hasContainer){
       return callback('Container', containerName, 'not found in sessionStorage');
     }
+    var container = containers[containerName];
     return callback(null, container);
   }
 
@@ -2201,12 +2204,15 @@ Container.prototype.getPublicName = function () {
 Container.prototype.getHistory = function (callback) {
   var containerNameHmac = this.getPublicName();
   var currentVersion = this.latestVersion();
-  
+  var userContainersName = containerNameHmac + currentVersion;
   if (!crypton.online) {
-    var containers = JSON.parse(window.sessionStorage.getItem('crypton')).containers[containerNameHmac + currentVersion];
-    if (containers === null || containers === undefined){
+    var containers = JSON.parse(window.sessionStorage.getItem('crypton')).containers;
+    var hasContainers = containers !== null && containers !== undefined;
+    var hasUserContainers = hasContainers && containers.hasOwnProperty(userContainersName);
+    if (!hasContainers || !hasUserContainers){
       return callback('container', containerNameHmac, 'not found in sessionStorage');
     }
+    var userContainers = containers[containerNameHmac + currentVersion];
     return callback(null, containers);
   }
 
