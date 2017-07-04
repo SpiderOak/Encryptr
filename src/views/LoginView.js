@@ -66,7 +66,6 @@
       $("input").blur();
 
       return app.loadOfflineData(username).then(function (){
-        console.warn('to authorize');
         return window.crypton.authorize(username, passphrase, function(err, session) {
           if (err) {
             window.app.dialogAlertView.show({

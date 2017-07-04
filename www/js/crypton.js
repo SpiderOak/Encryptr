@@ -1701,7 +1701,7 @@ Session.prototype.create = function (containerName, callback) {
     var hasContainers = containers !== null && containers !== undefined;
     var hasContainer = hasContainers && containers.hasOwnProperty(containerName);
     if (!hasContainers || !hasContainer){
-      return callback('Container', containerName, 'not found in sessionStorage');
+      return callback('Container' + containerName + 'not found in sessionStorage');
     }
     var container = containers[containerName];
     return callback(null, container);
@@ -2210,7 +2210,7 @@ Container.prototype.getHistory = function (callback) {
     var hasContainers = containers !== null && containers !== undefined;
     var hasUserContainers = hasContainers && containers.hasOwnProperty(userContainersName);
     if (!hasContainers || !hasUserContainers){
-      return callback('container', containerNameHmac, 'not found in sessionStorage');
+      return callback('container' + containerNameHmac + 'not found in sessionStorage');
     }
     var userContainers = containers[containerNameHmac + currentVersion];
     return callback(null, userContainers);

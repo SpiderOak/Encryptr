@@ -154,6 +154,9 @@
               encryptedIndexJSON);
           }
       }, function(err) {
+        if (!window.crypton.online){
+          return _this.viewActivate(event);
+        }
         window.app.session.create("_encryptrIndex", function(err, container) {
           if (err) {
             // OK. This is a bit more serious...
@@ -170,9 +173,11 @@
         });
       }).then(function() {
         if ($.os.ios || $.os.android || $.os.bb10 || $.os.nodeWebkit) {
+          if (window.app.mainView && !window.app.mainView.updatingLocalStorage) {
+            $(".entriesViewLoading").removeClass("loadingEntries");
+          }
           window.app.mainView.updateLocalStorage();
           setInterval(window.app.mainView.updateLocalStorage.bind(window.app.mainView), 60*1000);
-          $(".entriesViewLoading").removeClass("loadingEntries");
         }
       });
     },

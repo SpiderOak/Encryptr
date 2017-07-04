@@ -52,6 +52,14 @@
             if (err === 'No new records') {
               return window.app.entriesView.fixRecord(model, errorHandler, successHandler, options);
             }
+            if (!window.crypton.online){
+              return session.getContainer(model.id, function(err, container) {
+                if (err) {
+                  return errorHandler(err, options);
+                }
+                return successHandler(container.keys);
+              });
+            }
             return errorHandler(err, options);
           }
           return successHandler(container.keys);

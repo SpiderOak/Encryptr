@@ -8,6 +8,7 @@ var Encryptr = (function (window, console, undefined) {
 
   var Encryptr = function () {
     this.online = true; // assume a hopeful default
+    this.loadedOfflineData = false;
     this.offline_btns = [];
   };
 
@@ -196,11 +197,19 @@ var Encryptr = (function (window, console, undefined) {
 
   Encryptr.prototype.loadOfflineData = function(username) {
     var self = this;
+    var hasAccountModel = window.app.accountModel;
+    if (hasAccountModel) {
+      var usernameFromAccount = window.app.accountModel.get('username');
+      if (usernameFromAccount !== undefined){
+        username = usernameFromAccount;
+      }
+    }
     if (!username || window.crypton.online){
       var promise = $.Deferred();
       promise.resolve();
       return promise;
     }
+    this.loadedOfflineData = true;
     var filename = 'encryptr' + username + '.data';
     if ($.os.ios || $.os.android || $.os.bb10) {
       return this.readOfflineDataCordova(filename).then(function(data){
@@ -276,7 +285,7 @@ var Encryptr = (function (window, console, undefined) {
     this.offline_btns.forEach(function(btn_class) {
       $(btn_class).addClass('disabled-link disabled-btn');
     });
-    if (window.sessionStorage.getItem('crypton') === null) {
+    if (!this.loadedOfflineData) {
       app.loadOfflineData();
     }
   };
