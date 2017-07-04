@@ -65,77 +65,80 @@
 
       $("input").blur();
 
-      window.crypton.authorize(username, passphrase, function(err, session) {
-        if (err) {
-          window.app.dialogAlertView.show({
-            title: "Couldn't sign you in",
-            subtitle: sanitizeAuthError(err)
-          }, function(){});
-          $(".blocker").hide();
-          return;
-        }
-        window.app.settings = _.extend(window.app.settings, {username: username});
-        window.localStorage.setItem("settings", JSON.stringify(window.app.settings));
-        window.app.session = session;
-        window.app.accountModel = new window.app.AccountModel({
-          username: username,
-          passphrase: passphrase,
-          session: session
-        });
-        Backbone.Session = session;
-        window.app.mainView = new window.app.MainView().render();
-        var entriesCollection = window.app.entriesCollection =
-          new window.app.EntriesCollection();
-        window.app.navigator.pushView(
-          window.app.EntriesView,
-          { collection: entriesCollection },
-          window.app.noEffect
-        );
-        window.app.entriesView = window.app.navigator.viewsStack[0].instance;
-        _this.dismiss();
-        $(".blocker").hide();
-        window.app.loginBegan = Date.now();
-        window.app.checkVersion(true);
-        window.app.logoutInterval = window.setInterval(function() {
-          var timeoutInMinutes =
-            Math.floor(((Date.now() - window.app.loginBegan) / 1000) / 60);
-          // log out after 2 hours, if not mid-edit
-          if (timeoutInMinutes >= 120 &&
-              !(window.app.navigator.activeView instanceof Encryptr.prototype.EditView) &&
-              !($(".blocker").is(":visible"))
-          ) {
-            delete window.app.loginBegan;
-            window.clearInterval(window.app.logoutInterval);
-            window.app.accountModel.logout(function() {
-              window.app.loginView.disable();
-              // Throw up the login screen
-              window.app.loginView.show();
-              window.setTimeout(function() {
-                if (window.app.navigator.viewsStack.length > 0) {
-                  window.app.navigator.popAll(window.app.noEffect);
-                }
-                window.app.mainView.close();
-              },100);
-              window.setTimeout(function() {
-                window.app.loginView.enable();
-              },350);
-              //window.app.dialogAlertView.show({
-                //title: "Session timeout",
-                //subtitle: "You have been logged out"
-              //}, function() {
-                //window.app.checkVersion();
-              //});
-            });
+      return app.loadOfflineData(username).then(function (){
+        console.warn('to authorize');
+        return window.crypton.authorize(username, passphrase, function(err, session) {
+          if (err) {
+            window.app.dialogAlertView.show({
+              title: "Couldn't sign you in",
+              subtitle: sanitizeAuthError(err)
+            }, function(){});
+            $(".blocker").hide();
+            return;
           }
-        }, 60000); // check once per minute
-        window.setTimeout(function(){
-          window.app.session.load("entries", function(err, container) {
-            if (err && err == "No new records") {
-              // remove the import option
-              $(".menu-migrate-beta2").parent().hide();
-            }
+          window.app.settings = _.extend(window.app.settings, {username: username});
+          window.localStorage.setItem("settings", JSON.stringify(window.app.settings));
+          window.app.session = session;
+          window.app.accountModel = new window.app.AccountModel({
+            username: username,
+            passphrase: passphrase,
+            session: session
           });
-        }, 10);
+          Backbone.Session = session;
+          window.app.mainView = new window.app.MainView().render();
+          var entriesCollection = window.app.entriesCollection =
+            new window.app.EntriesCollection();
+          window.app.navigator.pushView(
+            window.app.EntriesView,
+            { collection: entriesCollection },
+            window.app.noEffect
+          );
+          window.app.entriesView = window.app.navigator.viewsStack[0].instance;
+          _this.dismiss();
+          $(".blocker").hide();
+          window.app.loginBegan = Date.now();
+          window.app.checkVersion(true);
+          window.app.logoutInterval = window.setInterval(function() {
+            var timeoutInMinutes =
+              Math.floor(((Date.now() - window.app.loginBegan) / 1000) / 60);
+            // log out after 2 hours, if not mid-edit
+            if (timeoutInMinutes >= 120 &&
+                !(window.app.navigator.activeView instanceof Encryptr.prototype.EditView) &&
+                !($(".blocker").is(":visible"))
+            ) {
+              delete window.app.loginBegan;
+              window.clearInterval(window.app.logoutInterval);
+              window.app.accountModel.logout(function() {
+                window.app.loginView.disable();
+                // Throw up the login screen
+                window.app.loginView.show();
+                window.setTimeout(function() {
+                  if (window.app.navigator.viewsStack.length > 0) {
+                    window.app.navigator.popAll(window.app.noEffect);
+                  }
+                  window.app.mainView.close();
+                },100);
+                window.setTimeout(function() {
+                  window.app.loginView.enable();
+                },350);
+                //window.app.dialogAlertView.show({
+                  //title: "Session timeout",
+                  //subtitle: "You have been logged out"
+                //}, function() {
+                  //window.app.checkVersion();
+                //});
+              });
+            }
+          }, 60000); // check once per minute
+          window.setTimeout(function(){
+            window.app.session.load("entries", function(err, container) {
+              if (err && err == "No new records") {
+                // remove the import option
+                $(".menu-migrate-beta2").parent().hide();
+              }
+            });
+          }, 10);
+        });
       });
     },
     loginButton_clickHandler: function(event) {

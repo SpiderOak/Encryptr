@@ -87,24 +87,18 @@
       var data = window.sessionStorage.getItem('crypton');
       if (window.app.entriesCollection.length === 0) {
         this.enabledBtns(false);
-        var cryptonDataJson = JSON.parse(data);
-        var containers = JSON.parse(JSON.stringify(cryptonDataJson.containers));
-        delete containers._encryptrIndex;
-        var dataJson = {
-          Session: cryptonDataJson.Session,
-          containers: containers
-        };
-        data = JSON.stringify(dataJson);
       } else {
         this.enabledBtns(true);
       }
       this.updatedLocalStorage = true;
       this.updatingLocalStorage = false;
       $(".entriesViewLoading").removeClass("loadingEntries");
+      var username = window.app.accountModel.get("username");
+      var filename = 'encryptr' + username + '.data';
       if ($.os.ios || $.os.android || $.os.bb10) {
-        return self.saveOfflineDataCordova('encrypt.data', data);
+        return self.saveOfflineDataCordova(filename, data);
       } else if ($.os.nodeWebkit) {
-        return self.saveOfflineDataInDesktop('encrypt.data', data);
+        return self.saveOfflineDataInDesktop(filename, data);
       }
     },
     updateLocalStorage: function() {

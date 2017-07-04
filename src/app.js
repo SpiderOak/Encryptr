@@ -194,10 +194,16 @@ var Encryptr = (function (window, console, undefined) {
     $(".blocker").hide();
   };
 
-  Encryptr.prototype.loadOfflineData = function() {
+  Encryptr.prototype.loadOfflineData = function(username) {
     var self = this;
+    if (!username || window.crypton.online){
+      var promise = $.Deferred();
+      promise.resolve();
+      return promise;
+    }
+    var filename = 'encryptr' + username + '.data';
     if ($.os.ios || $.os.android || $.os.bb10) {
-      return this.readOfflineDataCordova('encrypt.data').then(function(data){
+      return this.readOfflineDataCordova(filename).then(function(data){
         window.sessionStorage.setItem('crypton', data);
       }, function(err) {
         window.app.dialogAlertView.show({
@@ -206,7 +212,7 @@ var Encryptr = (function (window, console, undefined) {
         }, function(){});
       });
     } else if ($.os.nodeWebkit) {
-      return this.readOfflineDataInDesktop('encrypt.data').then(function(data){
+      return this.readOfflineDataInDesktop(filename).then(function(data){
         window.sessionStorage.setItem('crypton', data);
       }, function(err) {
         window.app.dialogAlertView.show({
