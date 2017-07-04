@@ -133,22 +133,26 @@
         _this.$("input.search").focus();
       }
       return this.getEntries().then(function(entries) {
-        if (entries.length === 0) {
-          _this.addAll();
-          return;
-        }
-        var indexJSON = JSON.stringify(entries.toJSON());
-        if (window.app.accountModel.get("passphrase")) {
-          var encryptedIndexJSON = window.sjcl.encrypt(
-            window.app.accountModel.get("passphrase"), indexJSON,
-            window.crypton.cipherOptions
-          );
-          var username = window.app.accountModel.get("username");
-          var hashArray = window.sjcl.hash.sha256.hash(username);
-          var hash = window.sjcl.codec.hex.fromBits(hashArray);
-          window.localStorage.setItem("encryptr-" + hash + "-index",
-            encryptedIndexJSON);
-        }
+        var promise = $.Deferred();
+          if (entries.length === 0) {
+            window.app.session.getContainer('_encryptrIndex', function(err, container) {
+              _this.addAll();
+              return promise.resolve();
+            });
+            return promise;
+          }
+          var indexJSON = JSON.stringify(entries.toJSON());
+          if (window.app.accountModel.get("passphrase")) {
+            var encryptedIndexJSON = window.sjcl.encrypt(
+              window.app.accountModel.get("passphrase"), indexJSON,
+              window.crypton.cipherOptions
+            );
+            var username = window.app.accountModel.get("username");
+            var hashArray = window.sjcl.hash.sha256.hash(username);
+            var hash = window.sjcl.codec.hex.fromBits(hashArray);
+            window.localStorage.setItem("encryptr-" + hash + "-index",
+              encryptedIndexJSON);
+          }
       }, function(err) {
         window.app.session.create("_encryptrIndex", function(err, container) {
           if (err) {

@@ -87,7 +87,14 @@
       var data = window.sessionStorage.getItem('crypton');
       if (window.app.entriesCollection.length === 0) {
         this.enabledBtns(false);
-        data = JSON.stringify({Session: JSON.parse(data).Session});
+        var cryptonDataJson = JSON.parse(data);
+        var containers = JSON.parse(JSON.stringify(cryptonDataJson.containers));
+        delete containers._encryptrIndex;
+        var dataJson = {
+          Session: cryptonDataJson.Session,
+          containers: containers
+        };
+        data = JSON.stringify(dataJson);
       } else {
         this.enabledBtns(true);
       }
