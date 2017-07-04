@@ -78,7 +78,7 @@ describe('Offline', function() {
 
     describe('loadOfflineData', function(){
 
-      var data, file, original_sessionStorage, promose_function;
+      var data, file, original_sessionStorage, promose_function, username;
 
       beforeEach(function() {
         promise_function = function() {
@@ -87,14 +87,17 @@ describe('Offline', function() {
           return promise;
         };
         data = 'data';
-        file = 'encrypt.data';
+        username = 'username';
+        file = 'encryptrusername.data';
         original_sessionStorage = JSON.parse(JSON.stringify(window.sessionStorage));
         window.sessionStorage.setItem = sinon.stub().returns(promise_function());
         window.sessionStorage.getItem = sinon.stub().returns(null);
+        window.crypton.online = false;
       });
 
       afterEach(function() {
           window.sessionStorage = original_sessionStorage;
+          window.crypton.online = true;
         });
 
       it('should have loadOfflineData method', function() {
@@ -118,25 +121,25 @@ describe('Offline', function() {
         });
 
         it('should call readOfflineDataCordova method', function(done) {
-          window.app.loadOfflineData().then(function() {
+          window.app.loadOfflineData(username).then(function() {
             window.app.readOfflineDataCordova.called.should.be.true();
           }).then(done);
         });
 
         it('should call readOfflineDataCordova method with correct params', function(done) {
-          window.app.loadOfflineData().then(function() {
+          window.app.loadOfflineData(username).then(function() {
             window.app.readOfflineDataCordova.calledWith(file).should.be.true();
           }).then(done);
         });
 
         it('should call window.sessionStorage.setItem method', function(done) {
-          window.app.loadOfflineData().then(function() {
+          window.app.loadOfflineData(username).then(function() {
             window.sessionStorage.setItem.called.should.be.true();
           }).then(done);
         });
 
         it('should call window.sessionStorage.setItem method with correct params', function(done) {
-          window.app.loadOfflineData().then(function() {
+          window.app.loadOfflineData(username).then(function() {
             window.sessionStorage.setItem.calledWith('crypton', data).should.be.true();
           }).then(done);
         });
@@ -156,25 +159,25 @@ describe('Offline', function() {
         });
 
         it('should call readOfflineDataInDesktop method', function(done) {
-          window.app.loadOfflineData().then(function() {
+          window.app.loadOfflineData(username).then(function() {
             window.app.readOfflineDataInDesktop.called.should.be.true();
           }).then(done);
         });
 
         it('should call readOfflineDataInDesktop method with correct params', function(done) {
-          window.app.loadOfflineData().then(function() {
+          window.app.loadOfflineData(username).then(function() {
             window.app.readOfflineDataInDesktop.calledWith(file).should.be.true();
           }).then(done);
         });
 
         it('should call window.sessionStorage.setItem method', function(done) {
-          window.app.loadOfflineData().then(function() {
+          window.app.loadOfflineData(username).then(function() {
             window.sessionStorage.setItem.called.should.be.true();
           }).then(done);
         });
 
         it('should call window.sessionStorage.setItem method with correct params', function(done) {
-          window.app.loadOfflineData().then(function() {
+          window.app.loadOfflineData(username).then(function() {
             window.sessionStorage.setItem.calledWith('crypton', data).should.be.true();
           }).then(done);
         });
@@ -217,7 +220,7 @@ describe('Offline', function() {
       var file;
 
       beforeEach(function() {
-        fiel = 'encryptr.data';
+        fiel = 'encryptrusername.data';
         sinon.stub(window.app, 'readCordovaFile');
       });
 
@@ -246,7 +249,7 @@ describe('Offline', function() {
       var filePath, file;
 
       beforeEach(function() {
-        file = 'encryptr.data'
+        file = 'encryptrusername.data'
         filePath = 'file://filePath';
         require = sinon.stub().returns({
           join: sinon.stub().returns(filePath),
@@ -498,12 +501,19 @@ describe('Offline', function() {
 
     describe('updateLocalStorage', function(){
 
-      var file, data;
+      var file, data, username;
 
       beforeEach(function() {
-        file = 'encrypt.data';
+        file = 'encryptrusername.data';
         data = null;
+        username = 'username';
+        window.crypton.online = false;
         sinon.stub(view, 'getEntries', promise_function);
+        window.app.accountModel = {
+          get: function() {
+            return username;
+          }
+        }
         view.updateLocalStorage.restore();
         window.app.entriesCollection = {
           length: 1
@@ -512,6 +522,7 @@ describe('Offline', function() {
 
       afterEach(function() {
         view.getEntries.restore();
+        window.crypton.online = true;
       });
 
       it('should have updateLocalStorage method', function() {
@@ -549,12 +560,6 @@ describe('Offline', function() {
         it('should call window.sessionStorage.getItem method', function(done) {
           view.updateLocalStorage().then(function() {
             window.sessionStorage.getItem.called.should.be.true();
-          }).then(done);
-        });
-
-        it('should call window.sessionStorage.getItem method with correct params', function(done) {
-          view.updateLocalStorage().then(function() {
-            window.sessionStorage.setItem.calledWith('crypton').should.be.true();
           }).then(done);
         });
 
@@ -605,7 +610,7 @@ describe('Offline', function() {
       var filePath, file, data;
 
       beforeEach(function() {
-        file = 'encryptr.data';
+        file = 'encryptrusername.data';
         data = 'data';
         filePath = 'file://filePath';
         require = sinon.stub().returns({
@@ -673,7 +678,7 @@ describe('Offline', function() {
       var file, data;
 
       beforeEach(function() {
-        file = 'encryptr.data';
+        file = 'encryptrusername.data';
         data = 'data';
         sinon.stub(view, 'writeCordovaFile');
       });
