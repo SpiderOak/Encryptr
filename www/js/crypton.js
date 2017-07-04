@@ -2213,7 +2213,7 @@ Container.prototype.getHistory = function (callback) {
       return callback('container', containerNameHmac, 'not found in sessionStorage');
     }
     var userContainers = containers[containerNameHmac + currentVersion];
-    return callback(null, containers);
+    return callback(null, userContainers);
   }
 
   var url = crypton.url() + '/container/' + containerNameHmac + '?after=' + (currentVersion + 1) + '&sid=' + crypton.sessionId;
