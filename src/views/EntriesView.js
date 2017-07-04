@@ -172,6 +172,7 @@
         if ($.os.ios || $.os.android || $.os.bb10 || $.os.nodeWebkit) {
           window.app.mainView.updateLocalStorage();
           setInterval(window.app.mainView.updateLocalStorage.bind(window.app.mainView), 60*1000);
+          $(".entriesViewLoading").removeClass("loadingEntries");
         }
       });
     },
