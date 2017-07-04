@@ -239,6 +239,10 @@
               window.app.navigator.popView(window.app.defaultPopEffect);
               $(".blocker").hide();
               window.app.toastView.show("Passphrase changed", 3000);
+              window.app.session.getContainer('_encryptrIndex', function(err, container) {
+                window.app.mainView.updatedLocalStorage = false;
+                window.app.mainView.updateLocalStorage();
+              });
             });
           }, function() {
             window.app.toastView.show("Starting passphrase keygen");
