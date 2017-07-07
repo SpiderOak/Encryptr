@@ -198,9 +198,9 @@ var Encryptr = (function (window, console, undefined) {
   Encryptr.prototype.loadOfflineData = function(username) {
     var self = this;
     var hasAccountModel = window.app.accountModel;
-    if (hasAccountModel) {
+    if (!username && hasAccountModel) {
       var usernameFromAccount = window.app.accountModel.get('username');
-      if (usernameFromAccount !== undefined){
+      if (usernameFromAccount !== undefined && usernameFromAccount !== null){
         username = usernameFromAccount;
       }
     }
