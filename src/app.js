@@ -297,6 +297,9 @@ var Encryptr = (function (window, console, undefined) {
     this.offline_btns.forEach(function(btn_class) {
       $(btn_class).removeClass('disabled-link disabled-btn');
     });
+    if (window.app.entriesView) {
+      window.app.entriesView.reloadIndex();
+    }
   };
 
   Encryptr.prototype.onResume = function(event) {

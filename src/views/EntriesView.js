@@ -181,6 +181,22 @@
         }
       });
     },
+    reloadIndex: function(){
+      var self = this;
+      var promise = $.Deferred();
+      if (window.app.session && window.app.session.containers) {
+        window.app.session.containers = [];
+        if (window.app.entriesCollection) {
+          window.app.entriesCollection.fetch({
+            success: promise.resolve,
+            error: promise.reject
+          });
+        }
+      } else {
+        promise.resolve(null);
+      }
+      return promise;
+    },
     fixRecord: function(model, errorHandler, successHandler, options) {
       try {
         return model.destroy({
