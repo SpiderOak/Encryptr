@@ -291,13 +291,14 @@ var Encryptr = (function (window, console, undefined) {
   };
 
   Encryptr.prototype.setOnline = function(event) {
+    var changed = this.online === false;
     this.online = true;
     window.online = true;
     window.crypton.online = true;
     this.offline_btns.forEach(function(btn_class) {
       $(btn_class).removeClass('disabled-link disabled-btn');
     });
-    if (window.app.entriesView) {
+    if (changed && window.app.entriesView) {
       window.app.entriesView.reloadIndex();
     }
   };
