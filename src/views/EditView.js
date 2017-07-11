@@ -96,48 +96,52 @@
       }
       _this.model.save(null, {
         success: function(model) {
-          if (indexNeedsUpdate) {
-            window.app.session.load("_encryptrIndex", function(err, container) {
-              if (err) {
-                window.app.dialogAlertView.show({
-                  title: "Error",
-                  subtitle: err
-                }, function() {
-                  window.app.navigator.popView(window.app.defaultPopEffect);
-                  $(".blocker").hide();
-                });
-                return;
-              }
-              container.keys[model.id] = {
-                id: model.id,
-                label: model.get("label"),
-                type: model.get("type")
-              };
-              container.save(function(err) {
-                if (err) {
-                  window.app.dialogAlertView.show({
-                    title: "Error",
-                    subtitle: err
-                  }, function() {
+          _this.model.fetch({
+            success: function() {
+              if (indexNeedsUpdate) {
+                window.app.session.load("_encryptrIndex", function(err, container) {
+                  if (err) {
+                    window.app.dialogAlertView.show({
+                      title: "Error",
+                      subtitle: err
+                    }, function() {
+                      window.app.navigator.popView(window.app.defaultPopEffect);
+                      $(".blocker").hide();
+                    });
+                    return;
+                  }
+                  container.keys[model.id] = {
+                    id: model.id,
+                    label: model.get("label"),
+                    type: model.get("type")
+                  };
+                  container.save(function(err) {
+                    if (err) {
+                      window.app.dialogAlertView.show({
+                        title: "Error",
+                        subtitle: err
+                      }, function() {
+                        window.app.navigator.popView(window.app.defaultPopEffect);
+                        $(".blocker").hide();
+                      });
+                      return;
+                    }
                     window.app.navigator.popView(window.app.defaultPopEffect);
+                    window.app.toastView.show("Entry saved");
+                    window.app.mainView.updatedLocalStorage = false;
+                    window.app.mainView.updateLocalStorage();
                     $(".blocker").hide();
-                  });
-                  return;
-                }
+                  }, {save: true, force: true});
+                });
+              } else {
                 window.app.navigator.popView(window.app.defaultPopEffect);
                 window.app.toastView.show("Entry saved");
                 window.app.mainView.updatedLocalStorage = false;
                 window.app.mainView.updateLocalStorage();
                 $(".blocker").hide();
-              }, {save: true, force: true});
-            });
-          } else {
-            window.app.navigator.popView(window.app.defaultPopEffect);
-            window.app.toastView.show("Entry saved");
-            window.app.mainView.updatedLocalStorage = false;
-            window.app.mainView.updateLocalStorage();
-            $(".blocker").hide();
-          }
+              }
+            }
+          });
         },
         error: function(err) {
           $(".blocker").hide();
