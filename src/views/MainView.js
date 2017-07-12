@@ -103,15 +103,24 @@
     },
     updateLocalStorage: function() {
       var self = this;
+      var promise = $.Deferred();
       if (!this.updatedLocalStorage && !this.updatingLocalStorage) {
         this.updatingLocalStorage = true;
         $(".entriesViewLoading").text("Fetching data...");
         $(".entriesViewLoading").addClass("loadingEntries");
-        if (window.app.entriesCollection.length === 0) {
-          return self.saveLocalStorage();
-        }
-        return this.getEntries().then(self.saveLocalStorage.bind(self));
+        return window.app.entriesView.reloadIndex().then(function() {
+          var entriesCount = window.app.entriesCollection.length;
+          if (entriesCount === 0) {
+            return self.saveLocalStorage();
+          }
+          return self.getEntries(entriesCount).then(self.saveLocalStorage.bind(self), function(){
+            self.updatingLocalStorage = false;
+            self.updateLocalStorage();
+          });
+        });
       }
+      promise.resolve();
+      return promise;
     },
     menuButton_clickHandler: function(event) {
       event.preventDefault();
@@ -250,11 +259,11 @@
       };
       window.requestAnimationFrame(fetchEntry);
     },
-    getEntries: function() {
+    getEntries: function(entriesCount) {
       var self = this;
       return window.app.entriesView.getCollection().then(function(collection) {
         var promise = $.Deferred();
-        if (collection) {
+        if (collection && collection.length === entriesCount) {
           if (self.updatedLocalStorage) {
             var promises = collection.map(self.getEntry);
             $.when.apply($, promises).then(function(){
