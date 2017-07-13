@@ -513,10 +513,13 @@ describe('Offline', function() {
           get: function() {
             return username;
           }
-        }
+        };
         view.updateLocalStorage.restore();
         window.app.entriesCollection = {
-          length: 1
+          length: 1,
+        };
+        window.app.entriesView = {
+          reloadIndex: promise_function
         };
       });
 

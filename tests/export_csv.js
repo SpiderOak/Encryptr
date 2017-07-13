@@ -33,6 +33,9 @@ describe('Export to Csv', function() {
       window.app.entriesView = {
         getCollection: sinon.stub().returns(promise_function(entries)())
       };
+      window.app.entriesCollection = {
+        length: 1,
+      };
     });
 
     afterEach(function() {
@@ -268,19 +271,19 @@ describe('Export to Csv', function() {
 
       it('should not call getEntry when this.updatedLocalStorage is false', function() {
         view.updatedLocalStorage = false;
-        view.getEntries();
+        view.getEntries(1);
         view.getEntry.called.should.be.false();
       });
 
       it('should call getEntryRec this.updatedLocalStorage is false', function() {
         view.updatedLocalStorage = false;
-        view.getEntries();
+        view.getEntries(1);
         view.getEntryRec.called.should.be.true();
       });
 
       it('should call getEntryRec with correct params this.updatedLocalStorage is false', function() {
         view.updatedLocalStorage = false;
-        view.getEntries();
+        view.getEntries(1);
         view.getEntryRec.calledWith(entries, []).should.be.true();
       });
 
