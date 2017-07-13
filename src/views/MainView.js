@@ -37,6 +37,7 @@
       app.checkonline(['.add-btn', '.fab.add-btn']);
       this.updatedLocalStorage = false;
       this.updatingLocalStorage = false;
+      this.pendingUpdateLocalStorage = false;
       this.menuView = new Encryptr.prototype.MenuView().render();
       this.menuView.dismiss();
       this.addMenuView = new Encryptr.prototype.AddMenuView().render();
@@ -101,23 +102,37 @@
         return self.saveOfflineDataInDesktop(filename, data);
       }
     },
-    updateLocalStorage: function() {
+    updateLocalStorage: function(containerChanged) {
       var self = this;
       var promise = $.Deferred();
       if (!this.updatedLocalStorage && !this.updatingLocalStorage) {
         this.updatingLocalStorage = true;
         $(".entriesViewLoading").text("Fetching data...");
         $(".entriesViewLoading").addClass("loadingEntries");
-        return window.app.entriesView.reloadIndex().then(function() {
+        var contianersToRemove = ['_encryptrIndex'];
+        if (containerChanged) {
+          contianersToRemove.push(containerChanged);
+        }
+        return window.app.entriesView.reloadIndex(contianersToRemove).then(function() {
           var entriesCount = window.app.entriesCollection.length;
           if (entriesCount === 0) {
             return self.saveLocalStorage();
           }
-          return self.getEntries(entriesCount).then(self.saveLocalStorage.bind(self), function(){
+          return self.getEntries(entriesCount).then(function(){
+            return self.saveLocalStorage().then(function(){
+              if (self.pendingUpdateLocalStorage){
+                self.updatingLocalStorage = false;
+                self.pendingUpdateLocalStorage = false;
+                self.updateLocalStorage(containerChanged);
+              }
+            });
+          }, function(){
             self.updatingLocalStorage = false;
-            self.updateLocalStorage();
+            self.updateLocalStorage(containerChanged);
           });
         });
+      } else {
+        this.pendingUpdateLocalStorage = true;
       }
       promise.resolve();
       return promise;
@@ -285,12 +300,13 @@
      var self = this;
      $(".entriesViewLoading").text("Generating CSV file...");
      $(".entriesViewLoading").addClass("loadingEntries");
-     return this.getEntries().then(function(entries){
+     var entriesCount = window.app.entriesCollection.length;
+     return this.getEntries(entriesCount).then(function(entries){
       $(".entriesViewLoading").removeClass("loadingEntries");
       return self.generateCsvFromEntries(entries.filter(function(entry){
         return entry !== null;
       }));
-     });
+     }, self.getCsv.bind(self));
     },
     exportButton_clickHandler: function(event) {
       var self = this;

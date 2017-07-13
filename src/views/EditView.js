@@ -129,7 +129,7 @@
                     window.app.navigator.popView(window.app.defaultPopEffect);
                     window.app.toastView.show("Entry saved");
                     window.app.mainView.updatedLocalStorage = false;
-                    window.app.mainView.updateLocalStorage();
+                    window.app.mainView.updateLocalStorage(model.id);
                     $(".blocker").hide();
                   }, {save: true, force: true});
                 });
@@ -137,7 +137,7 @@
                 window.app.navigator.popView(window.app.defaultPopEffect);
                 window.app.toastView.show("Entry saved");
                 window.app.mainView.updatedLocalStorage = false;
-                window.app.mainView.updateLocalStorage();
+                window.app.mainView.updateLocalStorage(model.id);
                 $(".blocker").hide();
               }
             }

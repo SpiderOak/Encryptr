@@ -299,7 +299,12 @@ var Encryptr = (function (window, console, undefined) {
       $(btn_class).removeClass('disabled-link disabled-btn');
     });
     if (changed && window.app.entriesView) {
-      window.app.entriesView.reloadIndex();
+      return window.app.entriesView.reloadIndex().then(function(){
+        if (window.app.mainView) {
+          window.app.mainView.updatedLocalStorage = false;
+          return window.app.mainView.updateLocalStorage();
+        }
+      });
     }
   };
 

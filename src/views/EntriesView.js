@@ -181,11 +181,17 @@
         }
       });
     },
-    reloadIndex: function(){
+    reloadIndex: function(containersToRemove){
       var self = this;
       var promise = $.Deferred();
       if (window.app.session && window.app.session.containers) {
-        window.app.session.containers = [];
+        if (name){
+          window.app.session.containers = window.app.session.containers.filter(function(container){
+            return containersToRemove.indexOf(container.name) === -1;
+          });
+        } else {
+          window.app.session.containers = [];
+        }
         if (window.app.entriesCollection) {
           window.app.entriesCollection.fetch({
             success: promise.resolve,
