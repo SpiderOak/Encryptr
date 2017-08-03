@@ -21,6 +21,7 @@
         "cancel_clickHandler",
         "dialogCancelButton_clickHandler",
         "dialogAcceptButton_clickHandler");
+      app.checkonline(['.signupButton']);
     },
     render: function() {
       this.$el.html(window.tmpl["dialogConfirmView"]({}));
@@ -127,9 +128,10 @@
       var _this = this;
       var title = options.title || "Confirm";
       var subtitle = options.subtitle || "Are you sure?";
+      var textbtn = options.textbtn || 'Try Again';
       this.$(".title").html(title);
       this.$(".subtitle").html(subtitle);
-      this.$(".dialog-accept-btn").html('Try Again');
+      this.$(".dialog-accept-btn").html(textbtn);
       if (this.$el.hasClass("dismissed")) {
         if (callback) $(document).on("dialogAccept", callback, this);
         this.$el.removeClass("dismissed");

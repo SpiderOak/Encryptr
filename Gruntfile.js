@@ -1,5 +1,9 @@
 /*global module:false*/
+/* jshint node: true */
+
 module.exports = function(grunt) {
+
+  require('load-grunt-tasks')(grunt);
 
   // Project configuration.
   grunt.initConfig({
@@ -52,6 +56,13 @@ module.exports = function(grunt) {
         dest: 'www/js/<%= pkg.name %>-tests.js'
       }
     },
+    rename: {
+      main: {
+        files: [
+          {src: ['components/offline-js/themes/offline-theme-dark.css'], dest: 'components/offline-js/themes/offline-theme-default.css'}
+        ]
+      }
+    },
     copy: {
       main: {
         files: [
@@ -59,6 +70,7 @@ module.exports = function(grunt) {
           {expand: true, flatten: true, src: ['components/font-awesome/fonts/*'], dest: 'www/components/font-awesome/fonts/'},
           {expand: true, flatten: true, src: ['components/moment/moment.js'], dest: 'www/components/moment/'},
           {expand: true, flatten: true, src: ['node_modules/semver/semver.browser.js'], dest: 'www/components/semver'},
+          {expand: true, flatten: true, src: ['node_modules/json2csv/dist/json2csv.js'], dest: 'www/components/json2csv'},
           {expand: true, flatten: true, src: ['components/underscore/underscore*.js'], dest: 'www/components/underscore/'},
           {expand: true, flatten: true, src: ['components/backstack/backstack*.js'], dest: 'www/components/backstack/'},
           {expand: true, flatten: true, src: ['components/backbone/backbone*.js'], dest: 'www/components/backbone/'},
@@ -194,25 +206,7 @@ module.exports = function(grunt) {
     jshint: {
       files: ['Gruntfile.js', 'src/*.js', 'src/**/*.js'],
       options: {
-        eqeqeq: false,
-        laxbreak: true,
-        undef: true,
-        newcap: true,
-        noarg: true,
-        strict: false,
-        trailing: true,
-        onecase: true,
-        boss: true,
-        eqnull: true,
-        onevar: false,
-        evil: true,
-        regexdash: true,
-        browser: true,
-        wsh: true,
-        sub: true,
-        globals: {
-          cordova: true
-        }
+        jshintrc: '.jshintrc'
       }
     },
     dot: {
@@ -227,25 +221,13 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.loadNpmTasks('grunt-shell');
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-dot-compiler');
-  grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-mocha-test');
-
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-node-webkit-builder');
-
-
   // Custom tasks
   grunt.registerTask('test', 'Do mocha test, default spec', function(which) {
-    grunt.task.run('jshint', 'dot', 'copy', 'concat', 'min');
+    grunt.task.run('jshint', 'dot', 'rename', 'copy', 'concat', 'min');
     grunt.task.run('shell:mocha' + (which || 'spec'));
   });
   grunt.registerTask('desktop', 'Build for desktop', function(which) {
-    grunt.task.run('jshint', 'dot', 'copy', 'concat', 'min', 'shell:mochadot');
+    grunt.task.run('jshint', 'dot', 'rename', 'copy', 'concat', 'min', 'shell:mochadot');
     if (which === 'release') {
       grunt.task.run('nodewebkit:release');
     } else {
@@ -254,7 +236,7 @@ module.exports = function(grunt) {
   });
   grunt.registerTask('min', ['uglify']); // polyfil for uglify
   grunt.registerTask('debug','Create a debug build', function(platform) {
-    grunt.task.run('jshint', 'dot', 'copy', 'concat', 'min', 'shell:mochadot');
+    grunt.task.run('jshint', 'dot', 'rename', 'copy', 'concat', 'min', 'shell:mochadot');
     if (platform === 'desktop') {
       grunt.task.run('nodewebkit:debug');
     } else {
@@ -263,8 +245,8 @@ module.exports = function(grunt) {
   });
 
   // Default task
-  grunt.registerTask('default', ['jshint', 'dot', 'copy', 'concat', 'min', 'shell:mochaspec']);
-  grunt.registerTask('yolo', ['jshint', 'dot', 'copy', 'concat', 'min']);
+  grunt.registerTask('default', ['jshint', 'dot', 'rename', 'copy', 'concat', 'min', 'shell:mochaspec']);
+  grunt.registerTask('yolo', ['jshint', 'dot', 'rename', 'copy', 'concat', 'min']);
 
 
 };

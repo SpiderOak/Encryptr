@@ -13,6 +13,7 @@
     initialize: function() {
       _.bindAll(this, "render", "addAll", "addOne", "form_submitHandler",
         "viewActivate", "viewDeactivate");
+      app.checkonline(['.btn.save-btn']);
       this.on("viewActivate",this.viewActivate);
       this.on("viewDeactivate",this.viewDeactivate);
       this.model.bind("all", this.addAll, this);
@@ -95,44 +96,52 @@
       }
       _this.model.save(null, {
         success: function(model) {
-          if (indexNeedsUpdate) {
-            window.app.session.load("_encryptrIndex", function(err, container) {
-              if (err) {
-                window.app.dialogAlertView.show({
-                  title: "Error",
-                  subtitle: err
-                }, function() {
-                  window.app.navigator.popView(window.app.defaultPopEffect);
-                  $(".blocker").hide();
-                });
-                return;
-              }
-              container.keys[model.id] = {
-                id: model.id,
-                label: model.get("label"),
-                type: model.get("type")
-              };
-              container.save(function(err) {
-                if (err) {
-                  window.app.dialogAlertView.show({
-                    title: "Error",
-                    subtitle: err
-                  }, function() {
+          _this.model.fetch({
+            success: function() {
+              if (indexNeedsUpdate) {
+                window.app.session.load("_encryptrIndex", function(err, container) {
+                  if (err) {
+                    window.app.dialogAlertView.show({
+                      title: "Error",
+                      subtitle: err
+                    }, function() {
+                      window.app.navigator.popView(window.app.defaultPopEffect);
+                      $(".blocker").hide();
+                    });
+                    return;
+                  }
+                  container.keys[model.id] = {
+                    id: model.id,
+                    label: model.get("label"),
+                    type: model.get("type")
+                  };
+                  container.save(function(err) {
+                    if (err) {
+                      window.app.dialogAlertView.show({
+                        title: "Error",
+                        subtitle: err
+                      }, function() {
+                        window.app.navigator.popView(window.app.defaultPopEffect);
+                        $(".blocker").hide();
+                      });
+                      return;
+                    }
                     window.app.navigator.popView(window.app.defaultPopEffect);
+                    window.app.toastView.show("Entry saved");
+                    window.app.mainView.updatedLocalStorage = false;
+                    window.app.mainView.updateLocalStorage(model.id);
                     $(".blocker").hide();
-                  });
-                  return;
-                }
+                  }, {save: true, force: true});
+                });
+              } else {
                 window.app.navigator.popView(window.app.defaultPopEffect);
                 window.app.toastView.show("Entry saved");
+                window.app.mainView.updatedLocalStorage = false;
+                window.app.mainView.updateLocalStorage(model.id);
                 $(".blocker").hide();
-              });
-            });
-          } else {
-            window.app.navigator.popView(window.app.defaultPopEffect);
-            window.app.toastView.show("Entry saved");
-            $(".blocker").hide();
-          }
+              }
+            }
+          });
         },
         error: function(err) {
           $(".blocker").hide();
@@ -163,6 +172,10 @@
       window.app.mainView.off("saveentry", null, null);
       window.app.mainView.off("editentry", null, null);
       window.app.mainView.off("deleteentry", null, null);
+      window.setTimeout(function() {
+        window.app.mainView.updatedLocalStorage = false;
+        window.app.mainView.updateLocalStorage();
+      }, 100);
     },
     close: function() {
       _.each(this.subViews, function(view) {

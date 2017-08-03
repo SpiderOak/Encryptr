@@ -22,6 +22,7 @@
           "copyable_doubleTapHandler",
           "viewActivate",
           "viewDeactivate");
+      app.checkonline(['.btn.delete-btn', '.btn.edit-btn']);
       this.model.on("change", this.addAll, this);
       this.on("viewActivate",this.viewActivate);
       this.on("viewDeactivate",this.viewDeactivate);
@@ -113,6 +114,9 @@
           $(".blocker").show();
           var oldId = _this.model.id;
           var parentCollection = _this.model.collection;
+          if (!parentCollection){
+            parentCollection = window.app.entriesCollection;
+          }
           _this.model.destroy({success: function(model, response) {
             window.app.session.load("_encryptrIndex", function(err, container) {
               if (err) {
@@ -133,19 +137,36 @@
                   }, function(){});
                 }
                 $(".blocker").hide();
-                window.app.navigator.popView(window.app.defaultPopEffect);
-                window.setTimeout(function(){
-                  window.app.toastView.show("Item deleted");
-                }, 100);
-                parentCollection.fetch();
-              });
+                parentCollection.fetch({
+                  success: function() {
+                    var indexJSON = JSON.stringify(parentCollection.toJSON());
+                    if (window.app.accountModel.get("passphrase")) {
+                      var encryptedIndexJSON = window.sjcl.encrypt(
+                        window.app.accountModel.get("passphrase"), indexJSON,
+                        window.crypton.cipherOptions
+                      );
+                      var username = window.app.accountModel.get("username");
+                      var hashArray = window.sjcl.hash.sha256.hash(username);
+                      var hash = window.sjcl.codec.hex.fromBits(hashArray);
+                      window.localStorage.setItem("encryptr-" + hash + "-index", encryptedIndexJSON);
+                    }
+                    window.app.navigator.popView(window.app.defaultPopEffect);
+                    window.setTimeout(function(){
+                      window.app.entriesView.fixRecord(_this.model, console.error, function(){
+                        window.app.toastView.show("Item deleted");
+                        window.app.mainView.updatedLocalStorage = false;
+                        window.app.mainView.updateLocalStorage();
+                      }, {});
+                    }, 100);
+                  }
+                });
+              }, {force: true, save: true});
             });
           }, error: function(err) {
             window.app.dialogAlertView.show({
               title: "Error",
               subtitle: err
             }, function(){});
-            console.error(arguments);
           }});
         }
       });

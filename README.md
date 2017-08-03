@@ -21,18 +21,30 @@ It is currently working on Android, iOS, and the Desktop – thanks to [NW.js](h
 - Grunt - [http://gruntjs.com/](http://gruntjs.com/)
 	- Build tool for minimising, running and tests
   - `npm install -g grunt-cli`
-- PhantomJS - [http://phantomjs.org/](http://phantomjs.org/)
+- PhantomJS - [http://phantomjs.org/](http://phantomjs.org/) Version: 1.9.7-15
 	- Headless webkit for running tests
 - Cordova-icon and Cordova-splash - [https://github.com/AlexDisler/cordova-icon/](https://github.com/AlexDisler/cordova-icon/) and [https://github.com/AlexDisler/cordova-splash/](https://github.com/AlexDisler/cordova-splash/)
-  - `npm install -g cordova-icon` and `npm install cordova-splash`
+  - `npm install -g cordova-icon` and `npm install -g cordova-splash`
 
 ## Getting started
 
 - clone the project
 - cd into the project folder
-- `npm install` to install node_modules and js/css components (`npm install` will also run `bower install`).
-- `cordova platform add ios` and/or `cordova platform add android`
-- `cordova-icon && cordova-splash`
+- With commands:
+  - `npm install` to install node_modules and js/css components (`npm install` will also run `bower install`).
+  - `cordova platform add ios` and/or `cordova platform add android`
+  - `cordova-icon && cordova-splash`
+- With script:
+  - iOS: `./build.sh ios`
+  - Android: `./build.sh android`
+  - Desktop: `./build.sh desktop`
+
+## Build Encryptr
+
+- iOS: `./build.sh ios`
+- Android: `./build.sh android`
+- Desktop: `./build.sh desktop`
+- All platforms: `./build.sh desktop ios android`
 
 ## First test
 

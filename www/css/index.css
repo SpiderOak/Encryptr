@@ -127,29 +127,20 @@ h1 {
   left: 0;
   top: 0;
 }
-.menu-btn {
-  background: url('../img/Settings.svg') center center no-repeat;
+.export-btn, .share-btn, .copy-btn, .save-btn, .delete-btn, .menu-btn, .edit-btn, .add-btn, .back-btn {
   background-size: 24px 24px;
+  padding: unset !important;
 }
-.back-btn {
-  background: url('../img/Back.svg') center center no-repeat;
-  background-size: 24px 24px;
+.disabled-btn {
+  color: gray !important;
 }
-.add-btn {
-  background: url('../img/Add.svg') center center no-repeat;
-  background-size: 24px 24px;
+.fab.add-btn.disabled-btn {
+  background-color: gray !important;
 }
-.edit-btn {
-  background: url('../img/Edit.svg') center center no-repeat;
-  background-size: 24px 24px;
-}
-.delete-btn {
-  background: url('../img/Delete.svg') center center no-repeat;
-  background-size: 24px 24px;
-}
-.save-btn {
-  background: url('../img/Save.svg') center center no-repeat;
-  background-size: 24px 24px;
+.disabled-link {
+  pointer-events: none !important;
+  cursor: default !important;
+  opacity: 0.55 !important;
 }
 .fab {
   display: block;

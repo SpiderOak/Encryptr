@@ -18,6 +18,7 @@
     },
     initialize: function () {
       _.bindAll(this, "render", "logout_clickHandler");
+      app.checkonline(['.change-passphrase', '.btn.save-btn']);
       this.on("viewActivate",this.viewActivate);
       this.on("viewDeactivate",this.viewDeactivate);
       this.settingsHaveChanged = false;
@@ -238,6 +239,10 @@
               window.app.navigator.popView(window.app.defaultPopEffect);
               $(".blocker").hide();
               window.app.toastView.show("Passphrase changed", 3000);
+              window.app.session.getContainer('_encryptrIndex', function(err, container) {
+                window.app.mainView.updatedLocalStorage = false;
+                window.app.mainView.updateLocalStorage();
+              });
             });
           }, function() {
             window.app.toastView.show("Starting passphrase keygen");
