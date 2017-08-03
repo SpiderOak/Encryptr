@@ -1,6 +1,6 @@
 {
   "title": "Encryptr",
-  "app": "../desktopbuilds/releases/Encryptr/mac/Encryptr.app",
+  "app": "../desktopbuilds/Encryptr/osx64/Encryptr.app",
   "icon": "icon-encryptr.icns",
   "background": "Encryptr-bg.png",
   "icons": {
