@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
-    <Product Id="1B24CF9E-B7E4-44F3-B1A4-25A6D01147FF" Name="Encryptr" Language="1033" Version="1.0.0.9" Manufacturer="Devgeeks" UpgradeCode="A33C6C6A-0067-4A61-A8D2-14850CD4C160">
+    <Product Id="1B24CF9E-B7E4-44F3-B1A4-25A6D01147FF" Name="Encryptr" Language="1033" Version="!(wix.version)" Manufacturer="SpiderOak, Inc." UpgradeCode="A33C6C6A-0067-4A61-A8D2-14850CD4C160">
         <Package Description="Encryptr installer" Comments="Encryptr" InstallerVersion="200" Compressed="yes" />
         <Media Id="1" Cabinet="simple.cab" EmbedCab="yes" />
         <MajorUpgrade DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now exit.">
