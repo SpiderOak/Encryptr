@@ -54,17 +54,16 @@
             <ComponentRef Id="FFMPEGSUMO.DLL" />
             <ComponentRef Id="GPLV3.RTF" />
             <ComponentRef Id="ICON_ENCRYPTR.ICO" />
-            <ComponentRef Id="ICUDT.DAT" />
+            <ComponentRef Id="ICUDTL.DAT" />
             <ComponentRef Id="LIBEGL.DLL" />
             <ComponentRef Id="LIBGLESV2.DLL" />
             <ComponentRef Id="NW.PAK" />
             <ComponentRef Id="StartMenuShortcuts" />
         </Feature>
         <UI />
-	    <Property Id="WIXUI_INSTALLDIR" Value="ENCRYPTR" />
-	    <UIRef Id="WixUI_InstallDir" />
+        <Property Id="WIXUI_INSTALLDIR" Value="ENCRYPTR" />
+        <UIRef Id="WixUI_InstallDir" />
         <Icon Id="DesktopIcon.exe" SourceFile="!(wix.dist)\icon-encryptr.ico" />
         <Icon Id="StartMenuIcon.exe" SourceFile="!(wix.dist)\icon-encryptr.ico" />
-        <WixVariable Id="WixUILicenseRtf" Value="!(wix.dist)\GPLv3.rtf" />
     </Product>
 </Wix>
