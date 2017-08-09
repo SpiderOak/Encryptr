@@ -15,7 +15,7 @@ version_str = sys.argv[1]
 subprocess.call(["candle.exe",
                  "-ext", "WiXUtilExtension",
                  "-ext", "WixUIExtension",
-                 "-dversion", version_str,
+                 "-dversion={}".format(version_str),
                  "Encryptr-win.wxs"])
 
 inst_files_root = os.path.join(
