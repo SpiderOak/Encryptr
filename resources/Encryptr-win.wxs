@@ -9,31 +9,31 @@
             <Directory Id="ProgramFilesFolder" Name="PFiles">
                 <Directory Id="ENCRYPTR" Name="Encryptr">
                     <Component Id="ENCRYPTR.EXE" DiskId="1" Guid="6A49F0D0-0168-475F-A04A-90437308DC98">
-                        <File Id="ENCRYPTR.EXE" Name="Encryptr.exe" Source="C:\Users\tommy\Desktop\Encryptr\Encryptr.exe">
+                        <File Id="ENCRYPTR.EXE" Name="Encryptr.exe" Source="!(wix.dist)\Encryptr.exe">
                             <Shortcut Id="desktopShortcut" Directory="DesktopFolder" Name="Encryptr" WorkingDirectory="INSTALLDIR" Advertise="yes" Icon="DesktopIcon.exe" IconIndex="0" />
                             <Shortcut Id="ExeShortcut" Directory="ProgramMenuDir" Name="Encryptr" Advertise="yes" Icon="StartMenuIcon.exe" IconIndex="0" />
                         </File>
                     </Component>
                     <Component Id="FFMPEGSUMO.DLL" DiskId="1" Guid="9746217B-8707-46B6-AEA5-2DE5CD986664">
-                        <File Id="FFMPEGSUMO.DLL" Name="ffmpegsumo.dll" Source="C:\Users\tommy\Desktop\Encryptr\ffmpegsumo.dll" />
+                        <File Id="FFMPEGSUMO.DLL" Name="ffmpegsumo.dll" Source="!(wix.dist)\ffmpegsumo.dll" />
                     </Component>
                     <Component Id="GPLV3.RTF" DiskId="1" Guid="48F3D745-6A58-49A7-8B81-49EBCE2158CF">
-                        <File Id="GPLV3.RTF" Name="GPLv3.rtf" Source="C:\Users\tommy\Desktop\Encryptr\GPLv3.rtf" />
+                        <File Id="GPLV3.RTF" Name="GPLv3.rtf" Source="!(wix.dist)\GPLv3.rtf" />
                     </Component>
                     <Component Id="ICON_ENCRYPTR.ICO" DiskId="1" Guid="30338B33-1FE0-4A7D-8246-82955B7D1924">
-                        <File Id="ICON_ENCRYPTR.ICO" Name="icon-encryptr.ico" Source="C:\Users\tommy\Desktop\Encryptr\icon-encryptr.ico" />
+                        <File Id="ICON_ENCRYPTR.ICO" Name="icon-encryptr.ico" Source="!(wix.dist)\icon-encryptr.ico" />
                     </Component>
-                    <Component Id="ICUDT.DLL" DiskId="1" Guid="C181D9AA-C0FF-4F5A-8A55-9609BA7698F0">
-                        <File Id="ICUDT.DLL" Name="icudt.dll" Source="C:\Users\tommy\Desktop\Encryptr\icudt.dll" />
+                    <Component Id="ICUDTL.DAT" DiskId="1" Guid="C181D9AA-C0FF-4F5A-8A55-9609BA7698F0">
+                        <File Id="ICUDTL.DAT" Name="icudtl.dat" Source="!(wix.dist)\icudtl.dat" />
                     </Component>
                     <Component Id="LIBEGL.DLL" DiskId="1" Guid="437DA282-58E7-4934-9661-875D9D7FBDAD">
-                        <File Id="LIBEGL.DLL" Name="libEGL.dll" Source="C:\Users\tommy\Desktop\Encryptr\libEGL.dll" />
+                        <File Id="LIBEGL.DLL" Name="libEGL.dll" Source="!(wix.dist)\libEGL.dll" />
                     </Component>
                     <Component Id="LIBGLESV2.DLL" DiskId="1" Guid="7665A2D5-3E9C-4FB4-AF78-7980A989CFA2">
-                        <File Id="LIBGLESV2.DLL" Name="libGLESv2.dll" Source="C:\Users\tommy\Desktop\Encryptr\libGLESv2.dll" />
+                        <File Id="LIBGLESV2.DLL" Name="libGLESv2.dll" Source="!(wix.dist)\libGLESv2.dll" />
                     </Component>
                     <Component Id="NW.PAK" DiskId="1" Guid="0A8BA00C-11FA-4665-BDEB-D4D062CD8EA2">
-                        <File Id="NW.PAK" Name="nw.pak" Source="C:\Users\tommy\Desktop\Encryptr\nw.pak" />
+                        <File Id="NW.PAK" Name="nw.pak" Source="!(wix.dist)\nw.pak" />
                     </Component>
                 </Directory>
             </Directory>
@@ -54,7 +54,7 @@
             <ComponentRef Id="FFMPEGSUMO.DLL" />
             <ComponentRef Id="GPLV3.RTF" />
             <ComponentRef Id="ICON_ENCRYPTR.ICO" />
-            <ComponentRef Id="ICUDT.DLL" />
+            <ComponentRef Id="ICUDT.DAT" />
             <ComponentRef Id="LIBEGL.DLL" />
             <ComponentRef Id="LIBGLESV2.DLL" />
             <ComponentRef Id="NW.PAK" />
@@ -63,8 +63,8 @@
         <UI />
 	    <Property Id="WIXUI_INSTALLDIR" Value="ENCRYPTR" />
 	    <UIRef Id="WixUI_InstallDir" />
-        <Icon Id="DesktopIcon.exe" SourceFile="C:\Users\tommy\Desktop\Encryptr\icon-encryptr.ico" />
-        <Icon Id="StartMenuIcon.exe" SourceFile="C:\Users\tommy\Desktop\Encryptr\icon-encryptr.ico" />
-        <WixVariable Id="WixUILicenseRtf" Value="C:\Users\tommy\Desktop\Encryptr\GPLv3.rtf" />
+        <Icon Id="DesktopIcon.exe" SourceFile="!(wix.dist)\icon-encryptr.ico" />
+        <Icon Id="StartMenuIcon.exe" SourceFile="!(wix.dist)\icon-encryptr.ico" />
+        <WixVariable Id="WixUILicenseRtf" Value="!(wix.dist)\GPLv3.rtf" />
     </Product>
 </Wix>
