@@ -52,9 +52,32 @@ def place_build_files(basedir, build_dir):
                 os.path.join(dest_dir, "encryptr-bin"))
 
 
+def create_deb(basedir, out_path):
+    """Create the DEB installer from basedir. Place DEB in out_path."""
+    subprocess.check_call([
+        "fakeroot",
+        "dpkg-deb",
+        "-b",
+        basedir,
+        out_path,
+    ],
+    )
+
+
+def create_rpm(version, rpm_spec, dist_root, out_dir):
+    subprocess.check_call([
+        "rpmbuild",
+        "-bb",
+        "-D", "version " + version,
+        "--buildroot", dist_root,
+        "-D", "outdir " + out_dir,
+        rpm_spec
+    ])
+
+
 def setup_dirs(basedir, resources):
     """Create the installer tree."""
-    # remove ./debian_inst/ if it exists, and create an empty one
+    # remove the workdir if it exists, and create an empty one
     shutil.rmtree(basedir, ignore_errors=True)
     os.makedirs(basedir)
     # copy all linux/usr/ folder (contains helper scripts, entrypoint, etc)
@@ -65,18 +88,16 @@ def setup_dirs(basedir, resources):
                     os.path.join(basedir, "DEBIAN"))
     os.makedirs(os.path.join(basedir, "opt", "Encryptr"))
 
-deb_root = os.path.join(BASE_DIR, "debian_inst")
-res_dir = os.path.join(BASE_DIR, "linux")
-setup_dirs(deb_root, res_dir)
-place_version_strings(deb_root, version_str)
-place_arch_strings(deb_root, arch_str)
-place_build_files(deb_root, build_files)
 
-subprocess.check_call([
-    "fakeroot",
-    "dpkg-deb",
-    "-b",
-    deb_root,
-    os.getcwd(),
-],
-)
+def clean_deb_files(basedir):
+    shutil.rmtree(os.path.join(basedir, "DEBIAN"))
+
+dist_root = os.path.join(BASE_DIR, "linux_inst")
+res_dir = os.path.join(BASE_DIR, "linux")
+setup_dirs(dist_root, res_dir)
+place_version_strings(dist_root, version_str)
+place_arch_strings(dist_root, arch_str)
+place_build_files(dist_root, build_files)
+create_deb(dist_root, BASE_DIR)
+clean_deb_files(dist_root)
+create_rpm(version_str, os.path.join(res_dir, "rpm.spec"), dist_root, BASE_DIR)
