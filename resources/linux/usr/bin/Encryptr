@@ -1,0 +1,7 @@
+#!/bin/bash
+HERE="/opt/Encryptr"
+
+# Always use our versions of ffmpeg libs.
+export LD_LIBRARY_PATH=$([ -n "$LD_LIBRARY_PATH" ] && echo "$HERE:$HERE/lib:$LD_LIBRARY_PATH" || echo "$HERE:$HERE/lib")
+
+exec -a "$0" "/opt/Encryptr/encryptr-bin"
