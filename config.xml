@@ -12,7 +12,7 @@
     <access origin="https://encryptr.org" />
     <access origin="wss://*.crypton.io" />
     <allow-navigation href="http://localhost:47243" />
-    <preference name="Orientation" value="default" />
+    <preference name="Orientation" value="portrait" />
     <platform name="android">
     </platform>
     <platform name="ios">
