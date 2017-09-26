@@ -162,7 +162,7 @@
       // Pop up a dialog to warn about how serious this is
       window.app.dialogConfirmView.show({
         title: "Warning - Changing Passphrase",
-        subtitle: "If forget your new passphrase your account will be unrecoverable! Continue?",
+        subtitle: "If you forget your new passphrase your account will be unrecoverable! Continue?",
         callback: function() {
           window.app.toastView.show("Passphrase unchanged");
         }
