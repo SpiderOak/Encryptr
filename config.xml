@@ -17,7 +17,7 @@
     </platform>
     <platform name="ios">
         <content src="http://localhost:47243" />
-        <preference name="Orientation" value="all" />
+        <preference name="Orientation" value="portrait" />
         <preference name="StatusBarBackgroundColor" value="#ffffff" />
         <preference name="StatusBarStyle" value="default" />
     </platform>
