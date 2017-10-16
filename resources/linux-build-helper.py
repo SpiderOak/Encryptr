@@ -16,12 +16,12 @@ def replace_str_in_file(file_path, source_str, replace_str):
     """Replace all appearences of source_str for replace_str in
     the file from file_path.
     """
-    with fileinput.FileInput(file_path, inplace=True) as file:
-        for line in file:
-            # replace the string on each line of the file
-            # end='' prevents this from writing double line ends
-            # since each line already has a \n
-            print(line.replace(source_str, replace_str), end='')
+    f = fileinput.FileInput(file_path, inplace=True)
+    for line in f:
+        # replace the string on each line of the file
+        # end='' prevents this from writing double line ends
+        # since each line already has a \n
+        print line.replace(source_str, replace_str),
 
 
 def place_version_strings(basedir, version):
@@ -101,3 +101,4 @@ place_build_files(dist_root, build_files)
 create_deb(dist_root, BASE_DIR)
 clean_deb_files(dist_root)
 create_rpm(version_str, os.path.join(res_dir, "rpm.spec"), dist_root, BASE_DIR)
+

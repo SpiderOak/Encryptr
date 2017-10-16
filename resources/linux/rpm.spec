@@ -24,6 +24,7 @@ cloud storage provider, or any third party.
 /usr/share/pixmaps/Encryptr.png
 
 %define _rpmdir %{outdir}
+%define __requires_exclude libudev.so.0
 
 %post  
 if [ -f /usr/lib/libudev.so.1 ]
