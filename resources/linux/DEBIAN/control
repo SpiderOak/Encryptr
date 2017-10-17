@@ -1,0 +1,17 @@
+Source: encryptr
+Version: INSERT_VERSION_HERE
+Section: contrib/utils
+Priority: optional
+Maintainer: SpiderOak <security@spideroak-inc.com>
+Installed-Size: 90648
+Architecture: INSERT_ARCH_HERE
+Homepage: https://encryptr.org
+Package: encryptr
+Depends:
+Description: A free, open source password manager and e-wallet.
+ Encryptr is simple and easy to use. It stores your sensitive data like
+ passwords, credit card data, PINs, or access codes, in the cloud. However,
+ because it was built on the zero-knowledge Crypton framework, Encryptr
+ ensures that only the user has the ability to access or read the confidential
+ information. Not the app's developers, cloud storage provider, or any third
+ party.

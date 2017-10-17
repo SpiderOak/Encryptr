@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=INSERT_VERSION_HERE
+Type=Application
+Name=Encryptr
+GenericName=Password Manager
+Comment=Free, open source, zero-knowledge password manager and e-wallet.
+Comment[en_US]=Free, open source, zero-knowledge password manager and e-wallet.
+Icon=/usr/share/pixmaps/Encryptr.png
+Exec=/usr/bin/Encryptr
+Terminal=false
+Categories=Utility;
