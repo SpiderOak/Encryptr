@@ -1,3 +1,23 @@
+#!/usr/bin/env python
+
+"""
+Helper script to build DEB and RPM installers for Encryptr!
+
+Usage:
+
+python linux-build-helper.py VERSION ARCH BUILD_FILES
+
+VERSION is the Encryptr version we will set in the installers (e.g., 2.0.0)
+ARCH is either amd64 or i386, and defines the target arch of the installers.
+BUILD_FILES points to the root of the files that will be included in the app.
+In a normal build process, you normally want this to be either
+../desktopbuilds/Encryptr/linux64/ or ../desktopbuilds/Encryptr/linux86/
+
+Example usage:
+
+python linux-build-helper.py 2.0.0 amd64 ../desktopbuilds/Encryptr/linux64/
+"""
+
 import subprocess
 import glob
 import shutil
@@ -16,12 +36,14 @@ def replace_str_in_file(file_path, source_str, replace_str):
     """Replace all appearences of source_str for replace_str in
     the file from file_path.
     """
+    # In Python 2.X FileInput cannot be used as context manager
     f = fileinput.FileInput(file_path, inplace=True)
     for line in f:
         # replace the string on each line of the file
-        # end='' prevents this from writing double line ends
-        # since each line already has a \n
+        # we use the trailing comma to avoid double line jumps,
+        # because each line already contains a \n char
         print line.replace(source_str, replace_str),
+    f.close()
 
 
 def place_version_strings(basedir, version):
@@ -101,4 +123,3 @@ place_build_files(dist_root, build_files)
 create_deb(dist_root, BASE_DIR)
 clean_deb_files(dist_root)
 create_rpm(version_str, os.path.join(res_dir, "rpm.spec"), dist_root, BASE_DIR)
-
