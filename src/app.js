@@ -187,12 +187,6 @@ var Encryptr = (function (window, console, undefined) {
       // Fallback to empty browser polyfill
       Encryptr.prototype.copyToClipboard = function() {};
     }
-    window.app.dialogAlertView.show({
-      title: 'PLEASE EXPORT YOUR DATA',
-      subtitle: 'This version of Encryptr will no longer be supported as of January 1st, 2018. <br />We encourage you to export your stored secrets prior to that date.',
-      textbtn: 'okay'
-    }, function(){});
-    $(".blocker").hide();
   };
 
   Encryptr.prototype.loadOfflineData = function(username) {
