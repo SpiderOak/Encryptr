@@ -27,6 +27,7 @@ import fileinput
 
 version_str = sys.argv[1]
 arch_str = sys.argv[2]
+assert(arch_str in ["amd64", "i386"])
 build_files = sys.argv[3]
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -86,13 +87,15 @@ def create_deb(basedir, out_path):
     )
 
 
-def create_rpm(version, rpm_spec, dist_root, out_dir):
+def create_rpm(version, arch, rpm_spec, dist_root, out_dir):
+    arch_str = arch if arch == "i386" else "x86_64"
     subprocess.check_call([
         "rpmbuild",
         "-bb",
         "-D", "version " + version,
         "--buildroot", dist_root,
         "-D", "outdir " + out_dir,
+        "--target", arch_str,
         rpm_spec
     ])
 
@@ -122,4 +125,5 @@ place_arch_strings(dist_root, arch_str)
 place_build_files(dist_root, build_files)
 create_deb(dist_root, BASE_DIR)
 clean_deb_files(dist_root)
-create_rpm(version_str, os.path.join(res_dir, "rpm.spec"), dist_root, BASE_DIR)
+create_rpm(version_str, arch_str, os.path.join(
+    res_dir, "rpm.spec"), dist_root, BASE_DIR)

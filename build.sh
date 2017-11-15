@@ -11,6 +11,7 @@ function install_platform {
     ./node_modules/cordova/bin/cordova platform remove ios
     ./node_modules/cordova/bin/cordova platform add ios
   elif [ "$PLATFORM" == "android" ]; then
+    ./node_modules/cordova/bin/cordova platform remove android
     ./node_modules/cordova/bin/cordova platform add android
   fi
 }
@@ -32,7 +33,7 @@ for PLATFORM in "$@"; do
     cordova-icon
     cordova-splash
     grunt --force
-    ./node_modules/cordova/bin/cordova prepare
+    ./node_modules/cordova/bin/cordova prepare $PLATFORM
     ./node_modules/cordova/bin/cordova build $PLATFORM
     ./node_modules/cordova/bin/cordova build $PLATFORM --release
   elif [ "$PLATFORM" == "desktop" ]; then
